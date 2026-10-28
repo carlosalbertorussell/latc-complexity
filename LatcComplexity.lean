@@ -1,4 +1,5 @@
 import LatcComplexity.Bridge
 import LatcComplexity.General
 import LatcComplexity.Adequacy
+import LatcComplexity.Counting
 import LatcComplexity.Axioms

@@ -36,9 +36,9 @@ are imported are then compiled from source, which takes a while on the first bui
 
 Verification status (2026-10-28, Linux cloud machine, x86_64, 4 cores): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0), with the dependencies above,
-`lake build` ended with `Build completed successfully (18601 jobs)` and exit code 0, with no
-warnings and no errors. The 17 modules of this repository (`LatcFormal`, its 11 files,
-`LatcComplexity`, `Bridge`, `General`, `Adequacy` and `Axioms`) were compiled; the other jobs were the
+`lake build` ended with `Build completed successfully (18603 jobs)` and exit code 0, with no
+warnings and no errors. The 18 modules of this repository (`LatcFormal`, its 11 files,
+`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting` and `Axioms`) were compiled; the other jobs were the
 dependencies, whose build outputs came from a checkout of the same commits built earlier on the
 same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compiled there).
 
@@ -50,6 +50,7 @@ same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compile
 | `LatcComplexity.Bridge` | Boolean domains: our clause constraints are Complexitylib CNF formulas; NP-/coNP-completeness and #P-hardness |
 | `LatcComplexity.General` | General finite domains: NP-/coNP-completeness |
 | `LatcComplexity.Adequacy` | The word-encoded problems are latc-check's `Latc.missing` on the tables they denote |
+| `LatcComplexity.Counting` | Boolean domains: counting \|M(T₀)\| is in #P, hence #P-complete |
 | `LatcComplexity.Axioms` | `#print axioms` on every theorem of the two files above |
 
 ## Theorems
@@ -107,12 +108,25 @@ the condition tuples of T₀ as bit vectors over the distinct attributes of the 
 | `Complete_coNPComplete` | `coNPComplete encInst Complete` |
 | `countMissing_sharpPHard` | `SharpPHard encInst countMissing`: counting \|M(T₀)\| (and \|𝒱\|, with T₀ = ∅) is #P-hard under parsimonious reductions |
 
+### Counting (`LatcComplexity/Counting.lean`, namespace `Latc.PaperD`)
+
+`countMissing (φ, T)` counts the states of the attributes occurring in `φ` that satisfy `φ` and
+whose condition tuple is not a row of `T` (the convention of Complexitylib's `CNF.modelCount`).
+
+| Theorem | Statement |
+|---|---|
+| `countMissing_sharpPComplete` | `SharpPComplete encInst countMissing`: counting \|M(T₀)\| is #P-complete under parsimonious reductions |
+| `countMissing_mem_SharpP` | `countMissing ∈ SharpP encInst` |
+| `countMissing_reduces_sharpSAT` | a parsimonious reduction to #SAT: each row of T₀ of the right length becomes a clause saying the condition tuple differs from it somewhere (`rowClause`, `toSharpSAT`) |
+| `countMissing_eq_sharpSAT` | \|M(T₀)\| = #SAT(`toSharpSAT (φ, T)`) |
+| `toSharpSAT_polyTime` | the reduction is polynomial-time |
+
 ## Axiom audit
 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 37 theorems: 30 print `[propext, Classical.choice, Quot.sound]`;
+* `LatcComplexity/Axioms.lean`, 46 theorems: 39 print `[propext, Classical.choice, Quot.sound]`;
   `Latc.PaperD.holdsAll_eq_eval`, `Latc.PaperD.satisfiable_decode_iff`,
   `Latc.PaperD.General.Inst.toList_injective`, `Latc.PaperD.General.Inst.exists_toList_eq` and
   `Latc.PaperD.General.con_iff` print `[propext, Quot.sound]`; and
@@ -127,7 +141,7 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* #P membership of counting |M(T₀)|, which with `countMissing_sharpPHard` gives #P-completeness.
+* #P-completeness of counting |M(T₀)| over general finite domains (it is proved for domains {0, 1}).
 * The monotone two-literal case (Valiant 1979) of the counting statement. It is formalised in
   Lean, in another model, as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
   [descriptive-complexity](https://github.com/PierreSenellart/descriptive-complexity).
