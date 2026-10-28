@@ -36,9 +36,9 @@ are imported are then compiled from source, which takes a while on the first bui
 
 Verification status (2026-10-28, Linux cloud machine, x86_64, 4 cores): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0), with the dependencies above,
-`lake build` ended with `Build completed successfully (18599 jobs)` and exit code 0, with no
-warnings and no errors. The 16 modules of this repository (`LatcFormal`, its 11 files,
-`LatcComplexity`, `Bridge`, `General` and `Axioms`) were compiled; the other jobs were the
+`lake build` ended with `Build completed successfully (18601 jobs)` and exit code 0, with no
+warnings and no errors. The 17 modules of this repository (`LatcFormal`, its 11 files,
+`LatcComplexity`, `Bridge`, `General`, `Adequacy` and `Axioms`) were compiled; the other jobs were the
 dependencies, whose build outputs came from a checkout of the same commits built earlier on the
 same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compiled there).
 
@@ -49,6 +49,7 @@ same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compile
 | `LatcFormal` | Theorem 1, Corollaries 1, 3, 4, Propositions 1–4, 6, 7, and the combinatorial reduction behind Proposition 5, unchanged from latc-check (documented in latc-check's `formal/README.md`) |
 | `LatcComplexity.Bridge` | Boolean domains: our clause constraints are Complexitylib CNF formulas; NP-/coNP-completeness and #P-hardness |
 | `LatcComplexity.General` | General finite domains: NP-/coNP-completeness |
+| `LatcComplexity.Adequacy` | The word-encoded problems are latc-check's `Latc.missing` on the tables they denote |
 | `LatcComplexity.Axioms` | `#print axioms` on every theorem of the two files above |
 
 ## Theorems
@@ -77,6 +78,23 @@ in unary.
 | `fromSAT_polyTime` | the reduction is polynomial-time |
 | `satisfiable_iff` | a formula over variables `< n` is satisfiable iff its conditions have a valid state over `n` attributes with domain {0, 1} |
 
+### Adequacy to latc-check's model (`LatcComplexity/Adequacy.lean`, namespace `Latc.PaperD.General`)
+
+An instance `I = (d, S, T)` denotes a table in the model of `LatcFormal/Basic.lean`: attributes
+`Fin n` with declared domains `Fin dᵢ`; the constraint predicate `I.con`, under which a tuple
+satisfies every clause of `S` and a condition `(i, v)` holds when attribute `i` exists and takes the
+value `v` (`con_cond_iff`, `con_iff`); and the condition set `I.table`, the tuples whose list of
+values is a row of `T` (rows of another length or with values outside the domains denote no
+tuple).
+
+| Theorem | Statement |
+|---|---|
+| `mem_MissingNonempty_iff` | `I ∈ MissingNonempty ↔ (Latc.missing I.con I.table).Nonempty` |
+| `mem_Complete_iff` | `I ∈ Complete ↔ Latc.missing I.con I.table = ∅` |
+| `coe_missing_map_toList` | the tuples of M(T₀), as lists of values (injectively, `Inst.toList_injective`), are exactly the witnesses of `MissingNonempty` |
+| `missingNonempty_finset_npComplete` | `NPComplete encInst {I \| (Latc.missing I.con I.table).Nonempty}` |
+| `complete_finset_coNPComplete` | `coNPComplete encInst {I \| Latc.missing I.con I.table = ∅}` |
+
 ### Boolean domains (`LatcComplexity/Bridge.lean`, namespace `Latc.PaperD`)
 
 An instance is a pair of a Complexitylib `CNF ℕ` (a condition Aᵢ = v is the literal `(i, v)`) and
@@ -94,9 +112,12 @@ the condition tuples of T₀ as bit vectors over the distinct attributes of the 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 26 theorems: 24 print `[propext, Classical.choice, Quot.sound]` and
-  `Latc.PaperD.holdsAll_eq_eval` and `Latc.PaperD.satisfiable_decode_iff` print
-  `[propext, Quot.sound]`.
+* `LatcComplexity/Axioms.lean`, 37 theorems: 30 print `[propext, Classical.choice, Quot.sound]`;
+  `Latc.PaperD.holdsAll_eq_eval`, `Latc.PaperD.satisfiable_decode_iff`,
+  `Latc.PaperD.General.Inst.toList_injective`, `Latc.PaperD.General.Inst.exists_toList_eq` and
+  `Latc.PaperD.General.con_iff` print `[propext, Quot.sound]`; and
+  `Latc.PaperD.General.Inst.inDomains_toList` and `Latc.PaperD.General.con_cond_iff` print
+  `[propext]`.
 * `LatcFormal/Axioms.lean`, 69 theorems: 66 print `[propext, Classical.choice, Quot.sound]` and
   `Latc.Prop5.decode_encode`, `Latc.Prop5.encode_decode` and `Latc.Prop5.encode_size` print
   `[propext, Quot.sound]`, as in latc-check.
@@ -106,8 +127,6 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* An adequacy theorem linking the word-encoded problems to latc-check's `Finset` model
-  (`Latc.missing`, `Latc.validSpace` over `Fin n` attributes).
 * #P membership of counting |M(T₀)|, which with `countMissing_sharpPHard` gives #P-completeness.
 * The monotone two-literal case (Valiant 1979) of the counting statement. It is formalised in
   Lean, in another model, as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of

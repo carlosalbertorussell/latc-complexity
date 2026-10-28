@@ -1,5 +1,6 @@
 import LatcComplexity.Bridge
 import LatcComplexity.General
+import LatcComplexity.Adequacy
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -33,3 +34,16 @@ import LatcComplexity.General
 #print axioms Latc.PaperD.General.MissingNonempty_npHard
 #print axioms Latc.PaperD.General.MissingNonempty_npComplete
 #print axioms Latc.PaperD.General.Complete_coNPComplete
+
+-- Adequacy to latc-check's `Finset` model (`LatcComplexity/Adequacy.lean`)
+#print axioms Latc.PaperD.General.Inst.toList_injective
+#print axioms Latc.PaperD.General.Inst.inDomains_toList
+#print axioms Latc.PaperD.General.Inst.exists_toList_eq
+#print axioms Latc.PaperD.General.con_cond_iff
+#print axioms Latc.PaperD.General.con_iff
+#print axioms Latc.PaperD.General.mem_missing_iff
+#print axioms Latc.PaperD.General.mem_MissingNonempty_iff
+#print axioms Latc.PaperD.General.mem_Complete_iff
+#print axioms Latc.PaperD.General.coe_missing_map_toList
+#print axioms Latc.PaperD.General.missingNonempty_finset_npComplete
+#print axioms Latc.PaperD.General.complete_finset_coNPComplete
