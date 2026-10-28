@@ -42,6 +42,13 @@ warnings and no errors. The 18 modules of this repository (`LatcFormal`, its 11 
 dependencies, whose build outputs came from a checkout of the same commits built earlier on the
 same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compiled there).
 
+Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
+Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
+9047 Mathlib files came from the cache); `lake build` 241 s, `Build completed successfully (18603
+jobs)`, no warnings, no errors, compiling from source 27 CSLib, 200 Complexitylib and the 18
+repository modules. About 7 minutes in all; 12 GB of disk (the repository with `.lake`, `~/.elan`
+with Lake's artifact cache, and `~/.cache/mathlib`). Its axiom audit is the one below.
+
 ## Layout
 
 | Library | Contents |
