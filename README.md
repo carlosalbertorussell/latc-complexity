@@ -36,18 +36,20 @@ are imported are then compiled from source, which takes a while on the first bui
 
 Verification status (2026-10-28, Linux cloud machine, x86_64, 4 cores): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0), with the dependencies above,
-`lake build` ended with `Build completed successfully (18603 jobs)` and exit code 0, with no
-warnings and no errors. The 18 modules of this repository (`LatcFormal`, its 11 files,
-`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting` and `Axioms`) were compiled; the other jobs were the
-dependencies, whose build outputs came from a checkout of the same commits built earlier on the
-same machine (Mathlib from `lake exe cache get`, CSLib and Complexitylib compiled there).
+`lake build` ended with `Build completed successfully (18605 jobs)` and exit code 0, with no
+warnings and no errors. The 19 modules of this repository (`LatcFormal`, its 11 files,
+`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting`, `CountingGeneral` and `Axioms`)
+were compiled; the other jobs were the dependencies, whose build outputs came from a checkout of
+the same commits built earlier on the same machine (Mathlib from `lake exe cache get`, CSLib and
+Complexitylib compiled there).
 
 Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
 Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
 9047 Mathlib files came from the cache); `lake build` 241 s, `Build completed successfully (18603
 jobs)`, no warnings, no errors, compiling from source 27 CSLib, 200 Complexitylib and the 18
 repository modules. About 7 minutes in all; 12 GB of disk (the repository with `.lake`, `~/.elan`
-with Lake's artifact cache, and `~/.cache/mathlib`). Its axiom audit is the one below.
+with Lake's artifact cache, and `~/.cache/mathlib`). Its axiom audit agreed with the one below on
+the 46 theorems audited at that commit.
 
 ## Layout
 
@@ -58,6 +60,7 @@ with Lake's artifact cache, and `~/.cache/mathlib`). Its axiom audit is the one 
 | `LatcComplexity.General` | General finite domains: NP-/coNP-completeness |
 | `LatcComplexity.Adequacy` | The word-encoded problems are latc-check's `Latc.missing` on the tables they denote |
 | `LatcComplexity.Counting` | Boolean domains: counting \|M(T₀)\| is in #P, hence #P-complete |
+| `LatcComplexity.CountingGeneral` | General finite domains: counting \|M(T₀)\| of latc-check's model is #P-complete |
 | `LatcComplexity.Axioms` | `#print axioms` on every theorem of the two files above |
 
 ## Theorems
@@ -128,12 +131,25 @@ whose condition tuple is not a row of `T` (the convention of Complexitylib's `CN
 | `countMissing_eq_sharpSAT` | \|M(T₀)\| = #SAT(`toSharpSAT (φ, T)`) |
 | `toSharpSAT_polyTime` | the reduction is polynomial-time |
 
+### Counting over general finite domains (`LatcComplexity/CountingGeneral.lean`, namespace `Latc.PaperD.General`)
+
+`missingCount I` is `(Latc.missing I.con I.table).card`: |M(T₀)| for the table an instance denotes
+in latc-check's model (see the adequacy section).
+
+| Theorem | Statement |
+|---|---|
+| `missingCount_sharpPComplete` | `SharpPComplete encInst missingCount`: counting \|M(T₀)\| is #P-complete under parsimonious reductions; with T₀ = ∅ this is \|𝒱\| |
+| `missingCount_mem_SharpP` | `missingCount ∈ SharpP encInst` |
+| `missingCount_eq_acceptCount` | a certificate is the encoding of a state padded with `false` to the length of the encoded domain sizes; the verifier `cverifier` accepts only these canonical certificates of states of M(T₀), one per tuple |
+| `sharpSAT_eq_missingCount` | the SAT reduction of `LatcComplexity.General` (dense variables, domains {0, 1}, T₀ = ∅) preserves counts |
+| `missingCount_sharpPHard` | `SharpPHard encInst missingCount` |
+
 ## Axiom audit
 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 46 theorems: 39 print `[propext, Classical.choice, Quot.sound]`;
+* `LatcComplexity/Axioms.lean`, 58 theorems: 51 print `[propext, Classical.choice, Quot.sound]`;
   `Latc.PaperD.holdsAll_eq_eval`, `Latc.PaperD.satisfiable_decode_iff`,
   `Latc.PaperD.General.Inst.toList_injective`, `Latc.PaperD.General.Inst.exists_toList_eq` and
   `Latc.PaperD.General.con_iff` print `[propext, Quot.sound]`; and
@@ -148,7 +164,6 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* #P-completeness of counting |M(T₀)| over general finite domains (it is proved for domains {0, 1}).
 * The monotone two-literal case (Valiant 1979) of the counting statement. It is formalised in
   Lean, in another model, as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
   [descriptive-complexity](https://github.com/PierreSenellart/descriptive-complexity).

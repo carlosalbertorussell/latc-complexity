@@ -2,6 +2,7 @@ import LatcComplexity.Bridge
 import LatcComplexity.General
 import LatcComplexity.Adequacy
 import LatcComplexity.Counting
+import LatcComplexity.CountingGeneral
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -59,3 +60,17 @@ import LatcComplexity.Counting
 #print axioms Latc.PaperD.countMissing_reduces_sharpSAT
 #print axioms Latc.PaperD.countMissing_mem_SharpP
 #print axioms Latc.PaperD.countMissing_sharpPComplete
+
+-- #P-completeness of counting |M(T₀)| over general finite domains (`LatcComplexity/CountingGeneral.lean`)
+#print axioms Latc.PaperD.General.certState_polyTime
+#print axioms Latc.PaperD.General.cverifier_polyTime
+#print axioms Latc.PaperD.General.certLen_polyTime
+#print axioms Latc.PaperD.General.frames_encList_append_replicate
+#print axioms Latc.PaperD.General.certState_certWord
+#print axioms Latc.PaperD.General.missingCount_eq_acceptCount
+#print axioms Latc.PaperD.General.missingCount_mem_SharpP
+#print axioms Latc.PaperD.General.valid_iff_eval
+#print axioms Latc.PaperD.General.sharpSAT_eq_missingCount
+#print axioms Latc.PaperD.General.sharpSAT_reduces_missingCount
+#print axioms Latc.PaperD.General.missingCount_sharpPHard
+#print axioms Latc.PaperD.General.missingCount_sharpPComplete
