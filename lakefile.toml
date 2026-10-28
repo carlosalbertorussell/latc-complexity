@@ -1,0 +1,25 @@
+name = "latc-complexity"
+version = "0.1.0"
+defaultTargets = ["LatcFormal", "LatcComplexity"]
+# Reuse build outputs across checkouts through Lake's content-addressed artifact cache.
+enableArtifactCache = true
+
+[leanOptions]
+autoImplicit = false
+
+# Complexitylib brings cslib and, through cslib's pin, Mathlib. Bump this SHA together with
+# lean-toolchain, which must equal Complexitylib's at the SHA.
+[[require]]
+name = "complexitylib"
+git = "https://github.com/cslib-community/complexitylib"
+rev = "b7acfc2310217697a892e791d318a5e127fadfd9"
+
+# The Lean formalisation of Paper A, copied from latc-check (commit b9f8273, folder formal/).
+[[lean_lib]]
+name = "LatcFormal"
+allowNonModules = true
+
+# Proposition 5 composed with Complexitylib's Cook–Levin theorems.
+[[lean_lib]]
+name = "LatcComplexity"
+allowNonModules = true

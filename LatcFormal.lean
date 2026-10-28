@@ -1,0 +1,11 @@
+import LatcFormal.Basic
+import LatcFormal.Prop2
+import LatcFormal.Prop3
+import LatcFormal.Prop4
+import LatcFormal.Examples
+import LatcFormal.Thm1
+import LatcFormal.Prop1
+import LatcFormal.Prop6
+import LatcFormal.Prop7
+import LatcFormal.Axioms
+import LatcFormal.Prop5Reduction
