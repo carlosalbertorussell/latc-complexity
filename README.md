@@ -36,9 +36,10 @@ are imported are then compiled from source, which takes a while on the first bui
 
 Verification status (2026-10-28, Linux cloud machine, x86_64, 4 cores): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0), with the dependencies above,
-`lake build` ended with `Build completed successfully (18605 jobs)` and exit code 0, with no
-warnings and no errors. The 19 modules of this repository (`LatcFormal`, its 11 files,
-`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting`, `CountingGeneral` and `Axioms`)
+`lake build` ended with `Build completed successfully (18613 jobs)` and exit code 0, with no
+warnings and no errors. The 20 modules of this repository (`LatcFormal`, its 11 files,
+`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting`, `CountingGeneral`, `Monotone` and
+`Axioms`)
 were compiled; the other jobs were the dependencies, whose build outputs came from a checkout of
 the same commits built earlier on the same machine (Mathlib from `lake exe cache get`, CSLib and
 Complexitylib compiled there).
@@ -61,6 +62,7 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Adequacy` | The word-encoded problems are latc-check's `Latc.missing` on the tables they denote |
 | `LatcComplexity.Counting` | Boolean domains: counting \|M(T₀)\| is in #P, hence #P-complete |
 | `LatcComplexity.CountingGeneral` | General finite domains: counting \|M(T₀)\| of latc-check's model is #P-complete |
+| `LatcComplexity.Monotone` | Clauses of two conditions Aᵢ = 1, Aⱼ = 1: counting \|𝒱\| is in #P and, assuming Valiant's theorem as a hypothesis, one-call #P-complete |
 | `LatcComplexity.Axioms` | `#print axioms` on every theorem of the two files above |
 
 ## Theorems
@@ -144,17 +146,45 @@ in latc-check's model (see the adequacy section).
 | `sharpSAT_eq_missingCount` | the SAT reduction of `LatcComplexity.General` (dense variables, domains {0, 1}, T₀ = ∅) preserves counts |
 | `missingCount_sharpPHard` | `SharpPHard encInst missingCount` |
 
+### The monotone two-literal case (`LatcComplexity/Monotone.lean`, namespace `Latc.PaperD.General`)
+
+Paper A states that counting |𝒱| stays #P-complete when every clause is two conditions
+Aᵢ = 1, Aⱼ = 1 over domains {0, 1}, citing Valiant (1979). Deciding such instances is trivial (the
+all-ones state is valid), so no parsimonious reduction from #SAT exists unless P = NP, and hardness
+needs a weaker reduction. The file defines one-call counting reductions in Complexitylib's model
+(`OneCallReducible`: polynomial-time `r` and `post` with `f a = post a (g (r a))`), and
+`OneCallSharpPHard`, `OneCallSharpPComplete` from them. Parsimonious reductions are one-call
+reductions, so #SAT is one-call #P-hard (`sharpSAT_oneCallSharpPHard`).
+
+**Valiant's theorem is a hypothesis here, not a proof.** It is not proved in Complexitylib's model.
+Valiant proved #Monotone-2SAT #P-complete under polynomial-time Turing reductions; its one-call form
+is machine-checked in another model (first-order reductions, #P via existential second-order logic)
+as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
+[descriptive-complexity](https://github.com/PierreSenellart/descriptive-complexity).
+
+| Theorem | Statement |
+|---|---|
+| `countValidMonotone2_oneCallSharpPComplete` | `(hValiant : OneCallSharpPHard encCNF SharpMonotone2SAT) → OneCallSharpPComplete encInst countValidMonotone2` |
+| `countValidMonotone2_mem_SharpP` | `countValidMonotone2 ∈ SharpP encInst` (unconditional) |
+| `sharpMonotone2SAT_reduces` | #Monotone-2SAT reduces parsimoniously to `countValidMonotone2` (unconditional) |
+| `countValidMonotone2_eq_card_validSpace` | on instances of the restricted shape, `countValidMonotone2 I = (Latc.validSpace I.con).card` |
+
+`SharpMonotone2SAT` is #SAT on formulas whose clauses are `xᵢ ∨ xⱼ`, and zero on other syntax;
+`countValidMonotone2` is |𝒱| on instances with domains {0, 1}, clauses of two conditions with value 1
+and T₀ = ∅, and zero on other syntax. This is the convention of Complexitylib's `SharpThreeSAT`.
+
 ## Axiom audit
 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 58 theorems: 51 print `[propext, Classical.choice, Quot.sound]`;
+* `LatcComplexity/Axioms.lean`, 72 theorems: 65 print `[propext, Classical.choice, Quot.sound]`;
   `Latc.PaperD.holdsAll_eq_eval`, `Latc.PaperD.satisfiable_decode_iff`,
   `Latc.PaperD.General.Inst.toList_injective`, `Latc.PaperD.General.Inst.exists_toList_eq` and
   `Latc.PaperD.General.con_iff` print `[propext, Quot.sound]`; and
   `Latc.PaperD.General.Inst.inDomains_toList` and `Latc.PaperD.General.con_cond_iff` print
-  `[propext]`.
+  `[propext]`. `countValidMonotone2_oneCallSharpPComplete` takes Valiant's theorem as its argument
+  `hValiant`; an argument is not an axiom, so it does not appear in this list.
 * `LatcFormal/Axioms.lean`, 69 theorems: 66 print `[propext, Classical.choice, Quot.sound]` and
   `Latc.Prop5.decode_encode`, `Latc.Prop5.encode_decode` and `Latc.Prop5.encode_size` print
   `[propext, Quot.sound]`, as in latc-check.
@@ -164,9 +194,10 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* The monotone two-literal case (Valiant 1979) of the counting statement. It is formalised in
-  Lean, in another model, as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
-  [descriptive-complexity](https://github.com/PierreSenellart/descriptive-complexity).
+* Valiant's theorem in Complexitylib's model: that #Monotone-2SAT is one-call #P-hard. It is the
+  hypothesis `hValiant` of `countValidMonotone2_oneCallSharpPComplete`. Proving it needs Valiant's
+  chain (or one through counting independent sets, as descriptive-complexity does) with
+  polynomial-time certificates for every step.
 
 ## Licence
 

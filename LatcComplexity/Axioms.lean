@@ -3,6 +3,7 @@ import LatcComplexity.General
 import LatcComplexity.Adequacy
 import LatcComplexity.Counting
 import LatcComplexity.CountingGeneral
+import LatcComplexity.Monotone
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -74,3 +75,19 @@ import LatcComplexity.CountingGeneral
 #print axioms Latc.PaperD.General.sharpSAT_reduces_missingCount
 #print axioms Latc.PaperD.General.missingCount_sharpPHard
 #print axioms Latc.PaperD.General.missingCount_sharpPComplete
+
+-- The monotone two-literal case (`LatcComplexity/Monotone.lean`)
+#print axioms Latc.PaperD.General.ParsimoniousReducible.oneCallReducible
+#print axioms Latc.PaperD.General.SharpPHard.oneCallSharpPHard
+#print axioms Latc.PaperD.General.OneCallReducible.trans_parsimonious
+#print axioms Latc.PaperD.General.OneCallSharpPHard.trans_parsimonious
+#print axioms Latc.PaperD.General.sharpSAT_oneCallSharpPHard
+#print axioms Latc.PaperD.General.countValidMonotone2_eq_card_validSpace
+#print axioms Latc.PaperD.General.pos2B_polyTime
+#print axioms Latc.PaperD.General.monotone2B_polyTime
+#print axioms Latc.PaperD.General.fromMonotone2_polyTime
+#print axioms Latc.PaperD.General.pos2B_fromSAT
+#print axioms Latc.PaperD.General.sharpMonotone2SAT_eq
+#print axioms Latc.PaperD.General.sharpMonotone2SAT_reduces
+#print axioms Latc.PaperD.General.countValidMonotone2_mem_SharpP
+#print axioms Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete
