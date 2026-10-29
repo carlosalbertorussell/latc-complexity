@@ -4,6 +4,8 @@ import LatcComplexity.Adequacy
 import LatcComplexity.Counting
 import LatcComplexity.CountingGeneral
 import LatcComplexity.Monotone
+import LatcComplexity.Binary
+import LatcComplexity.Tractable
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -91,3 +93,65 @@ import LatcComplexity.Monotone
 #print axioms Latc.PaperD.General.sharpMonotone2SAT_reduces
 #print axioms Latc.PaperD.General.countValidMonotone2_mem_SharpP
 #print axioms Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete
+
+-- The binary attribute index (`LatcComplexity/Binary.lean`)
+#print axioms Latc.PaperD.General.encInst_to_encInstBin_polyTime
+#print axioms Latc.PaperD.General.idReduction
+#print axioms Latc.PaperD.General.idParsimonious
+#print axioms Latc.PaperD.General.condHoldsBin_eq
+#print axioms Latc.PaperD.General.condHoldsBin_polyTime
+#print axioms Latc.PaperD.General.checkBin_eq
+#print axioms Latc.PaperD.General.checkBin_polyTime
+#print axioms Latc.PaperD.General.length_domains_le_bin
+#print axioms Latc.PaperD.General.MissingNonempty_mem_NP_bin
+#print axioms Latc.PaperD.General.MissingNonempty_npComplete_bin
+#print axioms Latc.PaperD.General.Complete_coNPComplete_bin
+#print axioms Latc.PaperD.General.missingNonempty_finset_npComplete_bin
+#print axioms Latc.PaperD.General.complete_finset_coNPComplete_bin
+#print axioms Latc.PaperD.General.certState_polyTime_bin
+#print axioms Latc.PaperD.General.cverifier_polyTime_bin
+#print axioms Latc.PaperD.General.certLen_polyTime_bin
+#print axioms Latc.PaperD.General.missingCount_mem_SharpP_bin
+#print axioms Latc.PaperD.General.missingCount_sharpPComplete_bin
+#print axioms Latc.PaperD.General.pos2B_polyTime_bin
+#print axioms Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin
+#print axioms Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin
+
+-- The tractable side (`LatcComplexity/Tractable.lean`)
+#print axioms Latc.PaperD.General.length_firstOcc
+#print axioms Latc.PaperD.General.map_table
+#print axioms Latc.PaperD.General.card_table
+#print axioms Latc.PaperD.General.card_univ
+#print axioms Latc.PaperD.General.missingCount_eq_of_noConstraints
+#print axioms Latc.PaperD.General.length_encNat_le_of_mem
+#print axioms Latc.PaperD.General.domProd_polyTime
+#print axioms Latc.PaperD.General.distinctRows_polyTime
+#print axioms Latc.PaperD.General.countNoCon_polyTime
+#print axioms Latc.PaperD.General.missingCountNoConstraints_polyTime
+#print axioms Latc.PaperD.General.missing_eq_empty_iff_of_noConstraints
+#print axioms Latc.PaperD.General.completeNoConB_polyTime
+#print axioms Latc.PaperD.General.completeNoConstraints_mem_P
+#print axioms Latc.PaperD.General.missingNonemptyNoConstraints_mem_P
+#print axioms Latc.PaperD.General.mem_boundedSections
+#print axioms Latc.PaperD.General.length_boundedSections_le
+#print axioms Latc.PaperD.General.length_candVals_le
+#print axioms Latc.PaperD.General.length_candidateStates_le
+#print axioms Latc.PaperD.General.boundedSections_zero
+#print axioms Latc.PaperD.General.boundedSections_succ
+#print axioms Latc.PaperD.General.boundedSections_polyTime
+#print axioms Latc.PaperD.General.candPool_polyTime
+#print axioms Latc.PaperD.General.candLists_eq
+#print axioms Latc.PaperD.General.candidateStates_polyTime
+#print axioms Latc.PaperD.General.exists_unwritten
+#print axioms Latc.PaperD.General.mem_candidateStates_iff
+#print axioms Latc.PaperD.General.exists_missing_candidate_iff
+#print axioms Latc.PaperD.General.someCandidateMissing_polyTime
+#print axioms Latc.PaperD.General.someCandidateMissing_iff
+#print axioms Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P
+#print axioms Latc.PaperD.General.completeFixedAttrs_mem_P
+#print axioms Latc.PaperD.General.mem_P_of_mem_P_bin
+#print axioms Latc.PaperD.General.completeNoConstraints_mem_P_unary
+#print axioms Latc.PaperD.General.missingNonemptyNoConstraints_mem_P_unary
+#print axioms Latc.PaperD.General.missingCountNoConstraints_polyTime_unary
+#print axioms Latc.PaperD.General.completeFixedAttrs_mem_P_unary
+#print axioms Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P_unary

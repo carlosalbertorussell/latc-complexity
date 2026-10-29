@@ -4,4 +4,6 @@ import LatcComplexity.Adequacy
 import LatcComplexity.Counting
 import LatcComplexity.CountingGeneral
 import LatcComplexity.Monotone
+import LatcComplexity.Binary
+import LatcComplexity.Tractable
 import LatcComplexity.Axioms
