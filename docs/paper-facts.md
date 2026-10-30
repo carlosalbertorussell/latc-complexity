@@ -912,8 +912,19 @@ page or the OMG page, and all are in `docs/paper-refs.bib`.
 
 Two points for the novelty claim:
 
-* Paper A says Levy and Rousset "give complexity bounds for verifying rule bases". Their full
-  text was not read here. Read it before submission to see whether the bounds cover completeness.
+* **Levy and Rousset: checked 2026-10-30, not a completeness result.** Read in the AAAI-96
+  version, "Verification of Knowledge Bases Based on Containment Checking", pp. 585–590
+  (https://aaai.org/Papers/AAAI/1996/AAAI96-087.pdf). A Horn-rule knowledge base is *verified*
+  if every set of ground facts that entails the input predicate P_in also entails the output
+  predicate P_out (Definition 1). They show this is query containment (Theorem 1). Theorem 2
+  (no interpreted predicates): NP-complete if the rules for both predicates are non-recursive;
+  doubly exponential time if one side is recursive; undecidable if both are. Theorem 3 (with
+  ≤, <, =, ≠): Π₂ᵖ-complete when non-recursive, and when only the input rules are recursive;
+  undecidable when the output rules are. This is output correctness on valid inputs. No theorem
+  there decides whether the rules cover every valid input, so it does not anticipate Paper D's
+  result. It is the earliest complexity analysis of rule-base verification and should be cited
+  as such. The 1998 journal version was not read; a search summary says it adds "input
+  completeness" constraints, which should be checked before submission.
 * Paper A also states that with compact rules, as in DMN, "deciding whether the rules cover 𝒟 is
   the tautology problem for formulas in disjunctive normal form, coNP-complete", citing Cook.
   Paper D's tractable side (no constraints, in P) is about explicit condition tuples, not compact
