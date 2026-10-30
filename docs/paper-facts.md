@@ -782,26 +782,36 @@ Close prior work:
      the entry `Sorted_Terms`. The
      paper says "we did not formally prove that every abstract step can be executed in polynomial
      time", and the hardness proof is on paper.
-   * Older related work: Kapur, Narendran, Rosenkrantz and Zhang (Acta Informatica 1991) show
-     sufficient completeness co-NP-complete for left-linear systems. This was seen only in search
-     snippets.
+   * Older related work: Deepak Kapur, Paliath Narendran, Daniel J. Rosenkrantz and Hantao Zhang,
+     "Sufficient-completeness, ground-reducibility and their complexity", Acta Informatica
+     28(4):311–350, 1991, [doi:10.1007/BF01893885](https://doi.org/10.1007/BF01893885) (record
+     from Crossref; full text not read). Thiemann and Yamada cite it for "deciding
+     quasi-reducibility is co-NP complete [17]".
 3. **Box unions: proved.** Karl Bringmann and Tobias Friedrich, "Approximating the volume of
-   unions and intersections of high-dimensional geometric objects", Computational Geometry 43
-   (2010) (arXiv:0809.0835).
-   * They quote as known that deciding whether some point lies outside a union of boxes is NP-hard
-     (citing Chan).
+   unions and intersections of high-dimensional geometric objects", Computational Geometry
+   43(6–7):601–610, 2010, [doi:10.1016/j.comgeo.2010.03.004](https://doi.org/10.1016/j.comgeo.2010.03.004)
+   (record from Crossref; quotes from arXiv:0809.0835).
+   * They quote as known that deciding whether some point lies outside a union of boxes is NP-hard,
+     citing Timothy M. Chan, "A (slightly) faster algorithm for Klee's measure problem",
+     Computational Geometry 43(3):243–250, 2010,
+     [doi:10.1016/j.comgeo.2009.01.007](https://doi.org/10.1016/j.comgeo.2009.01.007) (record from
+     Crossref; full text not read).
    * "Theorem 1. KMP is #P-hard", for the volume of a union of boxes, by reduction from #MON-CNF.
      They add: "there is no published result that explicitly states that KMP is #P-hard."
    * This is the geometric analogue of non-emptiness and counting of M(T₀). Calvanese et al. use
      the same geometric reading of decision tables.
-4. **A claim without proof.** US Patent 5,592,590 (C. H. Jolly, General Electric, 1997),
-   "Method for efficiently detecting covered rules in a knowledge base". It says: "Determining
+4. **A claim without proof.** US Patent 5,592,590, Christopher H. Jolly, assigned to General
+   Electric, filed 1 July 1994, granted 7 January 1997, "Method for efficiently detecting covered
+   rules in a knowledge base" (front page and column 2 read from the patent scan). It says: "Determining
    whether a rule in a knowledge base is covered, is a Co-NP-complete problem." Here "covered"
    means redundancy of a prioritised rule, not table completeness, and no proof is given.
 5. **DMN: upper bounds only.**
-   * Calvanese et al., Information Systems 2018: exponential algorithms, with no completeness
-     hardness.
-   * Calvanese, Dumas, Maggi and Montali, "Semantic DMN", TPLP 19 (2019),
+   * Calvanese, Dumas, Laurson, Maggi, Montali and Teinemaa, "Semantics, Analysis and
+     Simplification of DMN Decision Tables", Information Systems 78:112–125, 2018,
+     [doi:10.1016/j.is.2018.01.010](https://doi.org/10.1016/j.is.2018.01.010) (PDF read):
+     exponential algorithms, with no completeness hardness.
+   * Calvanese, Montali, Dumas and Maggi (Crossref's author order), "Semantic DMN: Formalizing and
+     Reasoning About Decisions in the Presence of Background Knowledge", TPLP 19(4):536–573, 2019,
      [doi:10.1017/S1471068418000479](https://doi.org/10.1017/S1471068418000479): reasoning tasks,
      completeness included, are decidable in ExpTime over ALCH(D) knowledge bases. That is an
      upper bound only.
@@ -838,3 +848,23 @@ Close prior work:
 
 Not searched directly: Semantic Scholar (rate-limited), DBLP and the ACM DL (bot checks). Coverage
 of those indexes rests on general web search.
+
+### Process soundness (added 2026-10-30)
+
+Decision-table completeness also appears inside process models, as "conditional completeness":
+some rule can fire from every reachable state where the table is enabled. No hardness result for
+it was found.
+
+* Massimiliano de Leoni, Paolo Felli and Marco Montali, "A Holistic Approach for Soundness
+  Verification of Decision-Aware Process Models", ER 2018, LNCS, Springer, pp. 219–235,
+  [doi:10.1007/978-3-030-00847-5_17](https://doi.org/10.1007/978-3-030-00847-5_17) (Crossref;
+  arXiv:1804.02316 read). Soundness of general Data Petri nets is undecidable; they verify a
+  decidable class by translation to coloured Petri nets.
+* Kimon Batoulis, Stephan Haarmann and Mathias Weske, "Various Notions of Soundness for
+  Decision-Aware Business Processes", ER 2017, LNCS, Springer, pp. 403–418,
+  [doi:10.1007/978-3-319-69904-2_31](https://doi.org/10.1007/978-3-319-69904-2_31) (Crossref;
+  full text not read). The source of conditional completeness, per de Leoni et al.
+* Kimon Batoulis and Mathias Weske, "Soundness of Decision-Aware Business Processes", BPM Forum
+  2017, LNBIP, Springer, pp. 106–124,
+  [doi:10.1007/978-3-319-65015-9_7](https://doi.org/10.1007/978-3-319-65015-9_7) (Crossref; full
+  text not read).
