@@ -689,7 +689,7 @@ Each BibTeX entry in `docs/paper-refs.bib` holds only verified fields.
 | 11 | Senellart and Gnatenko | confirmed | Pierre Senellart, Anton Gnatenko. "Descriptive Complexity in Lean: Completeness by First-Order Reductions". arXiv:2609.18261 [cs.LO], v1, 16 September 2026, 25 pages. <https://arxiv.org/abs/2609.18261>. The library's README says: "To cite the library, cite this paper". The software also has its own concept DOI, [10.5281/zenodo.21678423](https://doi.org/10.5281/zenodo.21678423) (v1.4.0, 2026-10-20). |
 | 12 | CSLib | confirmed | Clark Barrett, Swarat Chaudhuri, Fabrizio Montesi, Jim Grundy, Pushmeet Kohli, Leonardo de Moura, Alexandre Rademaker, Sorrachai Yingchareonthawornchai. "CSLib: The Lean Computer Science Library". arXiv:2602.04846 [cs.LO], v1, 4 February 2026. <https://arxiv.org/abs/2602.04846> |
 | 13 | complexitylib | **not found** (no preferred citation) | The README of <https://github.com/cslib-community/complexitylib> contains no citation text, and `CITATION.cff`, `CITATION.bib` and `CITATION` all return 404. No authors could be verified. Cite it as software, by URL and the pinned commit `b7acfc2310217697a892e791d318a5e127fadfd9`. |
-| 14 | Calvanese et al. | confirmed | Diego Calvanese, Marlon Dumas, Ülari Laurson, Fabrizio M. Maggi, Marco Montali, Irene Teinemaa. "Semantics and Analysis of DMN Decision Tables". BPM 2016, LNCS 9850, Springer, pp. 217–233, 2016. [doi:10.1007/978-3-319-45348-4_13](https://doi.org/10.1007/978-3-319-45348-4_13). The volume number comes from a library catalogue (Crossref has none); the rest is from Crossref. |
+| 14 | Calvanese et al. | confirmed | Diego Calvanese, Marlon Dumas, Ülari Laurson, Fabrizio M. Maggi, Marco Montali, Irene Teinemaa. "Semantics and Analysis of DMN Decision Tables". BPM 2016, LNCS 9850, Springer, pp. 217–233, 2016. [doi:10.1007/978-3-319-45348-4_13](https://doi.org/10.1007/978-3-319-45348-4_13). Crossref has no volume number; 9850 is given by a library catalogue and by three citing papers' Springer-deposited reference lists (e.g. doi:10.1007/978-3-030-30429-4_9). The rest is from Crossref. |
 | 15 | Arora and Barak | confirmed | Sanjeev Arora, Boaz Barak. *Computational Complexity: A Modern Approach*. Cambridge University Press, 2009. ISBN 978-0-521-42426-4. [doi:10.1017/CBO9780511804090](https://doi.org/10.1017/CBO9780511804090) (Cambridge Core) |
 
 ### What Provan and Ball prove, and what Valiant proves
@@ -765,9 +765,9 @@ Close prior work:
      Scholar (volume 14, pages 339–349).
    * Earlier versions: Technical Report TR13-08, University of Alberta, 2013,
      [doi:10.7939/R3H12V84G](https://doi.org/10.7939/R3H12V84G); and *Networked Systems* (NETYS
-     2014), LNCS, Springer, pp. 153–168,
+     2014), LNCS 8593, Springer, pp. 153–168,
      [doi:10.1007/978-3-319-09581-3_11](https://doi.org/10.1007/978-3-319-09581-3_11). Crossref
-     gives no LNCS volume number. The novelty search had missed both published versions.
+     gives no LNCS volume number; 8593 is from four citing papers' Springer-deposited reference lists (e.g. doi:10.1007/978-3-319-21741-3_8). The novelty search had missed both published versions.
    * The quotes below are from the 2013 report; the journal's theorem numbering was not checked.
    * They define "A firewall F is called complete iff every packet matches" it, and prove
      "Theorem 5. Problem FC is NP-hard" by reduction from 3-SAT.
