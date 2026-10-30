@@ -771,9 +771,11 @@ problem, not the method:
   (item 1).
 
 So Paper D is not the first machine-checked NP-completeness proof in Lean, nor the first for a
-Karp-style problem. It is the first, as far as this search found, for decision-table
-completeness. It is also the first composed end to end with complexitylib's Turing-machine
-Cook–Levin, and the first with counting and a tractable side.
+Karp-style problem. What this search supports is narrower: it is the first machine-checked
+complexity result found for decision-table completeness, and it covers counting and a
+tractable side, composed with complexitylib's Turing-machine Cook–Levin. Whether other projects
+already build on complexitylib was not searched, so the paper should not claim to be the first
+to do so.
 
 Two checks remain before submission:
 
