@@ -892,3 +892,29 @@ it was found.
 The three series volumes (LNCS 11157, LNCS 10650, LNBIP 297) are not in Crossref, and Springer's
 book pages sit behind a cookie wall. They come from reference lists deposited with Crossref by
 Springer: de Leoni et al.'s chapter for 10650 and 297, and three later papers citing it for 11157.
+
+### Works cited by Paper A (added 2026-10-30)
+
+Paper A's draft (the author's Claude Doc, revision 3420) cites 103 works. These 13 bear on Paper
+D and were missing from the outline; each record was checked against Crossref, the publisher's
+page or the OMG page, and all are in `docs/paper-refs.bib`.
+
+* **Rule-base and decision-table verification:** Suwa, Scott and Shortliffe 1982 (AI Magazine
+  3(4)); Nguyen, Perkins, Laffey and Pecora 1987 (AI Magazine 8(2)); Cragun and Steudel 1987
+  (IJMMS 26(5)); Preece, Shinghal and Batarekh 1992 (KER 7(2)); Vanthienen, Mues and Aerts 1998
+  (DKE 27(3)); Levy and Rousset 1998 (Artificial Intelligence 101).
+* **Tabular specifications:** Parnas, Madey and Iglewski 1994 (IEEE TSE 20(12)); Heitmeyer,
+  Jeffords and Labaw 1996 (ACM TOSEM 5(3)); Heimdahl and Leveson 1996 (IEEE TSE 22(6)); Owre,
+  Rushby and Shankar 1997 (TACAS '97, LNCS 1217), where PVS checks table disjointness and
+  coverage as proof obligations, the closest precedent in a proof assistant.
+* **DMN and domains:** OMG DMN 1.4 (formal/23-03-01, April 2023); Vandevelde, Aerts and
+  Vennekens, cDMN (TPLP 23(3), 2023); Reiter 1980 (JACM 27(2)), domain closure.
+
+Two points for the novelty claim:
+
+* Paper A says Levy and Rousset "give complexity bounds for verifying rule bases". Their full
+  text was not read here. Read it before submission to see whether the bounds cover completeness.
+* Paper A also states that with compact rules, as in DMN, "deciding whether the rules cover 𝒟 is
+  the tautology problem for formulas in disjunctive normal form, coNP-complete", citing Cook.
+  Paper D's tractable side (no constraints, in P) is about explicit condition tuples, not compact
+  rules, so the two agree. Paper D should say so, or a reader may see a contradiction.
