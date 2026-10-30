@@ -775,7 +775,10 @@ Close prior work:
      even in the linear case."
    * The reduction turns each CNF clause into a row of true/false/wildcard patterns, so in effect
      it is a reduction to completeness of a limited-entry decision table.
-   * The Isabelle formalisation (AFP entry `Pattern_Completeness`) verifies the algorithm. The
+   * The Isabelle formalisation verifies the algorithm. It is the AFP entry
+     [`Pattern_Completeness`](https://isa-afp.org/entries/Pattern_Completeness.html), "Verifying a
+     Decision Procedure for Pattern Completeness", May 2024 (confirmed on the AFP page), building on
+     the entry `Sorted_Terms`. The
      paper says "we did not formally prove that every abstract step can be executed in polynomial
      time", and the hardness proof is on paper.
    * Older related work: Kapur, Narendran, Rosenkrantz and Zhang (Acta Informatica 1991) show
