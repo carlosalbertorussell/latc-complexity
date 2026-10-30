@@ -133,11 +133,27 @@
   url           = {https://arxiv.org/abs/2602.04846}
 }
 
-% complexitylib: no preferred citation (no CITATION file, no citation text in the README).
-@misc{Complexitylib,
-  title        = {Complexitylib},
-  howpublished = {\url{https://github.com/cslib-community/complexitylib}},
-  note         = {Commit b7acfc2310217697a892e791d318a5e127fadfd9}
+% complexitylib, version 2 (built on CSLib), the version this repository depends on. No
+% CITATION file at the pinned commit; authors as in v1's CITATION.cff and the source headers
+% ("Authors: Samuel Schlesinger").
+@software{Complexitylib,
+  author  = {Schlesinger, Samuel and {The Complexitylib contributors}},
+  title   = {Complexitylib},
+  url     = {https://github.com/cslib-community/complexitylib},
+  version = {b7acfc2310217697a892e791d318a5e127fadfd9},
+  year    = {2026},
+  note    = {Lean 4 library built on CSLib; commit b7acfc2 of 28 October 2026}
+}
+
+% complexitylib, version 1 (pre-CSLib), as cited by Paper A. From its CITATION.cff at 1d31cd7.
+@software{ComplexitylibV1,
+  author  = {Schlesinger, Samuel and {The Complexitylib contributors}},
+  title   = {Complexitylib {V1}: computational complexity theory in {Lean} 4},
+  url     = {https://github.com/SamuelSchlesinger/complexitylib-v1},
+  version = {1d31cd7627ebca5290ae808c15ed74a49d227baa},
+  year    = {2026},
+  note    = {Commit 1d31cd7 of 21 October 2026}
+}
 }
 
 % LNCS volume 9850 is not in Crossref; it is from a library catalogue and three citing
