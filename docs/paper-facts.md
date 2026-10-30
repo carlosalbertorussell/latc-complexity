@@ -750,7 +750,9 @@ Close prior work:
      no counting result.
    * A journal version in IEEE TDSC 14(3):339–349, 2017 is cited by Hamilton, Roughan and Nguyen,
      but was not verified on the publisher's page.
-   * Hamilton, Roughan and Nguyen, "Boolean Expressions in Firewall Analysis" (arXiv:2205.04210),
+   * Adam Hamilton, Matthew Roughan and Giang T. Nguyen, "Boolean Expressions in Firewall
+     Analysis", arXiv:2205.04210 [cs.CR], v1, 3 May 2022 (no journal reference on arXiv; the
+     IEEE TNSM header on the PDF is not a publication record),
      note that the hardness needs an arbitrary number of header fields. With the number of fields
      fixed they give polynomial-time algorithms. This parallels Paper D's fixed-attribute result.
 2. **Pattern completeness: proved on paper; an Isabelle-verified algorithm.** René Thiemann and
