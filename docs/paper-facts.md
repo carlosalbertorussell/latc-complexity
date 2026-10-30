@@ -753,7 +753,33 @@ Against the two closest results, as the outline's contributions paragraph puts i
   firewall parallel: Hamilton, Roughan and Nguyen give polynomial-time algorithms when the number
   of fields is fixed (item 1).
 
-One check remains before submission: Vu and Demetrovics (2026, item 6) must be read in full.
+Machine-checked NP-completeness in Lean is not itself new, so Paper D's claim is about the
+problem, not the method:
+
+* Senellart and Gnatenko's descriptive-complexity (references, item 11) proves all 21 of Karp's
+  problems NP-complete in Lean 4: one unconditional `NP.Complete` theorem each, checked at
+  commit `fc068f6` (e.g. `knapsack_NP_complete`, `exactCover_NP_complete`). These rest on its
+  own Cook–Levin, `SAT_NP_complete`. Its NP is defined logically and its hardness uses
+  first-order reductions, not complexitylib's Turing machines.
+* The same library proves #Monotone-2SAT and the permanent one-call #P-complete
+  (`sharpMonotoneTwoSat_sharpP_oneCallComplete`, `sharpCycleCover_sharpP_oneCallComplete`).
+  That is the substance of Paper D's hypothesis `hValiant`, though in another model.
+* complexitylib, which Paper D builds on, has Cook–Levin, SAT, 3SAT and #SAT; Paper A cites its
+  earlier version for Cook–Levin in Lean 4 (references, item 13).
+* In Isabelle/HOL, poly-reductions (formerly Karp21) reduces SAT to all 21 problems, without
+  proving SAT NP-hard (references, item 5). In Coq, Gäher and Kunze proved Cook–Levin
+  (item 1).
+
+So Paper D is not the first machine-checked NP-completeness proof in Lean, nor the first for a
+Karp-style problem. It is the first, as far as this search found, for decision-table
+completeness. It is also the first composed end to end with complexitylib's Turing-machine
+Cook–Levin, and the first with counting and a tractable side.
+
+Two checks remain before submission:
+
+* read Vu and Demetrovics (2026, item 6) in full;
+* read the "input completeness" constraints of Levy and Rousset's 1998 journal version (see
+  "Works cited by Paper A" below), which the open 1996 version does not contain.
 
 Close prior work:
 
