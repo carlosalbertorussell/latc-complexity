@@ -884,6 +884,10 @@ it was found.
   2017, LNBIP 297, Springer, pp. 106–124,
   [doi:10.1007/978-3-319-65015-9_7](https://doi.org/10.1007/978-3-319-65015-9_7) (Crossref; full
   text not read).
+* Kimon Batoulis and Mathias Weske, "Disambiguation of DMN Decision Tables", BIS 2018, LNBIP 320,
+  Springer, pp. 236–249, [doi:10.1007/978-3-319-93931-5_17](https://doi.org/10.1007/978-3-319-93931-5_17)
+  (Crossref; full text not read). Paper A cites it for removing overlapping rules; it concerns
+  overlap, not completeness.
 
 The three series volumes (LNCS 11157, LNCS 10650, LNBIP 297) are not in Crossref, and Springer's
 book pages sit behind a cookie wall. They come from reference lists deposited with Crossref by
