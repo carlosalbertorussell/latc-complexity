@@ -16,7 +16,7 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
   states no preferred citation. BibTeX is in `docs/paper-refs.bib`.
 * **Novelty:** the search found no paper or formalisation that proves *decision-table* completeness
   NP-, coNP- or #P-complete. It did find close prior hardness results that the paper should cite:
-  firewall completeness (Elmallah and Gouda), pattern completeness (Thiemann and Yamada) and
+  firewall completeness (Elmallah and Gouda, IEEE TDSC), pattern completeness (Thiemann and Yamada) and
   box-union coverage (Chan; Bringmann and Friedrich). Vu and Demetrovics (Algorithms, 2026)
   study per-input decisions in decision tables with labelled nulls. Their abstract mentions a
   complexity analysis, but their full text could not be accessed (see Novelty, item 6).
@@ -739,17 +739,25 @@ problems, and Paper D should cite it. On this evidence:
 
 Close prior work:
 
-1. **Firewall completeness: proved, on paper.** Ehab S. Elmallah and Mohamed G. Gouda, "Hardness
-   of Firewall Analysis", Technical Report TR13-08, University of Alberta, 2013,
-   [doi:10.7939/R3H12V84G](https://doi.org/10.7939/R3H12V84G).
+1. **Firewall completeness: proved, on paper.** Ehab Elmallah and Mohamed Gouda, "Hardness of
+   Firewall Analysis", IEEE Transactions on Dependable and Secure Computing, 2015, early access,
+   [doi:10.1109/TDSC.2015.2455532](https://doi.org/10.1109/TDSC.2015.2455532). This is the version
+   to cite.
+   * Crossref holds only the early-access record (2015, pages "1–1"). The final volume, issue and
+     pages are not in Crossref. Hamilton, Roughan and Nguyen cite it as 14(3):339–349, 2017; check
+     that on IEEE Xplore before submission.
+   * Earlier versions: Technical Report TR13-08, University of Alberta, 2013,
+     [doi:10.7939/R3H12V84G](https://doi.org/10.7939/R3H12V84G); and *Networked Systems* (NETYS
+     2014), LNCS, Springer, pp. 153–168,
+     [doi:10.1007/978-3-319-09581-3_11](https://doi.org/10.1007/978-3-319-09581-3_11). Crossref
+     gives no LNCS volume number. The novelty search had missed both published versions.
+   * The quotes below are from the 2013 report; the journal's theorem numbering was not checked.
    * They define "A firewall F is called complete iff every packet matches" it, and prove
      "Theorem 5. Problem FC is NP-hard" by reduction from 3-SAT.
    * The setting has packets with d integer-interval fields, rules that are conjunctions of
      intervals, and no constraints. The number of fields is unbounded.
    * They call the problem "NP-hard"; by its form it is coNP-hard. There is no membership proof and
      no counting result.
-   * A journal version in IEEE TDSC 14(3):339–349, 2017 is cited by Hamilton, Roughan and Nguyen,
-     but was not verified on the publisher's page.
    * Adam Hamilton, Matthew Roughan and Giang T. Nguyen, "Boolean Expressions in Firewall
      Analysis", arXiv:2205.04210 [cs.CR], v1, 3 May 2022 (no journal reference on arXiv; the
      IEEE TNSM header on the PDF is not a publication record),
