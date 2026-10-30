@@ -740,12 +740,13 @@ problems, and Paper D should cite it. On this evidence:
 Close prior work:
 
 1. **Firewall completeness: proved, on paper.** Ehab Elmallah and Mohamed Gouda, "Hardness of
-   Firewall Analysis", IEEE Transactions on Dependable and Secure Computing, 2015, early access,
-   [doi:10.1109/TDSC.2015.2455532](https://doi.org/10.1109/TDSC.2015.2455532). This is the version
-   to cite.
-   * Crossref holds only the early-access record (2015, pages "1–1"). The final volume, issue and
-     pages are not in Crossref. Hamilton, Roughan and Nguyen cite it as 14(3):339–349, 2017; check
-     that on IEEE Xplore before submission.
+   Firewall Analysis", IEEE Transactions on Dependable and Secure Computing 14(3):339–349,
+   May–June 2017, [doi:10.1109/TDSC.2015.2455532](https://doi.org/10.1109/TDSC.2015.2455532). This
+   is the version to cite.
+   * Volume, issue, pages and issue date were read from IEEE Xplore by the author on 2026-10-30 (the
+     Xplore page refuses automated access). Crossref holds only the 2015 early-access record (pages
+     "1–1"). The values agree with Hamilton, Roughan and Nguyen's citation and with Semantic
+     Scholar (volume 14, pages 339–349).
    * Earlier versions: Technical Report TR13-08, University of Alberta, 2013,
      [doi:10.7939/R3H12V84G](https://doi.org/10.7939/R3H12V84G); and *Networked Systems* (NETYS
      2014), LNCS, Springer, pp. 153–168,
