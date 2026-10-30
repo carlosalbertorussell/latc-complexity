@@ -767,8 +767,10 @@ Close prior work:
    Akihisa Yamada, "A verified algorithm for deciding pattern completeness with optimal asymptotic
    complexity", J. Log. Algebraic Methods Program. 151 (2026) 101129,
    [doi:10.1016/j.jlamp.2026.101129](https://doi.org/10.1016/j.jlamp.2026.101129). The conference
-   version is FSCD 2024, LIPIcs 299, 27:1–27:17,
-   [doi:10.4230/LIPIcs.FSCD.2024.27](https://doi.org/10.4230/LIPIcs.FSCD.2024.27).
+   version, under the shorter title "A Verified Algorithm for Deciding Pattern Completeness", is
+   FSCD 2024, LIPIcs 299, 27:1–27:17,
+   [doi:10.4230/LIPIcs.FSCD.2024.27](https://doi.org/10.4230/LIPIcs.FSCD.2024.27) (confirmed from
+   the DOI's DataCite record, which points to Dagstuhl DROPS).
    * "Theorem 9. Deciding pattern completeness is co-NP hard for both TRSs and pattern problems,
      even in the linear case."
    * The reduction turns each CNF clause into a row of true/false/wildcard patterns, so in effect
