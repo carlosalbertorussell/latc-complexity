@@ -872,15 +872,19 @@ some rule can fire from every reachable state where the table is enabled. No har
 it was found.
 
 * Massimiliano de Leoni, Paolo Felli and Marco Montali, "A Holistic Approach for Soundness
-  Verification of Decision-Aware Process Models", ER 2018, LNCS, Springer, pp. 219–235,
+  Verification of Decision-Aware Process Models", ER 2018, LNCS 11157, Springer, pp. 219–235,
   [doi:10.1007/978-3-030-00847-5_17](https://doi.org/10.1007/978-3-030-00847-5_17) (Crossref;
   arXiv:1804.02316 read). Soundness of general Data Petri nets is undecidable; they verify a
   decidable class by translation to coloured Petri nets.
 * Kimon Batoulis, Stephan Haarmann and Mathias Weske, "Various Notions of Soundness for
-  Decision-Aware Business Processes", ER 2017, LNCS, Springer, pp. 403–418,
+  Decision-Aware Business Processes", ER 2017, LNCS 10650, Springer, pp. 403–418,
   [doi:10.1007/978-3-319-69904-2_31](https://doi.org/10.1007/978-3-319-69904-2_31) (Crossref;
   full text not read). The source of conditional completeness, per de Leoni et al.
 * Kimon Batoulis and Mathias Weske, "Soundness of Decision-Aware Business Processes", BPM Forum
-  2017, LNBIP, Springer, pp. 106–124,
+  2017, LNBIP 297, Springer, pp. 106–124,
   [doi:10.1007/978-3-319-65015-9_7](https://doi.org/10.1007/978-3-319-65015-9_7) (Crossref; full
   text not read).
+
+The three series volumes (LNCS 11157, LNCS 10650, LNBIP 297) are not in Crossref, and Springer's
+book pages sit behind a cookie wall. They come from reference lists deposited with Crossref by
+Springer: de Leoni et al.'s chapter for 10650 and 297, and three later papers citing it for 11157.
