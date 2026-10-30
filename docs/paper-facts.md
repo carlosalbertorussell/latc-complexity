@@ -17,7 +17,9 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
 * **Novelty:** the search found no paper or formalisation that proves *decision-table* completeness
   NP-, coNP- or #P-complete. It did find close prior hardness results that the paper should cite:
   firewall completeness (Elmallah and Gouda), pattern completeness (Thiemann and Yamada) and
-  box-union coverage (Chan; Bringmann and Friedrich).
+  box-union coverage (Chan; Bringmann and Friedrich). Vu and Demetrovics (Algorithms, 2026)
+  study per-input decisions in decision tables with labelled nulls. Their abstract mentions a
+  complexity analysis, but their full text could not be accessed (see Novelty, item 6).
 * **Axiom audit:** the axiom lines below are copied from the audit recorded in the README (build of
   2026-10-29, `LatcComplexity/Axioms.lean`). The audit was **not re-run** in this session: the
   sandbox refused to install the Lean toolchain. A whole-word search of every `.lean` file for
@@ -787,15 +789,36 @@ Close prior work:
      [doi:10.1017/S1471068418000479](https://doi.org/10.1017/S1471068418000479): reasoning tasks,
      completeness included, are decidable in ExpTime over ALCH(D) knowledge bases. That is an
      upper bound only.
-6. **Unread; check before submission.** Duc Nghia Vu and János Demetrovics, "Labeled Null
-   Semantics for Incomplete Decision Tables: Certain, Possible, and Conditional Decision
-   Reasoning", Algorithms 19(9):725, 2026,
-   [doi:10.3390/a19090725](https://doi.org/10.3390/a19090725).
-   * The abstract says they "analyze their computational complexity". The full text could not be
-     opened.
-   * An unverified search summary says they prove per-input decision checks coNP-complete under
-     labelled nulls. That would be a different problem from whole-table completeness over
-     constrained states, but the paper should be read before Paper D claims novelty.
+6. **Abstract read; full text not accessible (checked 2026-10-30).** Duc Nghia Vu and Janos
+   Demetrovics, "Labeled Null Semantics for Incomplete Decision Tables: Certain, Possible, and
+   Conditional Decision Reasoning", Algorithms 19(9):725, published 27 August 2026,
+   [doi:10.3390/a19090725](https://doi.org/10.3390/a19090725). The record and abstract come from
+   the publisher's Crossref deposit (`api.crossref.org/works/10.3390/a19090725`). The MDPI
+   article, HTML and PDF pages all returned HTTP 403 to automated access. OpenAlex
+   (`any_repository_has_fulltext: false`) and Semantic Scholar list no copy other than MDPI's.
+   * **What the paper is about** (from the abstract). The setting is decision tables whose
+     *condition values are incomplete*: missing values are labelled nulls, where equal labels
+     denote the same unknown value. A possible world is a valuation of the nulls. On that
+     semantics the authors define "certain, possible, and conditional decisions", "develop
+     symbolic algorithms that avoid explicit enumeration of possible worlds, analyze their
+     computational complexity, and establish precise relationships with rough set
+     approximations". Constraints appear as "labeled null identities and constraints" that rule
+     out tolerant rules that "cannot match in any admissible possible world". The evaluation is a
+     synthetic benchmark (105 instances, up to 500 rules and 32 labelled nulls).
+   * **Relation to Paper D.** The problem differs, on the abstract's evidence. The question there
+     is which decision a table with unknown entries yields for a given input, across valuations
+     of the nulls. Paper D's question is whether the rules of a fully specified table cover every
+     state allowed by the domain constraints (completeness, non-emptiness and counting of M(T₀)).
+     The abstract mentions no hardness of table completeness, no counting result and no proof
+     assistant.
+   * **Not verified.** The abstract does not say which complexity bounds the paper proves. An
+     earlier search-engine summary claimed coNP-completeness results for certain decisions and
+     for being "complete for an input" (some rule matches in every admissible possible world).
+     That summary is still unconfirmed. If those results exist, they concern coverage of a single
+     input under null valuations, which is a coNP-style universal check close in spirit to Paper
+     D's. Paper D should therefore cite this paper as related work on decision tables. Before
+     claiming that *no* decision-table hardness result exists, someone with browser or
+     institutional access should read its complexity section; it is open access (CC BY).
 
 Not searched directly: Semantic Scholar (rate-limited), DBLP and the ACM DL (bot checks). Coverage
 of those indexes rests on general web search.
