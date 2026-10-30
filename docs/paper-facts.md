@@ -14,12 +14,18 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
   states no preferred citation. BibTeX is in `docs/paper-refs.bib`.
-* **Novelty:** the search found no paper or formalisation that proves *decision-table* completeness
-  NP-, coNP- or #P-complete. It did find close prior hardness results that the paper should cite:
-  firewall completeness (Elmallah and Gouda, IEEE TDSC), pattern completeness (Thiemann and Yamada) and
-  box-union coverage (Chan; Bringmann and Friedrich). Vu and Demetrovics (Algorithms, 2026)
-  study per-input decisions in decision tables with labelled nulls. Their abstract mentions a
-  complexity analysis, but their full text could not be accessed (see Novelty, item 6).
+* **Novelty:** the search found no paper or formalisation proving *decision-table* completeness NP-, coNP- or
+  #P-complete. Hardness of rule-set coverage is known in adjacent settings, and Paper D should
+  cite it:
+  * firewall completeness (Elmallah and Gouda, IEEE TDSC 2017);
+  * quasi-reducibility and pattern completeness (Kapur et al. 1991; Thiemann and Yamada);
+  * unions of boxes (Chan; Bringmann and Friedrich);
+  * a claim without proof in a GE patent (Jolly).
+
+  Paper D can claim the first such result for decision tables, with domain constraints, counting
+  and a Lean proof, but not the first hardness result for coverage in general. Vu and Demetrovics
+  (Algorithms, 2026), on decision tables with labelled nulls, still need reading in full (see
+  Novelty, item 6).
 * **Axiom audit:** the axiom lines below are copied from the audit recorded in the README (build of
   2026-10-29, `LatcComplexity/Axioms.lean`). The audit was **not re-run** in this session: the
   sandbox refused to install the Lean toolchain. A whole-word search of every `.lean` file for
@@ -722,20 +728,30 @@ Do not cite it for a hardness claim.
 
 ## Novelty
 
-**Finding.** No paper or formalisation was found that proves completeness of decision tables
-NP-, coNP- or #P-complete or -hard. This covers DMN, expert-system rule bases and decision tables
-in Vanthienen's sense, with or without domain constraints. No Lean formalisation of any related
-hardness result was found either. Prior work does prove the same kind of hardness for very close
-problems, and Paper D should cite it. On this evidence:
+**Finding** (as the outline now states it). Hardness of rule-set coverage is known in adjacent
+settings:
 
-* coNP-hardness of *unconstrained* table completeness is close to known results (items 1 and 2
-  below);
-* still new are:
-  * the constrained version stated for decision tables;
-  * #P-completeness of counting missing states;
-  * the tractable side, which is no constraints, or a fixed number of attributes (item 1's
-    follow-up has a similar fixed-field result for firewalls);
-  * the machine checking.
+* firewall completeness (Elmallah and Gouda, item 1);
+* quasi-reducibility and pattern completeness (Kapur et al.; Thiemann and Yamada, item 2);
+* unions of boxes (Chan; Bringmann and Friedrich, item 3);
+* a coNP-completeness claim, without proof, for covered rules in a GE patent (Jolly, item 4).
+
+No source found proves *decision-table* completeness NP-, coNP- or #P-complete. That holds for
+DMN, expert-system rule bases and decision tables in Vanthienen's sense, with or without domain
+constraints. None of the related hardness results is checked in Lean. Paper D can claim that, but
+not the first hardness result for coverage in general.
+
+Against the two closest results, as the outline's contributions paragraph puts it:
+
+* Elmallah and Gouda prove firewall completeness NP-hard, with no membership result.
+* Thiemann and Yamada prove pattern completeness co-NP hard and verify their algorithm in
+  Isabelle, but their hardness proof is on paper.
+* Neither handles domain constraints or counts missing states. Paper D adds both, plus the
+  tractable side, with every hardness proof machine-checked in Lean. The tractable side has a
+  firewall parallel: Hamilton, Roughan and Nguyen give polynomial-time algorithms when the number
+  of fields is fixed (item 1).
+
+One check remains before submission: Vu and Demetrovics (2026, item 6) must be read in full.
 
 Close prior work:
 
