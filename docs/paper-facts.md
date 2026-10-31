@@ -9,8 +9,9 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
   `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). They include all 22
   theorems the outline names: its 19 explicit names, plus the 3 main theorems of `Adequacy.lean`.
-* **Wrong names in the outline: none.** Every name it cites exists exactly as written. Four
-  cautions follow in the next section.
+* **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
+  first checked, and the 23 its section table cites after the edits of 2026-10-30. Of four
+  cautions in the next section, two were resolved in the outline and two still apply.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
   states no preferred citation. (complexitylib was later resolved from the repository itself:
@@ -36,52 +37,64 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
 
 ## Outline names: check and cautions
 
-All 19 explicit names exist, at the file and line given below. "The main theorems of
-`Adequacy.lean`" is not a Lean name. Read it as `mem_MissingNonempty_iff`, `mem_Complete_iff`
-and `coe_missing_map_toList`; the outline already lists the two `_finset_` theorems separately.
+**As first checked (2026-10-29).** The task's outline list held 19 explicit names plus "the main
+theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_MissingNonempty_iff`,
+`mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
-| Outline name | Full name | File:line | Status |
-|---|---|---|---|
-| `holdsAll_eq_eval` | `Latc.PaperD.holdsAll_eq_eval` | `LatcComplexity/Bridge.lean:29` | exists, exact name |
-| `satisfiable_decode_iff` | `Latc.PaperD.satisfiable_decode_iff` | `LatcComplexity/Bridge.lean:35` | exists, exact name |
-| `encInst_to_encInstBin_polyTime` | `Latc.PaperD.General.encInst_to_encInstBin_polyTime` | `LatcComplexity/Binary.lean:31` | exists, exact name |
-| (main theorem of `Adequacy.lean`) | `Latc.PaperD.General.mem_MissingNonempty_iff` | `LatcComplexity/Adequacy.lean:101` | exists, exact name |
-| (main theorem of `Adequacy.lean`) | `Latc.PaperD.General.mem_Complete_iff` | `LatcComplexity/Adequacy.lean:113` | exists, exact name |
-| (main theorem of `Adequacy.lean`) | `Latc.PaperD.General.coe_missing_map_toList` | `LatcComplexity/Adequacy.lean:119` | exists, exact name |
-| `MissingNonempty_npComplete_bin` | `Latc.PaperD.General.MissingNonempty_npComplete_bin` | `LatcComplexity/Binary.lean:103` | exists, exact name |
-| `Complete_coNPComplete_bin` | `Latc.PaperD.General.Complete_coNPComplete_bin` | `LatcComplexity/Binary.lean:107` | exists, exact name |
-| `missingNonempty_finset_npComplete` | `Latc.PaperD.General.missingNonempty_finset_npComplete` | `LatcComplexity/Adequacy.lean:136` | exists, exact name |
-| `complete_finset_coNPComplete` | `Latc.PaperD.General.complete_finset_coNPComplete` | `LatcComplexity/Adequacy.lean:145` | exists, exact name |
-| `missingCount_sharpPComplete_bin` | `Latc.PaperD.General.missingCount_sharpPComplete_bin` | `LatcComplexity/Binary.lean:161` | exists, exact name |
-| `countMissing_eq_sharpSAT` | `Latc.PaperD.countMissing_eq_sharpSAT` | `LatcComplexity/Counting.lean:104` | exists, exact name |
-| `countValidMonotone2_mem_SharpP` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP` | `LatcComplexity/Monotone.lean:177` | exists, exact name |
-| `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name |
-| `countValidMonotone2_oneCallSharpPComplete` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete` | `LatcComplexity/Monotone.lean:186` | exists, exact name |
-| `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:184` | exists, exact name |
-| `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
-| `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:153` | exists, exact name |
-| `missingCount_eq_of_noConstraints` | `Latc.PaperD.General.missingCount_eq_of_noConstraints` | `LatcComplexity/Tractable.lean:91` | exists, exact name |
-| `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
-| `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:456` | exists, exact name |
-| `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:281` | exists, exact name |
+**As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
+section table cites the 23 names below, by paper section; all exist exactly as written. Compared
+with the first list:
 
-Cautions. None of these is a wrong name.
+* three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
+  `missingNonempty_finset_npComplete` in §4), and `missingCount_eq_acceptCount` and
+  `sharpSAT_eq_missingCount`, the general-domain counting lemmas, in §5;
+* two names of the first list are no longer cited: `missingNonempty_finset_npComplete` and
+  `complete_finset_coNPComplete`, the unary-index forms (both still exist, `Adequacy.lean:136`
+  and `:145`).
+
+| § | Outline name | Full name | File:line | Status |
+|---|---|---|---|---|
+| 2 | `holdsAll_eq_eval` | `Latc.PaperD.holdsAll_eq_eval` | `LatcComplexity/Bridge.lean:29` | exists, exact name |
+| 2 | `satisfiable_decode_iff` | `Latc.PaperD.satisfiable_decode_iff` | `LatcComplexity/Bridge.lean:35` | exists, exact name |
+| 3 | `encInst_to_encInstBin_polyTime` | `Latc.PaperD.General.encInst_to_encInstBin_polyTime` | `LatcComplexity/Binary.lean:31` | exists, exact name |
+| 3 | `mem_MissingNonempty_iff` | `Latc.PaperD.General.mem_MissingNonempty_iff` | `LatcComplexity/Adequacy.lean:101` | exists, exact name |
+| 3 | `mem_Complete_iff` | `Latc.PaperD.General.mem_Complete_iff` | `LatcComplexity/Adequacy.lean:113` | exists, exact name |
+| 3 | `coe_missing_map_toList` | `Latc.PaperD.General.coe_missing_map_toList` | `LatcComplexity/Adequacy.lean:119` | exists, exact name |
+| 4 | `MissingNonempty_npComplete_bin` | `Latc.PaperD.General.MissingNonempty_npComplete_bin` | `LatcComplexity/Binary.lean:103` | exists, exact name |
+| 4 | `Complete_coNPComplete_bin` | `Latc.PaperD.General.Complete_coNPComplete_bin` | `LatcComplexity/Binary.lean:107` | exists, exact name |
+| 4 | `missingNonempty_finset_npComplete_bin` | `Latc.PaperD.General.missingNonempty_finset_npComplete_bin` | `LatcComplexity/Binary.lean:111` | exists, exact name (added 2026-10-30) |
+| 5 | `missingCount_sharpPComplete_bin` | `Latc.PaperD.General.missingCount_sharpPComplete_bin` | `LatcComplexity/Binary.lean:161` | exists, exact name |
+| 5 | `missingCount_eq_acceptCount` | `Latc.PaperD.General.missingCount_eq_acceptCount` | `LatcComplexity/CountingGeneral.lean:128` | exists, exact name (added 2026-10-30) |
+| 5 | `sharpSAT_eq_missingCount` | `Latc.PaperD.General.sharpSAT_eq_missingCount` | `LatcComplexity/CountingGeneral.lean:205` | exists, exact name (added 2026-10-30) |
+| 5 | `countMissing_eq_sharpSAT` | `Latc.PaperD.countMissing_eq_sharpSAT` | `LatcComplexity/Counting.lean:104` | exists, exact name |
+| 5 | `countValidMonotone2_mem_SharpP` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP` | `LatcComplexity/Monotone.lean:177` | exists, exact name |
+| 5 | `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name |
+| 5 | `countValidMonotone2_oneCallSharpPComplete` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete` | `LatcComplexity/Monotone.lean:186` | exists, exact name |
+| 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:184` | exists, exact name |
+| 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
+| 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:153` | exists, exact name |
+| 6 | `missingCount_eq_of_noConstraints` | `Latc.PaperD.General.missingCount_eq_of_noConstraints` | `LatcComplexity/Tractable.lean:91` | exists, exact name |
+| 6 | `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
+| 6 | `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:456` | exists, exact name |
+| 6 | `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:281` | exists, exact name |
+
+Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the outline on
+2026-10-30; 1 and 4 still apply.
 
 1. **Namespaces.** `MissingNonempty_npComplete`, `Complete_coNPComplete`, `MissingNonempty_mem_NP`,
    `SAT_reduces` and `fromSAT_polyTime` exist both in `Latc.PaperD` (Boolean domains, `Bridge.lean`)
    and in `Latc.PaperD.General` (general domains, `General.lean`). These are different theorems
    about different `Inst` types. If the paper cites one of them, give the namespace.
-2. **`countMissing_eq_sharpSAT` is about Boolean domains** (`Latc.PaperD`, `Counting.lean`). It is
-   stated for `countMissing` on a CNF with bit-vector rows, not for `missingCount` over general
-   domains. The general-domain #P results are `missingCount_eq_acceptCount`,
-   `sharpSAT_eq_missingCount` and `missingCount_sharpPComplete(_bin)`. If §5 means general domains,
-   cite those, or say that this lemma is the Boolean case.
-3. **The outline mixes encodings.** It cites `missingNonempty_finset_npComplete` and
-   `complete_finset_coNPComplete`, which use the unary attribute index `encInst`, next to
-   `MissingNonempty_npComplete_bin` and `Complete_coNPComplete_bin`, which use the all-binary
-   `encInstBin`. The `encInstBin` versions of the first two also exist
-   (`missingNonempty_finset_npComplete_bin`, `complete_finset_coNPComplete_bin`). The tractable
-   theorems are stated for `encInstBin`; their `encInst` versions carry the suffix `_unary`.
+2. **Resolved: `countMissing_eq_sharpSAT` is about Boolean domains** (`Latc.PaperD`,
+   `Counting.lean`), stated for `countMissing` on a CNF with bit-vector rows. The outline's §5 now
+   cites the general-domain lemmas `missingCount_eq_acceptCount` and `sharpSAT_eq_missingCount`
+   and marks this one "(Boolean domains)". The contributions list was corrected to match:
+   over general domains, membership is by counting certificates and hardness by a parsimonious
+   reduction *from* #SAT; only the Boolean case reduces *to* #SAT.
+3. **Resolved: the outline mixed encodings.** §4 now cites the all-binary
+   `missingNonempty_finset_npComplete_bin` beside `MissingNonempty_npComplete_bin` and
+   `Complete_coNPComplete_bin`. The tractable theorems are stated for `encInstBin`; their
+   `encInst` versions carry the suffix `_unary`.
 4. **`countValidMonotone2_oneCallSharpPComplete` is conditional.** Valiant's theorem is its
    hypothesis `hValiant`, not an axiom, so it does not appear in the axiom audit. Hardness is under
    one-call reductions, defined in `Monotone.lean`, and is not Complexitylib's parsimonious
