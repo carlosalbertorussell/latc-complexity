@@ -10,7 +10,7 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
   `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). They include all 22
   theorems the outline names: its 19 explicit names, plus the 3 main theorems of `Adequacy.lean`.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
-  first checked, and the 23 its section table cites after the edits of 2026-10-30. Of four
+  first checked, and the 24 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, two were resolved in the outline and two still apply.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
@@ -42,7 +42,7 @@ theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_Missing
 `mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
 **As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
-section table cites the 23 names below, by paper section; all exist exactly as written. Compared
+section table cites the 24 names below, by paper section; all exist exactly as written. Compared
 with the first list:
 
 * three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
@@ -56,7 +56,9 @@ with the first list:
   replace their unary forms (`Monotone.lean:177` and `:186`, both still present).
   `sharpMonotone2SAT_reduces` has no `_bin` form; it reduces to `encInst`, and hardness for
   `encInstBin` follows by composing with the identity re-encoding, as the proof of
-  `countValidMonotone2_oneCallSharpPComplete_bin` does. The count stays at 23.
+  `countValidMonotone2_oneCallSharpPComplete_bin` does. The count stays at 23;
+* also on 2026-10-31, §4 added `complete_finset_coNPComplete_bin`, the binary form of the
+  completeness result on `Latc.missing`, beside its non-emptiness counterpart: 24 names.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -69,6 +71,7 @@ with the first list:
 | 4 | `MissingNonempty_npComplete_bin` | `Latc.PaperD.General.MissingNonempty_npComplete_bin` | `LatcComplexity/Binary.lean:103` | exists, exact name |
 | 4 | `Complete_coNPComplete_bin` | `Latc.PaperD.General.Complete_coNPComplete_bin` | `LatcComplexity/Binary.lean:107` | exists, exact name |
 | 4 | `missingNonempty_finset_npComplete_bin` | `Latc.PaperD.General.missingNonempty_finset_npComplete_bin` | `LatcComplexity/Binary.lean:111` | exists, exact name (added 2026-10-30) |
+| 4 | `complete_finset_coNPComplete_bin` | `Latc.PaperD.General.complete_finset_coNPComplete_bin` | `LatcComplexity/Binary.lean:119` | exists, exact name (added 2026-10-31) |
 | 5 | `missingCount_sharpPComplete_bin` | `Latc.PaperD.General.missingCount_sharpPComplete_bin` | `LatcComplexity/Binary.lean:161` | exists, exact name |
 | 5 | `missingCount_eq_acceptCount` | `Latc.PaperD.General.missingCount_eq_acceptCount` | `LatcComplexity/CountingGeneral.lean:128` | exists, exact name (added 2026-10-30) |
 | 5 | `sharpSAT_eq_missingCount` | `Latc.PaperD.General.sharpSAT_eq_missingCount` | `LatcComplexity/CountingGeneral.lean:205` | exists, exact name (added 2026-10-30) |
