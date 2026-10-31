@@ -20,10 +20,10 @@ line counts.
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
   last three, the counting result of commit `242311b` (`missingCount_eq_weighted_of_le`,
   `length_classStates_le`, `missingCountFixedAttrs_polyTime`); §6 below also records its `_unary`
-  corollary, which the paper draft cites. They include all 27
+  corollary, which the paper draft cites. They include all 29
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
-  first checked, and the 27 its section table cites after the edits of 2026-10-30 and 31. Of four
+  first checked, and the 29 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, two were resolved in the outline and two still apply.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
@@ -55,7 +55,7 @@ theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_Missing
 `mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
 **As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
-section table cites the 27 names below, by paper section; all exist exactly as written. Compared
+section table cites the 29 names below, by paper section; all exist exactly as written. Compared
 with the first list:
 
 * three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
@@ -76,7 +76,9 @@ with the first list:
   with at most `k` attributes: 25 names;
 * and, after the Gap 1 merge (`43d7e25`), §5 added `sharpMonotone2SAT_oneCallSharpPHard` and
   `countValidMonotone2_sharpPComplete_oneCall`, Valiant's theorem and the unconditional result:
-  27 names.
+  27 names;
+* and, after the Gap 3 merge (`cbf016b`), §6 added `missingNonempty_explicitDegree` and
+  `missingNonemptyFixedAttrs_uniform`: 29 names.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -107,6 +109,8 @@ with the first list:
 | 6 | `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
 | 6 | `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:293` | exists, exact name |
 | 6 | `missingCountFixedAttrs_polyTime` | `Latc.PaperD.General.missingCountFixedAttrs_polyTime` | `LatcComplexity/Tractable.lean:1052` | exists, exact name (added 2026-10-31) |
+| 6 | `missingNonempty_explicitDegree` | `Latc.PaperD.General.missingNonempty_explicitDegree` | `LatcComplexity/ExplicitDegree.lean:601` | exists, exact name (added 2026-10-31) |
+| 6 | `missingNonemptyFixedAttrs_uniform` | `Latc.PaperD.General.missingNonemptyFixedAttrs_uniform` | `LatcComplexity/ExplicitDegree.lean:627` | exists, exact name (added 2026-10-31) |
 
 Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the outline on
 2026-10-30, and 4 by the Gap 1 proof on 2026-10-31; 1 still applies.
@@ -821,7 +825,7 @@ reported. All nine theorems of the README's table exist as written: `missingNone
 `missingNonemptyFixedAttrs_uniform`, `completeFixedAttrs_uniform`, `missingCountFixedAttrs_uniform`
 (627, 636, 645), and the three `…WithBound_explicitDegree` (655, 669, 684). The draft cites three:
 
-#### `Latc.PaperD.General.missingNonempty_explicitDegree`
+#### `Latc.PaperD.General.missingNonempty_explicitDegree` (outline)
 
 - Exists: yes, `LatcComplexity/ExplicitDegree.lean:601`
 - Reading: One machine decides non-emptiness of M(T₀) on every instance within time and space c·(|x|+1)^(d·n+d), n the number of attributes.
@@ -835,7 +839,7 @@ theorem missingNonempty_explicitDegree :
       (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
 ```
 
-#### `Latc.PaperD.General.missingNonemptyFixedAttrs_uniform`
+#### `Latc.PaperD.General.missingNonemptyFixedAttrs_uniform` (outline)
 
 - Exists: yes, `LatcComplexity/ExplicitDegree.lean:627`
 - Reading: The same constants c, d₀, d₁ serve every k, on instances with at most k attributes, within c·(|x|+1)^(d₀·k+d₁).
