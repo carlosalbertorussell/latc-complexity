@@ -1021,6 +1021,32 @@ The arXiv version (1603.07466) gives a formal semantics and geometric sweep-line
 overlapping and missing rules, with run-time experiments. It proves no NP-, coNP- or #P-hardness.
 Do not cite it for a hardness claim.
 
+
+### Added after the referee read (2026-10-31)
+
+Verified against Crossref (records spot-checked again) and, for the book, the Open Library edition
+from the Library of Congress record; all in `docs/paper-refs.bib`.
+
+* Krentel, "The complexity of optimization problems", JCSS 36(3):490–509, 1988,
+  [doi:10.1016/0022-0000(88)90039-6](https://doi.org/10.1016/0022-0000(88)90039-6). Full text not
+  read (ScienceDirect refused automated access). The attribution of "metric reductions"
+  f(x) = h(x, g(r(x))) to it is from a secondary source (arXiv:2609.08884, Definition A.3); the
+  paper says "attributed to Krentel".
+* Zankó, "#P-completeness via many-one reductions", IJFCS 2(1):77–82, 1991,
+  [doi:10.1142/S0129054191000066](https://doi.org/10.1142/S0129054191000066). Abstract read: a
+  variant of many-one reductions, under which the (0,1)-permanent is #P-complete.
+* Forster, Kunze and Wuttke, "Verified programming of Turing machines in Coq", CPP 2020,
+  pp. 114–128, [doi:10.1145/3372885.3373816](https://doi.org/10.1145/3372885.3373816).
+* Xu, Zhang and Urban, "Mechanising Turing Machines and Computability Theory in Isabelle/HOL",
+  ITP 2013, LNCS 7998, pp. 147–162,
+  [doi:10.1007/978-3-642-39634-2_13](https://doi.org/10.1007/978-3-642-39634-2_13) (volume from
+  Urban's publications page; Crossref omits it).
+* Pollack, Hicks and Harrison, *Decision Tables: Theory and Practice*, Wiley-Interscience, 1971,
+  ISBN 047169150X (Open Library OL4915790M).
+* Not added: whether Valiant's SIAM 1979 paper states #DNF #P-complete could not be checked in the
+  full text (a secondary source says so); the paper does not need it, since counting the uncovered
+  inputs of compact rows is #SAT of the negated DNF.
+
 ## Novelty
 
 **Finding** (as the outline now states it). Hardness of rule-set coverage is known in adjacent

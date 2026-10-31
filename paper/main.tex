@@ -101,7 +101,7 @@ one-call version of Valiant's theorem on \#Monotone-2SAT in the same Turing-mach
 \label{sec:intro}
 
 Decision tables state business rules, regulations and clinical guidelines as rows of
-condition values. A table is \emph{complete} when every combination of declared condition
+condition values~\cite{PollackHicksHarrison1971}. A table is \emph{complete} when every combination of declared condition
 values that the domain constraints allow is covered by some row; the uncovered combinations
 form its \emph{missing set}~$M(T_0)$. Completeness checking is a staple of decision-table
 practice, from early expert-system checkers~\cite{SuwaScottShortliffe1982} to the analysers of
@@ -196,7 +196,8 @@ Three notions are used. A \emph{many-one} reduction from $A$ to $B$ is a polynom
 with $a \in A \iff r(a) \in B$; NP-, coNP-hardness and completeness are defined with it. A
 \emph{parsimonious} reduction from $f$ to $g$ is a polynomial-time $r$ with $f(a) = g(r(a))$;
 Complexitylib defines \#P-hardness with it. These two are Complexitylib's. The third is defined
-in this development:
+in this development; it is the polynomial-time metric reduction attributed to
+Krentel~\cite{Krentel1988}:
 \begin{definition}[one-call reduction]
 \label{def:onecall}
 $f$ reduces to $g$ with one call if there are polynomial-time functions $r$ and
@@ -216,7 +217,9 @@ hardness only for \#Monotone-2SAT, whose value is at most $2^{\#\text{variables}
 target proved to be in \#P.) Parsimonious reductions are one-call, with
 $\mathit{post}(a, y) = y$; so \#P-hardness implies one-call \#P-hardness, and a
 parsimonious reduction followed by a one-call reduction is one-call.
-It is weaker than parsimonious hardness, which matters below: a problem whose decision version
+Zank\'o defines \#P-completeness with a variant of many-one reductions and shows the
+$(0,1)$-permanent complete under it~\cite{Zanko1991}. One-call hardness is weaker than parsimonious
+hardness, which matters below: a problem whose decision version
 is trivial cannot be parsimoniously \#P-hard unless P~=~NP, but can be one-call \#P-hard.
 Our hardness proofs start from Complexitylib's Cook--Levin theorem and its parsimonious form:
 SAT is NP-hard, UNSAT coNP-complete, and \#SAT \#P-hard under parsimonious reductions.
@@ -634,9 +637,10 @@ Isabelle~\cite{Cook_Levin-AFP}; reductions between Karp's problems are verified 
 Isabelle~\cite{PolyReductionsIsabelle}; and Senellart and Gnatenko prove all 21 of Karp's
 problems NP-complete in Lean~\cite{SenellartGnatenko2026}, with NP defined in
 descriptive-complexity terms and first-order reductions, and also prove \#Monotone-2SAT one-call
-\#P-complete in that setting. Computability and time complexity have been mechanised through
-partial recursive functions in Lean~\cite{Carneiro2019} and the weak call-by-value
-$\lambda$-calculus in Coq~\cite{ForsterKSW2021}. Our setting needs explicit encodings and running
+\#P-complete in that setting. Turing machines and computability have been mechanised in
+Isabelle/HOL~\cite{XuZhangUrban2013} and Coq~\cite{ForsterKunzeWuttke2020}, computability through
+partial recursive functions in Lean~\cite{Carneiro2019}, and time complexity through the weak
+call-by-value $\lambda$-calculus in Coq~\cite{ForsterKSW2021}. Our setting needs explicit encodings and running
 times, but its classes are the textbook ones on Turing machines, so polynomial time, binary
 encodings of numbers and the size of the input, the quantities the tractability results of
 \Cref{sec:boundary} are about, are first-class.

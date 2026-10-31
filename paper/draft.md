@@ -27,7 +27,8 @@ Valiant’s theorem on \#Monotone-2SAT in the same Turing-machine model.
 ## 1 Introduction
 
 Decision tables state business rules, regulations and clinical
-guidelines as rows of condition values. A table is *complete* when every
+guidelines as rows of condition values ([Pollack, Hicks, and Harrison
+1971](#ref-PollackHicksHarrison1971)). A table is *complete* when every
 combination of declared condition values that the domain constraints
 allow is covered by some row; the uncovered combinations form its
 *missing set* $M(T_0)$. Completeness checking is a staple of
@@ -145,7 +146,8 @@ polynomial-time $r$ with $a \in A \iff r(a) \in B$; NP-, coNP-hardness
 and completeness are defined with it. A *parsimonious* reduction from
 $f$ to $g$ is a polynomial-time $r$ with $f(a) = g(r(a))$; Complexitylib
 defines \#P-hardness with it. These two are Complexitylib’s. The third
-is defined in this development:
+is defined in this development; it is the polynomial-time metric
+reduction attributed to Krentel ([Krentel 1988](#ref-Krentel1988)):
 
 <div class="definition">
 
@@ -173,12 +175,15 @@ We use one-call hardness only for \#Monotone-2SAT, whose value is at
 most $2^{\#\text{variables}}$, and for a target proved to be in \#P.)
 Parsimonious reductions are one-call, with $\mathit{post}(a, y) = y$; so
 \#P-hardness implies one-call \#P-hardness, and a parsimonious reduction
-followed by a one-call reduction is one-call. It is weaker than
-parsimonious hardness, which matters below: a problem whose decision
-version is trivial cannot be parsimoniously \#P-hard unless P = NP, but
-can be one-call \#P-hard. Our hardness proofs start from Complexitylib’s
-Cook–Levin theorem and its parsimonious form: SAT is NP-hard, UNSAT
-coNP-complete, and \#SAT \#P-hard under parsimonious reductions.
+followed by a one-call reduction is one-call. Zankó defines
+\#P-completeness with a variant of many-one reductions and shows the
+$(0,1)$-permanent complete under it ([Zankó 1991](#ref-Zanko1991)).
+One-call hardness is weaker than parsimonious hardness, which matters
+below: a problem whose decision version is trivial cannot be
+parsimoniously \#P-hard unless P = NP, but can be one-call \#P-hard. Our
+hardness proofs start from Complexitylib’s Cook–Levin theorem and its
+parsimonious form: SAT is NP-hard, UNSAT coNP-complete, and \#SAT
+\#P-hard under parsimonious reductions.
 
 #### latc-check’s model.
 
@@ -685,9 +690,12 @@ Senellart and Gnatenko prove all 21 of Karp’s problems NP-complete in
 Lean ([Senellart and Gnatenko 2026](#ref-SenellartGnatenko2026)), with
 NP defined in descriptive-complexity terms and first-order reductions,
 and also prove \#Monotone-2SAT one-call \#P-complete in that setting.
-Computability and time complexity have been mechanised through partial
-recursive functions in Lean ([Carneiro 2019](#ref-Carneiro2019)) and the
-weak call-by-value $\lambda$-calculus in Coq ([Forster et al.
+Turing machines and computability have been mechanised in
+Isabelle/HOL ([Xu, Zhang, and Urban 2013](#ref-XuZhangUrban2013)) and
+Coq ([Forster, Kunze, and Wuttke 2020](#ref-ForsterKunzeWuttke2020)),
+computability through partial recursive functions in Lean ([Carneiro
+2019](#ref-Carneiro2019)), and time complexity through the weak
+call-by-value $\lambda$-calculus in Coq ([Forster et al.
 2021](#ref-ForsterKSW2021)). Our setting needs explicit encodings and
 running times, but its classes are the textbook ones on Turing machines,
 so polynomial time, binary encodings of numbers and the size of the
@@ -994,6 +1002,15 @@ Leibniz-Zentrum für Informatik.
 
 </div>
 
+<div id="ref-ForsterKunzeWuttke2020" class="csl-entry">
+
+Forster, Yannick, Fabian Kunze, and Maximilian Wuttke. 2020. “Verified
+Programming of Turing Machines in Coq.” In *Proceedings of the 9th ACM
+SIGPLAN International Conference on Certified Programs and Proofs (CPP
+2020)*, 114–28. ACM. <https://doi.org/10.1145/3372885.3373816>.
+
+</div>
+
 <div id="ref-GaeherKunze2021" class="csl-entry">
 
 Gäher, Lennard, and Fabian Kunze. 2021.
@@ -1052,6 +1069,14 @@ Complexity.” *Acta Informatica* 28 (4): 311–50.
 
 </div>
 
+<div id="ref-Krentel1988" class="csl-entry">
+
+Krentel, Mark W. 1988. “The Complexity of Optimization Problems.”
+*Journal of Computer and System Sciences* 36 (3): 490–509.
+<https://doi.org/10.1016/0022-0000(88)90039-6>.
+
+</div>
+
 <div id="ref-LevyRousset1996" class="csl-entry">
 
 Levy, Alon Y., and Marie-Christine Rousset. 1996. “Verification of
@@ -1086,6 +1111,13 @@ PVS: Tables, Types, and Model Checking.” In *Tools and Algorithms for
 the Construction and Analysis of Systems (TACAS ’97)*, 1217:366–83.
 Lecture Notes in Computer Science. Springer.
 <https://doi.org/10.1007/BFb0035400>.
+
+</div>
+
+<div id="ref-PollackHicksHarrison1971" class="csl-entry">
+
+Pollack, Solomon L., Harry T. Hicks Jr., and William J. Harrison. 1971.
+*Decision Tables: Theory and Practice*. New York: Wiley-Interscience.
 
 </div>
 
@@ -1163,6 +1195,17 @@ Reasoning.” *Algorithms* 19 (9): 725.
 
 </div>
 
+<div id="ref-XuZhangUrban2013" class="csl-entry">
+
+Xu, Jian, Xingyuan Zhang, and Christian Urban. 2013. “Mechanising Turing
+Machines and Computability Theory in Isabelle/HOL.” In *Interactive
+Theorem Proving (ITP 2013)*, edited by Sandrine Blazy, Christine
+Paulin-Mohring, and David Pichardie, 7998:147–62. Lecture Notes in
+Computer Science. Springer.
+<https://doi.org/10.1007/978-3-642-39634-2_13>.
+
+</div>
+
 <div id="ref-ZanengaEtAl2025" class="csl-entry">
 
 Zanenga, Aurora Francesca, Nunzio Marco Bisceglia, Benedetta Ippoliti,
@@ -1171,6 +1214,14 @@ Andrea Bombarda, Angelo Gargantini, Akshay Rajhans, and Claudio Menghi.
 Tabular Requirements.” In *Proceedings of the 33rd ACM International
 Conference on the Foundations of Software Engineering (FSE Companion
 ’25)*, 1148–52. ACM. <https://doi.org/10.1145/3696630.3728599>.
+
+</div>
+
+<div id="ref-Zanko1991" class="csl-entry">
+
+Zankó, Viktória. 1991. “\#P-Completeness via Many-One Reductions.”
+*International Journal of Foundations of Computer Science* 2 (1): 77–82.
+<https://doi.org/10.1142/S0129054191000066>.
 
 </div>
 
