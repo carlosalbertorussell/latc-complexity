@@ -8,7 +8,8 @@ Paper A states that computing |𝒱| stays `#P`-complete when every constraint i
 conditions Aᵢ = 1, Aⱼ = 1 over domains {0, 1}, citing Valiant (1979) for `#Monotone-2SAT`.
 Deciding such instances is trivial (the all-ones state is valid), so no parsimonious reduction
 from `#SAT` exists unless P = NP; hardness needs a weaker reduction. This file formalises the part
-of the argument that belongs to Paper A and states Valiant's theorem as an explicit hypothesis.
+of the argument that belongs to Paper A and keeps Valiant's theorem as an explicit hypothesis here;
+the hypothesis is discharged in `LatcComplexity/Valiant/OneCall.lean`.
 
 * `OneCallReducible`: a one-call counting reduction in Complexitylib's model; a polynomial-time map
   `r` and a polynomial-time post-processing `post` with `f a = post a (g (r a))`. Parsimonious
@@ -23,9 +24,14 @@ of the argument that belongs to Paper A and states Valiant's theorem as an expli
 * `countValidMonotone2_oneCallSharpPComplete`: **if** `#Monotone-2SAT` is one-call `#P`-hard (the
   hypothesis `hValiant`), then `countValidMonotone2` is one-call `#P`-complete.
 
-The hypothesis is not proved in Complexitylib's model. Valiant proved `#Monotone-2SAT` `#P`-complete
-under polynomial-time Turing reductions; its one-call form is machine-checked in another model as
-`sharpMonotoneTwoSat_sharpP_oneCallComplete` of Senellart's descriptive-complexity library.
+The hypothesis `hValiant` is kept here because this file cannot import the Valiant development
+(that would be circular). It is discharged in `LatcComplexity/Valiant/OneCall.lean`, which proves
+Valiant's theorem in Complexitylib's model in its one-call form,
+`Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`, and the unconditional
+`Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall`. Valiant proved
+`#Monotone-2SAT` `#P`-complete under polynomial-time Turing reductions; its one-call form is also
+machine-checked in another model as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of Senellart's
+descriptive-complexity library.
 -/
 
 namespace Latc.PaperD.General
@@ -182,7 +188,10 @@ theorem countValidMonotone2_mem_SharpP : countValidMonotone2 ∈ SharpP encInst 
 
 /-- **Proposition 5, monotone two-literal case, conditional on Valiant's theorem:** if
 `#Monotone-2SAT` is one-call `#P`-hard (`hValiant`), then counting |𝒱| for clauses of two
-conditions Aᵢ = 1, Aⱼ = 1 over domains {0, 1} is one-call `#P`-complete. -/
+conditions Aᵢ = 1, Aⱼ = 1 over domains {0, 1} is one-call `#P`-complete. The hypothesis is
+discharged in `LatcComplexity/Valiant/OneCall.lean`
+(`Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall_unary` for this encoding, and
+`Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall` for binary attribute indices). -/
 theorem countValidMonotone2_oneCallSharpPComplete
     (hValiant : OneCallSharpPHard encCNF SharpMonotone2SAT) :
     OneCallSharpPComplete encInst countValidMonotone2 :=
