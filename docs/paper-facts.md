@@ -656,6 +656,28 @@ theorem modelCount_eq_card (hd : ∀ o ∈ occurrences φ, o.2.2.1 < n)
       Indep φ n (falseSet g) ∧ (falseSet g).card = n + φ.length).card
 ```
 
+#### `Latc.PaperD.Valiant.countMissingMonotone2_eq_card_missing`
+
+- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:34` (merged in `a21b85f`)
+- Reading: On instances with domains {0, 1}, clauses of two conditions with value 1 and any rows (`pos2AnyB`), the function `countMissingMonotone2` is latc-check's |M(T₀)|.
+- Axioms: `[propext, Classical.choice, Quot.sound]` (branch build `8d3cb97`)
+
+```lean
+theorem countMissingMonotone2_eq_card_missing (I : General.Inst) (h : pos2AnyB I = true) :
+    countMissingMonotone2 I = (Latc.missing I.con I.table).card
+```
+
+#### `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall`
+
+- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:97`
+- Reading: Counting the missing combinations of monotone two-literal tables with any T₀ is one-call #P-complete under `encInstBin` (`_unary` at line 104 for `encInst`). Hardness reuses the reduction from #Monotone-2SAT, whose images have T₀ = ∅ or fail the shape test.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem countMissingMonotone2_sharpPComplete_oneCall :
+    OneCallSharpPComplete encInstBin countMissingMonotone2
+```
+
 #### `Latc.PaperD.Valiant.modelCount_psi`
 
 - Exists: yes, `LatcComplexity/Valiant/Pendant.lean:115`
@@ -876,7 +898,7 @@ theorem that prints fewer than all three axioms, and none of the four is among t
 
 ## Line counts
 
-Counted with `wc -l` (every line, including blank lines and comments) at `cbf016b`.
+Counted with `wc -l` (every line, including blank lines and comments) at `a21b85f`.
 
 | File | Lines | Theorems/lemmas |
 |---|---|---|
@@ -885,7 +907,7 @@ Counted with `wc -l` (every line, including blank lines and comments) at `cbf016
 | `LatcComplexity/Adequacy.lean` | 152 | 13 |
 | `LatcComplexity/Counting.lean` | 140 | 10 |
 | `LatcComplexity/CountingGeneral.lean` | 262 | 20 |
-| `LatcComplexity/Monotone.lean` | 191 | 15 |
+| `LatcComplexity/Monotone.lean` | 200 | 15 |
 | `LatcComplexity/Binary.lean` | 186 | 21 |
 | `LatcComplexity/Tractable.lean` | 1099 | 81 |
 | `LatcComplexity/ExplicitDegree.lean` | 692 | 46 |
@@ -894,10 +916,11 @@ Counted with `wc -l` (every line, including blank lines and comments) at `cbf016
 | `LatcComplexity/Valiant/Counting.lean` | 518 | 38 |
 | `LatcComplexity/Valiant/Pendant.lean` | 195 | 9 |
 | `LatcComplexity/Valiant/OneCall.lean` | 200 | 14 |
-| `LatcComplexity/Valiant/Axioms.lean` | 98 | 0 (80 `#print axioms`) |
-| **`LatcComplexity/` total** | **4577** | **317** |
-| `LatcComplexity/` without the two `Axioms.lean` | 4227 | 317 |
-| `LatcComplexity.lean` (root import file) | 14 | |
+| `LatcComplexity/Valiant/AnyTable.lean` | 109 | 13 |
+| `LatcComplexity/Valiant/Axioms.lean` | 113 | 0 (93 `#print axioms`) |
+| **`LatcComplexity/` total** | **4710** | **330** |
+| `LatcComplexity/` without the two `Axioms.lean` | 4345 | 330 |
+| `LatcComplexity.lean` (root import file) | 15 | |
 | `LatcFormal/Basic.lean` | 114 | |
 | `LatcFormal/Thm1.lean` | 130 | |
 | `LatcFormal/Prop1.lean` | 287 | |
@@ -911,10 +934,11 @@ Counted with `wc -l` (every line, including blank lines and comments) at `cbf016
 | `LatcFormal/Axioms.lean` | 95 | |
 | **`LatcFormal/` total** (copied unchanged from latc-check) | **1777** | |
 | `LatcFormal.lean` (root import file) | 11 | |
-| **Repository total, all `.lean` files** | **6379** | |
+| **Repository total, all `.lean` files** | **6513** | |
 
-Paper D's new development is `LatcComplexity/`: 4577 lines, or 4227 without the two audit files
-(3836 and 3535 at `43d7e25`, before the explicit degree; 2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
+Paper D's new development is `LatcComplexity/`: 4710 lines, or 4345 without the two audit files
+(4577 and 4227 at `cbf016b`, before the Monotone.lean comment update and the any-T₀ monotone
+result; 3836 and 3535 at `43d7e25`, before the explicit degree; 2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
 counting result).
 
 ## References
