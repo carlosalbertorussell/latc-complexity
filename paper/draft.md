@@ -7,23 +7,21 @@ Carlos A. Russell, Independent Researcher, Buenos Aires, Argentina
 > is the source; edit it, not this file. Not compiled with LaTeX yet.
 
 **Abstract.** A decision table is complete when every combination of its declared
-condition values is covered by a row. Checking completeness under domain
-constraints, and counting the missing combinations, arise when tables
-are completed or audited in practice. We give a machine-checked proof in
-Lean 4 that deciding whether a table has a missing combination is
-NP-complete, that deciding completeness is coNP-complete, and that
-counting the missing combinations is \#P-complete, over general finite
-domains. The proofs compose a reduction from an existing formalisation
-of decision-table completion with the Cook–Levin theorem and its
-parsimonious form in Complexitylib, a library of complexity theory on
-multi-tape Turing machines. An adequacy theorem ties the encoded
-problems to the original set-based definitions, and matching
-tractability results show where the hardness comes from: without domain
-constraints all three problems are solvable in polynomial time, and they
-remain so with a fixed number of attributes. For tables whose
-constraints are monotone two-literal clauses, counting stays
-\#P-complete under one-call reductions; for this we prove Valiant’s
-theorem in Complexitylib’s model, by a single-call reduction from \#SAT.
+condition values that the domain constraints allow is covered by a row.
+We prove in Lean 4, over multi-tape Turing machines and with no unproved
+assumptions, that for finite-domain decision tables with clause
+constraints, deciding whether a combination is missing is NP-complete,
+deciding completeness is coNP-complete, and counting the missing
+combinations is \#P-complete. An adequacy theorem ties these word
+problems to the set-based definitions of an existing formalisation of
+decision-table completion, so the results speak about the original
+objects. Complementary polynomial-time results locate the hardness: all
+three problems are polynomial without constraints, and with a fixed
+number of attributes, where one machine runs within $c\,(|x|+1)^{dn+d}$
+on instances with $n$ attributes. For monotone two-literal constraints,
+counting remains \#P-complete under reductions with a single oracle
+call; for this we prove a one-call version of Valiant’s theorem on
+\#Monotone-2SAT in the same Turing-machine model.
 
 ## 1 Introduction
 
@@ -35,151 +33,647 @@ allow is covered by some row; the uncovered combinations form its
 decision-table practice, from early expert-system checkers ([Suwa,
 Scott, and Shortliffe 1982](#ref-SuwaScottShortliffe1982)) to the
 analysers of the DMN standard ([Calvanese et al.
-2016](#ref-CalvaneseDLMMT2016)), which find missing rules but state no
-complexity result.
+2016](#ref-CalvaneseDLMMT2016)), which report missing rules. Counting
+them matters too: one missing edge case and a table that misses half of
+its valid inputs are both “incomplete”, and $|M(T_0)|$ is what tells
+them apart.
 
 Russell ([Russell 2026a](#ref-PaperA)) re-examined a decision-table
-completion method over declared finite domains and proved, on paper,
+completion method over declared finite domains and argued, on paper,
 that completeness under clause constraints is coNP-complete and that
 counting $|M(T_0)|$ is \#P-complete (Proposition 5 there). The
 accompanying Lean development, latc-check ([Russell
-2026b](#ref-latc_check_0_1_0)), formalised the model and the
-combinatorial reduction, but not the complexity classes: those need a
-model of computation, polynomial-time bounds and encodings, which
+2026b](#ref-latc_check_0_1_0)), formalised the decision-table model and
+the combinatorial reduction, but not the complexity classes: those need
+a model of computation, polynomial-time bounds and encodings, which
 latc-check did not have.
 
-This paper closes that gap. We compose latc-check’s model with the
-Cook–Levin theorem of Complexitylib ([Schlesinger and The Complexitylib
-contributors 2026](#ref-Complexitylib)), a Lean 4 library of complexity
-theory on multi-tape Turing machines built on CSLib ([Barrett et al.
-2026](#ref-CSLib2026)) and Mathlib, and obtain the following, all with
-only the three standard axioms of Lean.
+This paper supplies them. We compose latc-check’s model with
+Complexitylib ([Schlesinger and The Complexitylib contributors
+2026](#ref-Complexitylib)), a Lean 4 library of complexity theory on
+multi-tape Turing machines with a machine-checked Cook–Levin theorem,
+and prove the classification end to end, together with results that
+neither earlier development contains. Every theorem depends only on
+Lean’s three standard axioms, and none on `sorry`.
 
-1.  **NP- and coNP-completeness, end to end,** of the existence of a
-    missing combination and of completeness, over general finite
-    domains, in Complexitylib’s Turing-machine model, with every number
-    in the encoding written in binary; a unary-index variant is kept
-    (Sections 3 and 4).
+#### Contributions.
 
-2.  **\#P-completeness** of counting the missing combinations, over
-    general finite domains: membership by counting accepted
-    certificates, hardness by a parsimonious reduction from \#SAT
-    (Section 5).
+Table 1 separates what this paper adds from what it reuses.
 
-3.  **The tractable side:** without domain constraints, completeness and
-    non-emptiness are in P and the count is computable in polynomial
-    time; with at most $k$ attributes, both decision problems are in P
-    and the count is computable in polynomial time, within
-    $c\,(|x|+1)^{d k + d}$ for constants $c, d$ independent of $k$.
-    Hardness needs both constraints and an unbounded number of
-    attributes (Section 6).
+1.  **The classification, machine-checked end to end** (Sections 4 and
+    5): non-emptiness of $M(T_0)$ is NP-complete, completeness
+    coNP-complete and counting \#P-complete, for finite domains with
+    clause constraints, with every number of the input written in
+    binary. Hardness holds already for Boolean domains and empty tables.
 
-4.  **An adequacy theorem** linking the word-encoded problems to
-    latc-check’s set-based definitions, so that the theorems speak about
-    the original objects (Section 3).
+2.  **Adequacy** (Section 3): the encoded problems are exactly
+    latc-check’s set-based ones.
 
-5.  **The monotone two-literal case:** membership in \#P, a parsimonious
-    reduction from \#Monotone-2SAT, and \#P-hardness under one-call
-    reductions, with Valiant’s theorem itself proved in Complexitylib’s
-    model by a one-call reduction from \#SAT (Section 5).
+3.  **The tractability boundary** (Section 7): polynomial time without
+    constraints, and with a fixed number of attributes, for both
+    decision problems and for counting, with an explicit degree linear
+    in the number of attributes.
 
-#### Related work.
+4.  **One-call hardness for monotone two-literal counting** (Section 6):
+    a definition of one-call reductions in Complexitylib’s model, and a
+    one-call version of Valiant’s theorem, from which counting the
+    missing combinations stays \#P-complete under one-call reductions
+    when every constraint is $A_i = 1 \lor A_j = 1$.
+
+<div class="tabular">
+
+L0.38L0.26L0.26 result & before this paper & here  
+decision-table model, missing set & latc-check (Lean) & reused  
+SAT to missing states, combinatorially & latc-check (Lean) & reused  
+NP/coNP-completeness, \#P-completeness & on paper ([Russell
+2026a](#ref-PaperA), Prop. 5) & Turing machines, in Lean  
+adequacy of the encoded problems & – & new  
+polynomial cases: no constraints, fixed $k$ & – & new  
+explicit degree in the number of attributes & – & new  
+one-call reductions, one-call Valiant & Valiant, Turing reductions & new
+in this model  
+
+</div>
+
+Section 2 recalls Complexitylib and latc-check, Section 3 fixes the
+input language, Sections 4 and 5 and 6 and 7 prove the results, Section
+8 discusses related work and Section 9 the formalisation. Appendix A
+lists the main Lean statements and Appendix B the artifact.
+
+## 2 Preliminaries
+
+#### Machines, encodings and classes.
+
+Complexitylib works with multi-tape Turing machines over a binary
+alphabet. A type $\alpha$ is given an encoding, an injection
+$\alpha \hookrightarrow \{0,1\}^*$; pairs, lists and natural numbers
+have standard encodings, numbers in binary (`encNat`) or in unary
+(`encUnary`). A function $f$ is computable in polynomial time between
+two encodings when some machine maps the encoding of every $a$ to the
+encoding of $f(a)$ within a polynomial in the input length. A language
+is in P when its characteristic function is; in NP when it is the set of
+inputs having a certificate of polynomially bounded length accepted by a
+polynomial-time verifier; and coNP is the class of complements. A
+function $f$ into $\mathbb{N}$ is in \#P when $f(a)$ is the number of
+certificates of a polynomially bounded length that a polynomial-time
+verifier accepts on $a$.
+
+#### Reductions.
+
+Three notions are used. A *many-one* reduction from $A$ to $B$ is a
+polynomial-time $r$ with $a \in A \iff r(a) \in B$; NP-, coNP-hardness
+and completeness are defined with it. A *parsimonious* reduction from
+$f$ to $g$ is a polynomial-time $r$ with $f(a) = g(r(a))$; Complexitylib
+defines \#P-hardness with it. These two are Complexitylib’s. The third
+is ours:
+
+<div class="definition">
+
+<span id="def:onecall" label="def:onecall"></span> $f$ reduces to $g$
+with one call if there are polynomial-time functions $r$ and
+$\mathit{post}$ with $f(a) = \mathit{post}(a, g(r(a)))$ for every $a$,
+where $\mathit{post}$ reads $a$ and the answer $g(r(a))$ written in
+binary. $g$ is *one-call \#P-hard* if every function in \#P, under any
+encoding, reduces to it with one call, and *one-call \#P-complete* if it
+is moreover in \#P.
+
+</div>
+
+A one-call reduction is a polynomial-time Turing reduction that makes
+exactly one oracle query, whose answer is post-processed together with
+the input. Parsimonious reductions are one-call, with
+$\mathit{post}(a, y) = y$; so \#P-hardness implies one-call
+\#P-hardness, and a parsimonious reduction followed by a one-call
+reduction is one-call. One-call hardness implies hardness under
+polynomial-time Turing reductions, the notion of Valiant ([Valiant
+1979](#ref-Valiant1979enumeration)). It is weaker than parsimonious
+hardness, which matters below: a problem whose decision version is
+trivial cannot be parsimoniously \#P-hard unless P = NP, but can be
+one-call \#P-hard. Our hardness proofs start from Complexitylib’s
+Cook–Levin theorem and its parsimonious form: SAT is NP-hard, UNSAT
+coNP-complete, and \#SAT \#P-hard under parsimonious reductions.
+
+#### latc-check’s model.
+
+Attributes are indexed by a finite type $\iota$, attribute $i$ having
+the declared finite domain $D_i$, so the space of condition tuples
+$\mathcal{D} = \prod_i D_i$ is finite. Constraints are a decidable
+predicate $C$ on tuples, and a table is represented by its set $T_0$ of
+condition tuples. The valid space is
+$\mathcal{V} = \{x \in \mathcal{D} : C(x)\}$, the missing set is
+$M(T_0) = \mathcal{V} \setminus T_0$, and the table is complete when
+$M(T_0) = \emptyset$. In Lean these are `validSpace C` and
+`missing C T`, both `Finset`s, so duplicate rows play no role. Two
+lemmas identify latc-check’s clause constraints and satisfiability with
+Complexitylib’s CNF formulas (`holdsAll_eq_eval`,
+`satisfiable_decode_iff`), which lets the two developments share the SAT
+reduction.
+
+## 3 Instances, encoding and adequacy
+
+#### Instances.
+
+An instance is a triple $I = (d, S, T)$ of lists of natural numbers:
+
+- $d = [d_0, \dots, d_{n-1}]$, the domain sizes; attribute $i$ ranges
+  over $\{0, \dots, d_i - 1\}$, and $n$, the number of attributes, is
+  the length of $d$;
+
+- $S$, the clause constraints: a list of clauses, each a list of
+  conditions $(i, v)$, read $A_i = v$;
+
+- $T$, the rows of $T_0$: a list of lists of values.
+
+A *state* is a list $s$ of length $n$ with $s_i < d_i$. It satisfies the
+condition $(i, v)$ when $i < n$ and $s_i = v$, and it is *valid* when
+every clause of $S$ has a condition it satisfies. Every triple is an
+instance; nothing is rejected as malformed, and the semantics settles
+each degenerate case. A condition on a nonexistent attribute, or with a
+value outside the domain, is never satisfied; an empty clause makes
+every state invalid; a domain of size zero leaves no states; a row of
+the wrong length or with an out-of-domain value covers no state; and
+repeated rows or conditions change nothing. Then $$\begin{aligned}
+\textit{MissingNonempty} &= \{I : \text{some valid state is not a row of } T\},\\
+\textit{Complete} &= \overline{\textit{MissingNonempty}},
+\end{aligned}$$ and $\textit{missingCount}(I)$ is the number of valid
+states that are not rows.
+
+#### A running example.
+
+Take two attributes with $d = [3, 2]$, the constraint
+$A_0 = 0 \lor A_1 = 1$, and the rows $(0,0)$, $(0,1)$, $(1,1)$:
+$$I = \bigl([3, 2],\ [[(0,0), (1,1)]],\ [[0,0], [0,1], [1,1]]\bigr).$$
+Of the six states, four are valid: $(0,0)$, $(0,1)$, $(1,1)$ and
+$(2,1)$. The first three are rows, so $M(T_0) = \{(2,1)\}$: the instance
+is in *MissingNonempty*, not complete, and
+$\textit{missingCount}(I) = 1$.
+
+#### Encoding and input size.
+
+The main encoding, `encInstBin`, writes the triple with Complexitylib’s
+encodings of pairs and lists and every number in binary: the domain
+sizes, the attribute index and value of each condition, and the values
+of each row. The number of attributes is not written separately; it is
+the length of the list $d$. The input size $|x|$ in every polynomial
+bound below is the length of this encoding. With binary domain sizes,
+$|\mathcal{D}| = \prod_i d_i$ can be exponential in $|x|$ even for one
+attribute.
+
+Checking a condition $(i, v)$ against a state reads $s_i$ at a binary
+index $i$. We use Complexitylib’s `listGetD_binary`, which walks the
+list while reading the bits of the index and returns a default when the
+list ends, so the cost is polynomial in the lengths of the list and of
+the index’s binary encoding, not in the index’s value, which is never
+written in unary. The values are shifted by one before the lookup, so
+that the default $0$ matches no value: an out-of-range attribute fails
+the condition, as the semantics requires. A second encoding, `encInst`,
+writes the attribute index in unary. The identity is polynomial-time
+from `encInst` to `encInstBin`, so hardness for the unary encoding
+transfers to the binary one; every result below holds for both.
+
+#### Adequacy.
+
+An instance denotes a table in latc-check’s model: attributes `Fin n`,
+domains `Fin dᵢ`, the constraint predicate given by the clauses, and as
+$T_0$ the tuples whose list of values is a row. The word problems are
+exactly latc-check’s:
+
+    theorem mem_MissingNonempty_iff (I : Inst) :
+        I ∈ MissingNonempty ↔ (missing I.con I.table).Nonempty
+    theorem mem_Complete_iff (I : Inst) : I ∈ Complete ↔ missing I.con I.table = ∅
+
+A third theorem, `coe_missing_map_toList`, shows that the tuples of
+$M(T_0)$, read as lists, are exactly the witnesses of *MissingNonempty*,
+and *missingCount* is defined as the cardinality of latc-check’s missing
+set. Every complexity result below is therefore a statement about
+latc-check’s `missing` on clause-constrained tables; it says nothing
+about constraint languages other than clauses.
+
+## 4 The decision problems
+
+<div class="theorem">
+
+<span id="thm:decision" label="thm:decision"></span> Under `encInstBin`,
+*MissingNonempty* is NP-complete and *Complete* is coNP-complete. Both
+remain hard on instances with domains $\{0,1\}$ and $T_0 = \emptyset$.
+
+</div>
+
+<div class="proof">
+
+*Proof sketch.* *Membership.* The certificate is a missing state. The
+verifier checks that it lies in the domains, satisfies every clause and
+is not a row; it runs in polynomial time (`checkBin_polyTime`). A state
+in the domains has $s_i < d_i$ for every $i$, so its encoding is no
+longer than that of $d$, which bounds the certificate length by $|x|$.
+*Hardness.* Given a CNF formula $\varphi$, renumber its variables
+densely as $0, \dots, n-1$ and build the instance with $n$ attributes of
+domain $\{0,1\}$, one clause per clause of $\varphi$ (the literal $x_i$
+becomes $A_i = 1$, and $\lnot x_i$ becomes $A_i = 0$), and no rows. Its
+valid states are the satisfying assignments of $\varphi$, and with no
+rows they are all missing. So $\varphi$ is satisfiable iff the instance
+is in *MissingNonempty*, and unsatisfiable iff it is complete: a
+reduction from SAT and from UNSAT, polynomial-time (`fromSAT_polyTime`).
+Composed with Complexitylib’s Cook–Levin theorems and with the identity
+re-encoding, this gives the theorem (`MissingNonempty_npComplete_bin`,
+`Complete_coNPComplete_bin`). By adequacy the same holds for
+$\{I : M(T_0) \neq \emptyset\}$ and $\{I : M(T_0) = \emptyset\}$ stated
+with latc-check’s `missing`. ◻
+
+</div>
+
+The empty table shows where the hardness lies: in the constraints, not
+in the rows. With $T_0 = \emptyset$, completeness is unsatisfiability of
+the constraints. Rows only remove states, and Section 7 shows that
+without constraints they cannot make the problems hard. The same results
+hold with Boolean domains and Complexitylib’s CNF formulas as
+constraints (Appendix A).
+
+## 5 Counting
+
+<div class="theorem">
+
+<span id="thm:counting" label="thm:counting"></span> Under `encInstBin`,
+*missingCount* is \#P-complete under parsimonious reductions, and
+remains \#P-hard on instances with domains $\{0,1\}$ and
+$T_0 = \emptyset$.
+
+</div>
+
+<div class="proof">
+
+*Proof sketch.* *Membership.* Membership needs every missing state to
+have exactly one accepted certificate. Let $L$ be the length of the
+encoding of the domain sizes $d$. A certificate is a bit string of
+length $L$. The verifier decodes the first $n$ numbers from it into a
+state $s$ and accepts when $s$ is missing *and* the certificate equals
+the canonical certificate of $s$: the encoding of $s$ followed by zeros
+up to length $L$. The encoding of a state in the domains is no longer
+than that of $d$, so every missing state has a canonical certificate of
+length $L$; the canonical certificate determines the state; and any
+other string decoding to $s$ is rejected. So the accepted certificates
+of length $L$ are in bijection with $M(T_0)$
+(`missingCount_eq_acceptCount`), and both the verifier and $L$ are
+polynomial-time. Without the canonicity test, a state could have several
+accepted certificates (different padding) and the count would be wrong.
+
+*Hardness.* The reduction of Theorem 2 is parsimonious: the satisfying
+assignments of $\varphi$ and the missing states of its instance are in
+bijection, so
+$\#\mathrm{SAT}(\varphi) = \textit{missingCount}(\mathit{fromSAT}(\varphi))$
+(`sharpSAT_eq_missingCount`). Composition with Complexitylib’s
+parsimonious Cook–Levin theorem gives
+`missingCount_sharpPComplete_bin`. ◻
+
+</div>
+
+For Boolean domains there is also a parsimonious reduction *to* \#SAT:
+add to the constraints, for each row of the right length, the clause
+stating that the tuple differs from that row
+(`countMissing_eq_sharpSAT`).
+
+## 6 Monotone two-literal constraints and Valiant’s theorem
+
+Russell ([Russell 2026a](#ref-PaperA)) notes that counting the valid
+states stays \#P-complete when every clause is $A_i = 1 \lor A_j = 1$
+over domains $\{0,1\}$, citing Valiant ([Valiant
+1979](#ref-Valiant1979enumeration)). Deciding such instances is trivial:
+with domains $\{0,1\}$ and only positive two-literal clauses, the
+all-ones state is valid. So counting cannot be \#P-hard under
+parsimonious reductions unless P = NP, and the right notion is the
+one-call reduction of Definition 1.
+
+Let *SharpMonotone2SAT* be the number of models of a CNF formula whose
+clauses are all $x_i \lor x_j$, and *countValidMonotone2* the number of
+valid states of an instance with domains $\{0,1\}$, clauses of two
+conditions with value 1, and no rows. As with Complexitylib’s \#3SAT,
+both functions are total and return $0$ on inputs of any other shape;
+the shape tests are polynomial-time. Counting valid states of such
+instances is in \#P, and \#Monotone-2SAT reduces to it parsimoniously
+(`countValidMonotone2_mem_SharpP_bin`, `sharpMonotone2SAT_reduces`).
+What remains is the hardness of \#Monotone-2SAT itself.
+
+<div class="theorem">
+
+<span id="thm:valiant" label="thm:valiant"></span> \#Monotone-2SAT is
+one-call \#P-hard. Hence *countValidMonotone2* is one-call \#P-complete
+under `encInstBin` and `encInst`.
+
+</div>
+
+Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing
+reductions, interpolating over many oracle calls. Senellart and Gnatenko
+machine-check the one-call form in a logical model of \#P with
+first-order reductions ([Senellart and Gnatenko
+2026](#ref-SenellartGnatenko2026)). We prove it in Complexitylib’s model
+by one reduction from \#SAT, which is \#P-hard parsimoniously, so by
+Definition 1 it suffices to reduce \#SAT to \#Monotone-2SAT with one
+call.
+
+#### Step 1: models as independent sets.
+
+Let $\varphi$ have variables $0, \dots, n-1$ (after dense renumbering)
+and clauses $c_1, \dots, c_m$. Build a graph $G$ with a vertex $(i, b)$
+for each variable $i$ and value $b$, and a vertex $o$ for each literal
+occurrence, read “$o$ is the first true literal of its clause”. Edges
+join $(i, 0)$ and $(i, 1)$; any two occurrences of the same clause; an
+occurrence and the value of its variable that falsifies it; and an
+occurrence and each value that makes an *earlier* literal of its clause
+true. The vertices fall into $K = n + m$ cliques, $\{(i,0),(i,1)\}$ for
+each variable and the occurrences of each clause, so every independent
+set has at most $K$ vertices. An independent set of exactly $K$ vertices
+picks a value for each variable, which is an assignment $\sigma$, and an
+occurrence in each clause that $\sigma$ makes true, with every earlier
+literal false. That occurrence is unique given $\sigma$, so these
+independent sets are in bijection with the models of $\varphi$
+(`modelCount_eq_card`). The “first true literal” choice is what makes
+the correspondence exact, for any CNF: repeated and complementary
+literals need no special case. An empty clause has no vertex, so no
+independent set reaches $K$, and the count is $0$, as it should be.
+
+For example, $\varphi = x_0 \lor x_1$ has $n = 2$, $m = 1$, $K = 3$,
+vertices $(0,0)$, $(0,1)$, $(1,0)$, $(1,1)$, $o_1$ for $x_0$, $o_2$ for
+$x_1$. The edges at $o_1$ go to $o_2$ and $(0,0)$; those at $o_2$ go to
+$o_1$, $(1,0)$ and $(0,1)$. The independent sets of size 3 are
+$\{(0,1), (1,0), o_1\}$, $\{(0,1), (1,1), o_1\}$ and
+$\{(0,0), (1,1), o_2\}$: three, one per model.
+
+#### Step 2: a monotone formula.
+
+Let $N$ be the number of vertices of $G$, and give every vertex
+$t = n + 1$ fresh pendant leaves. The monotone formula $\psi$ has a
+variable per vertex and leaf, and a clause $x_u \lor
+x_w$ per edge $\{u, w\}$ of the graph with leaves. Its models are the
+vertex covers, the complements of the independent sets. An independent
+set of the graph with leaves consists of an independent set $S$ of $G$
+together with any subset of the leaves of the $N - |S|$ vertices
+outside $S$, so
+$$x \;=\; \#\mathrm{SAT}(\psi) \;=\; \sum_{S \text{ independent in } G} 2^{\,t\,(N - |S|)}
+\qquad (\text{\texttt{modelCount_psi}}).$$ Every vertex has leaves, so
+no vertex of the formula is isolated, and $\psi$ has exactly two
+positive literals per clause.
+
+#### Step 3: one digit.
+
+Write $x$ in base $2^t$. Multiply by $2^{tK}$ and divide by $2^{tN}$:
+$$\Bigl\lfloor \frac{x \cdot 2^{tK}}{2^{tN}} \Bigr\rfloor
+= \Bigl\lfloor \sum_{S} 2^{\,t\,(K - |S|)} \Bigr\rfloor .$$ Since
+$|S| \le K$, every exponent is a nonnegative multiple of $t$, so the sum
+is an integer and the floor is exact. Sets with $|S| < K$ contribute
+multiples of $2^t$, and sets with $|S| = K$ contribute $1$ each. Their
+number is $\#\mathrm{SAT}(\varphi) \le 2^n < 2^t$. So
+$$\#\mathrm{SAT}(\varphi) \;=\; \Bigl\lfloor \frac{x \cdot 2^{tK}}{2^{tN}} \Bigr\rfloor \bmod 2^t
+\qquad (\text{\texttt{sharpSAT_eq_post}}).$$ Multiplying before dividing
+avoids computing $N - K$, which is negative when $\varphi$ has empty
+clauses ($K$ counts them, $N$ does not); then the quotient is $0$, which
+is correct. The post-processing needs only binary multiplication,
+division, remainder and powers of two on numbers of polynomially many
+bits, all polynomial-time in Complexitylib; the construction of $\psi$
+is polynomial-time; and the oracle is called once, on $\psi$
+(`toMonotone_polyTime`, `post_polyTime`, `sharpSAT_oneCallReducible`).
+Composing with the parsimonious \#P-hardness of \#SAT gives
+`sharpMonotone2SAT_oneCallSharpPHard`, and with the reduction to
+*countValidMonotone2*, the second half of Theorem 4. The development
+also keeps the conditional form,
+`countValidMonotone2_oneCallSharpPComplete_bin`, which takes
+\#Monotone-2SAT’s hardness as a hypothesis; Theorem 4 discharges it.
+
+## 7 Where the hardness comes from
+
+The reductions of Sections 4 and 5 use clause constraints and as many
+attributes as the formula has variables. Removing either ingredient
+makes all three problems polynomial-time (Table 2).
+
+#### No constraints.
+
+Then every state is valid and $|M(T_0)| = \prod_i d_i - r$, where $r$ is
+the number of *distinct* rows that are states
+(`missingCount_eq_of_noConstraints`). The product can be exponential in
+$|x|$, but its binary encoding is no longer than those of the factors
+together, so a fold that multiplies in binary stays polynomial: each
+intermediate product has at most $|x|$ bits. The count is therefore
+polynomial-time, and so are completeness and non-emptiness, which
+compare $\prod_i d_i$ with $r$ (`missingCountNoConstraints_polyTime`,
+`completeNoConstraints_mem_P`, `missingNonemptyNoConstraints_mem_P`).
+
+#### At most $k$ attributes: deciding.
+
+With binary domain sizes, $\mathcal{D}$ cannot be enumerated even for
+$k = 1$. Let $N$ be the number of value entries written in the instance,
+in conditions and in rows, and call a number *unwritten* if it occurs in
+none of them. An unwritten value satisfies no condition, and a state
+containing one is not a row; so in a missing state, an unwritten value
+can be replaced by any other unwritten value of the same domain, and the
+state stays missing. At most $N$ of the numbers $0, \dots, N$ are
+written, so one of them, $u$, is unwritten. If a missing state uses an
+unwritten value $v > N$ in attribute $i$, then $d_i > v > u$, so $u$ is
+in the domain and can replace $v$. Hence if a missing state exists, one
+exists whose values lie among $0, \dots, N$ and the written values: at
+most $2N+1$ candidates per attribute and $(2N+1)^k$ candidate states
+(`length_candidateStates_le`, `exists_missing_candidate_iff`). Checking
+each candidate is polynomial, so both decision problems are in P for
+each $k$ (`missingNonemptyFixedAttrs_mem_P`,
+`completeFixedAttrs_mem_P`).
+
+#### At most $k$ attributes: counting.
+
+A candidate state stands for all the states obtained by replacing its
+unwritten values, so counting must weigh it. For each attribute, split
+its domain into classes: each written value inside the domain alone, and
+one class holding all the unwritten values of the domain (possibly
+empty), represented by $u$. Which conditions a state satisfies, and
+whether it is a row, depend only on its vector of classes, so
+$$|M(T_0)| = \sum_{\substack{c \text{ a class vector,}\\ \text{valid and not a row}}}\
+\prod_{i} |c_i|
+\qquad (\text{\texttt{missingCount_eq_weighted_of_le}}),$$ over at most
+$(N+1)^k$ class vectors (`length_classStates_le`). Each product is at
+most $\prod_i d_i$, so the sum is computed in binary by the
+bounded-growth fold of the no-constraint case, and the count is
+polynomial-time for each $k$ (`missingCountFixedAttrs_polyTime`).
+
+#### An explicit degree.
+
+“Polynomial time for each $k$” allows the polynomial to depend on $k$
+arbitrarily. We bound it with Complexitylib’s `ComputableTidilyInO`,
+which keeps explicit bound functions and a single constant through
+composition, case splits and folds. Three statements are proved, each
+for non-emptiness, completeness and counting, each for time and space:
+
+1.  *One machine for all instances.* There are $c, d$ such that one
+    machine decides non-emptiness on every instance within
+    $c\,(|x|+1)^{dn+d}$, where $n$ is the instance’s number of
+    attributes (`missingNonempty_explicitDegree`; Appendix A).
+
+2.  *Uniform in $k$* (`missingNonemptyFixedAttrs_uniform`). There are
+    $c, d_0, d_1$ such that for every $k$, on instances with at most $k$
+    attributes, one machine decides the problem within
+    $c\,(|x|+1)^{d_0 k + d_1}$.
+
+3.  *$k$ in the input.* There are $c, d$ such that one machine, given
+    $k$ in unary and an instance, decides “at most $k$ attributes and
+    $M(T_0) \neq \emptyset$” within $c\,(|(k,x)|+1)^{dk+d}$
+    (`missingNonemptyWithBound_explicitDegree`).
+
+The degree grows linearly with the number of attributes. This is an XP
+bound, $|x|^{O(k)}$, not fixed-parameter tractability,
+$f(k) \cdot |x|^{O(1)}$; we claim no FPT result.
+
+*What is not proved.* For each fixed $k$, a separate machine with $k$
+built in that rejects instances with more than $k$ attributes, with
+constants independent of $k$. Testing $n \le k$ inside the machine goes
+through Complexitylib’s case-split and constant-output lemmas, whose
+constants depend on the machine, and making them uniform would need
+changes to the library. Statements 2 and 3 cover the same ground: the
+first on the instances where the answer can be positive, the second on
+all instances with $k$ given as input.
+
+<div class="tabular">
+
+L0.15L0.11L0.17L0.2L0.17 constraints & attributes & deciding & counting
+& hardness via  
+clauses & unbounded & NP-, coNP-complete & \#P-complete & many-one,
+parsimonious  
+none & unbounded & P & polynomial-time & –  
+clauses & at most $k$ & P, degree $O(k)$ & polynomial-time, degree
+$O(k)$ & –  
+monotone two-literal & unbounded & trivial & one-call \#P-complete &
+one-call  
+
+</div>
+
+## 8 Related work
+
+#### Hardness of coverage.
 
 Hardness of rule coverage is not new in itself. Elmallah and Gouda prove
 firewall completeness NP-hard by reduction from 3-SAT, with no
-membership result ([Elmallah and Gouda 2017](#ref-ElmallahGouda2017));
+membership result ([Elmallah and Gouda 2017](#ref-ElmallahGouda2017)).
 Thiemann and Yamada prove pattern completeness co-NP hard and verify
 their decision procedure in Isabelle, the hardness proof being on
-paper ([Thiemann and Yamada 2026](#ref-ThiemannYamada2026)); Kapur et
+paper ([Thiemann and Yamada 2026](#ref-ThiemannYamada2026)). Kapur et
 al. showed quasi-reducibility co-NP complete ([Kapur et al.
-1991](#ref-KapurNRZ1991)); and the volume of a union of boxes is
+1991](#ref-KapurNRZ1991)), and the volume of a union of boxes is
 \#P-hard ([Bringmann and Friedrich 2010](#ref-BringmannFriedrich2010)).
+
+#### Rule bases and tables.
+
 Levy and Rousset gave the first complexity results for verifying rule
 bases ([Levy and Rousset 1996](#ref-LevyRousset1996),
 [1998](#ref-LevyRousset1998)): whether no legal input derives a bad
 output, for relational inputs and Horn rules, NP-complete to undecidable
 depending on recursion, and $\Pi_2^p$-complete with order predicates and
-negation; their “input completeness” constraints restrict which inputs
+negation. Their “input completeness” constraints restrict which inputs
 are legal, and they leave output completeness open. Coverage of a
 propositional table could be phrased in their framework, but its
-complexity is lower: coNP for completeness, as we show, with
-NP-completeness of non-emptiness and \#P-completeness of counting. For
-tables themselves, Menghi et al. prove completeness of Simulink
-Requirements Tables undecidable, by reduction from Hilbert’s tenth
-problem, since their conditions range over real-valued signals, and
-check it with SMT ([Menghi et al. 2025](#ref-MenghiEtAl2025); [Zanenga
-et al. 2025](#ref-ZanengaEtAl2025)); and Vu and Demetrovics prove that
-deciding the possible and certain decisions of a decision table with
-unknown entries is NP- and coNP-complete, and counting the worlds
-yielding a decision \#P-hard, all by encoding a formula in the
-constraints on the unknowns ([Vu and Demetrovics
-2026](#ref-VuDemetrovics2026)). They define completeness for a single
-input but state no complexity for deciding it. None of these classifies
-the completeness of a decision table over its declared finite domains,
-none counts the missing combinations, and none of the hardness proofs is
-checked in a proof assistant. Machine-checked NP-completeness is not new
-either: Cook–Levin has been mechanised in ACL2 ([Gamboa and Cowles
+complexity is lower: coNP for completeness, as shown here, with NP for
+non-emptiness and \#P for counting. Menghi et al. prove completeness of
+Simulink Requirements Tables undecidable, by reduction from Hilbert’s
+tenth problem, because their conditions range over real-valued signals,
+and check it with SMT ([Menghi et al. 2025](#ref-MenghiEtAl2025);
+[Zanenga et al. 2025](#ref-ZanengaEtAl2025)). Vu and Demetrovics study
+decision tables whose entries may be unknown: for one given input,
+deciding its possible and certain decisions is NP- and coNP-complete,
+and counting the valuations yielding a decision \#P-hard, all by
+encoding a formula in the constraints on the unknowns ([Vu and
+Demetrovics 2026](#ref-VuDemetrovics2026)). They define completeness for
+a single input but state no complexity for deciding it. Their model asks
+what a partly unknown table says about one input; ours asks whether a
+fully specified table covers every input its declared domains and
+constraints allow, which is the check a DMN analyser performs. The
+closest precedent for tables in a proof assistant is PVS, which
+generates coverage and disjointness obligations for tabular
+specifications ([Owre, Rushby, and Shankar
+1997](#ref-OwreRushbyShankar1997)): proof obligations about given
+tables, not complexity results. To our knowledge, none of these works
+classifies the completeness of decision tables over declared finite
+domains, or counts their missing combinations, and none of the hardness
+proofs is machine-checked.
+
+#### Mechanised complexity.
+
+Cook–Levin has been mechanised in ACL2 ([Gamboa and Cowles
 2004](#ref-GamboaCowles2004)), Coq ([Gäher and Kunze
 2021](#ref-GaeherKunze2021)) and Isabelle ([Balbach
 2023](#ref-Cook_Levin-AFP)), and Senellart and Gnatenko prove all 21 of
-Karp’s problems NP-complete in Lean, in a logical model with first-order
-reductions ([Senellart and Gnatenko 2026](#ref-SenellartGnatenko2026)).
-Our contribution is the problem, decision-table completeness under
-constraints, with counting and a tractable side, on Complexitylib’s
-Turing machines. The closest precedent for tables in a proof assistant
-is PVS, which generates coverage and disjointness obligations for
-tabular specifications ([Owre, Rushby, and Shankar
-1997](#ref-OwreRushbyShankar1997)); those are proof obligations about
-given tables, not complexity results.
+Karp’s problems NP-complete in Lean ([Senellart and Gnatenko
+2026](#ref-SenellartGnatenko2026)), with NP defined in
+descriptive-complexity terms and first-order reductions. Our setting
+needs explicit encodings and running times, but its classes are the
+textbook ones on Turing machines, so polynomial time, binary encodings
+of numbers and the size of the input, the quantities the tractability
+results of Section 7 are about, are first-class.
 
-## 2 Setting
+## 9 The formalisation
 
-#### latc-check’s model.
+#### Trust.
 
-Attributes are indexed by a finite type $\iota$, attribute $i$ having
-the declared finite domain $D_i$; condition tuples are dependent
-functions $x : \forall i, D_i$, so the product space
-$\mathcal{D} = D_1 \times \dots \times D_n$ is a finite type. The
-constraints are one decidable predicate $C$ on tuples, and a table is
-represented by its set $T_0$ of condition tuples. The valid space and
-the missing set are
+The axiom audit prints the axioms of 300 theorems, among them every
+theorem this paper cites; each uses only `propext`, `Classical.choice`
+and `Quot.sound`, or fewer, and none uses `sorryAx`. This shows that no
+proof is left unfinished and no axiom is added. It does not show that
+the definitions are the intended ones. The trusted base is Lean’s
+kernel; Complexitylib’s definitions of machines, running time, encodings
+and the classes P, NP, coNP and \#P; our encoding of instances; and
+Definition 1. The adequacy theorems remove one item from that list: the
+encoded problems are proved equal to latc-check’s, so a reader need
+trust only latc-check’s definition of the missing set and our map from
+an instance to the table it denotes, each a few lines (Sections 2 and
+3).
 
-    def validSpace : Finset (∀ i, D i) := univ.filter C
-    def missing (T : Finset (∀ i, D i)) : Finset (∀ i, D i) := validSpace C \ T
+#### Engineering.
 
-The table is complete when `missing C T = ∅`.
+The development has 4 227 lines of Lean, besides the audit files.
+Complexitylib’s `fun_prop` discharged most composition steps of
+polynomial-time proofs. Proofs by hand were needed where the size of
+intermediate values matters: the binary product of the domain sizes, the
+enumeration of candidate states (by induction on $k$), the explicit
+bounds of Section 7, and the arithmetic of Valiant’s post-processing.
+For the graph of Section 6, `fun_prop` timed out until each
+vertex-numbering and edge helper had its own composable polynomial-time
+lemma. Reading a list at a binary index needed a library lemma,
+`listGetD_binary`, rather than a new proof. The development pins one
+commit of Complexitylib, a library that changes daily on a
+release-candidate toolchain; it also builds unchanged against a later
+commit on the next toolchain (Appendix B).
 
-#### Complexitylib.
+#### Worst case and practice.
 
-A type is encoded by an injection `α ↪ List Bool`; encodings of pairs,
-lists and natural numbers (in binary, `encNat`, or in unary, `encUnary`)
-are provided. `ComputableInPolyTime f encA encB` says that a multi-tape
-Turing machine with a binary alphabet computes $f$ between the encodings
-in polynomial time. The classes `P`, `NP`, `coNP` and `SharpP` are
-defined from such machines, hardness from polynomial-time many-one
-reductions and, for counting, from parsimonious reductions
-(`ParsimoniousReducible`). Our hardness proofs start from
-`CookLevin.SAT_npHard`, `CookLevin.UNSAT_coNPComplete` and the
-parsimonious `CookLevin.SharpSAT_sharpPHard`.
+NP-hardness does not make real DMN tables slow to check. Their
+constraints are often absent or sparse, and their number of input
+columns is small: exactly the regimes of Section 7. What the
+classification rules out is a polynomial algorithm for all tables with
+clause constraints, unless P = NP; what the tractable cases show is that
+the difficulty comes from the constraints across many attributes, not
+from the size of the domains or of the table.
 
-#### The two libraries agree on SAT.
+## 10 Conclusion
 
-latc-check’s reduction is stated for its own propositional formulas. Two
-lemmas identify its clause constraints and satisfiability with
-Complexitylib’s CNF formulas:
+Decision-table completeness under clause constraints is coNP-complete,
+finding a missing combination NP-complete, and counting them
+\#P-complete, with machine-checked proofs on Turing machines that apply
+to latc-check’s set-based definitions; without constraints, or with a
+fixed number of attributes, all three are polynomial, with a degree
+linear in the number of attributes. For monotone two-literal constraints
+counting stays \#P-complete under one-call reductions, by a one-call
+version of Valiant’s theorem proved in the same model. What remains open
+in the formalisation is the per-$k$ machine with constants independent
+of $k$. The one-call reductions and the Valiant reduction use only
+Complexitylib’s notions and could be offered upstream.
+
+## Appendix A: Main Lean statements
+
+The statements below are copied from the source up to `:=`. Unless
+noted, they are in the namespace `Latc.PaperD.General`; `Inst` is the
+type of instances of Section 3.
+
+#### Bridge (namespace `Latc.PaperD`).
 
     theorem holdsAll_eq_eval (S : Prop5.ConSet ℕ) (x : ℕ → Bool) :
         Prop5.holdsAll S x = (toCNF S).eval x
     theorem satisfiable_decode_iff (S : Prop5.ConSet ℕ) :
         Prop5.Satisfiable (Prop5.decode S) ↔ (toCNF S).Satisfiable
 
-## 3 Encoding and adequacy
-
-An instance is a triple $(d, S, T)$: the domain sizes
-$d = [|D_0|, \dots, |D_{n-1}|]$, the clause constraints $S$, each clause
-a list of conditions $(i, v)$ read $A_i = v$, and the rows $T$ of $T_0$.
-A state is a list $s$ of values with $s_i < d_i$; it is valid when every
-clause has a condition it satisfies.
+#### Instances.
 
     abbrev Cond := ℕ × ℕ
     abbrev Inst := List ℕ × (List (List Cond) × List (List ℕ))
@@ -188,54 +682,7 @@ clause has a condition it satisfies.
       {I | ∃ s, InDomains I.1 s ∧ Valid I.2.1 s ∧ s ∉ I.2.2}
     def Complete : Set Inst := MissingNonemptyᶜ
 
-#### Binary throughout.
-
-The main encoding `encInstBin` writes every number in binary, the
-attribute index of a condition included. Checking a condition then reads
-$s_i$ at a binary index $i$, which we do with Complexitylib’s
-`listGetD_binary`: it caps the index at the length of the list while
-reading its bits, so a large index is never expanded to unary. The
-values are shifted by one, so that the default $0$ of an out-of-range
-lookup matches no value. An earlier encoding, `encInst`, writes the
-index in unary; the identity is polynomial-time from it to `encInstBin`
-(`encInst_to_encInstBin_polyTime`), so hardness for the unary encoding
-transfers to the binary one, and every result holds for both.
-
-#### Adequacy.
-
-An instance $I$ denotes a table in latc-check’s model: attributes
-`Fin n`, domains `Fin dᵢ`, the constraint predicate `I.con` and the
-condition set `I.table` (rows of another length, or with values outside
-the domains, denote no tuple). The word problems are exactly
-latc-check’s:
-
-    theorem mem_MissingNonempty_iff (I : Inst) :
-        I ∈ MissingNonempty ↔ (missing I.con I.table).Nonempty
-    theorem mem_Complete_iff (I : Inst) : I ∈ Complete ↔ missing I.con I.table = ∅
-
-A third theorem, `coe_missing_map_toList`, shows that the tuples of
-$M(T_0)$, read as lists of values, are exactly the witnesses of
-`MissingNonempty`. Every complexity result below is therefore also a
-statement about `Latc.missing`.
-
-## 4 Decision problems
-
-#### Membership.
-
-The certificate is the missing state itself. The check verifies that the
-state lies in the domains, satisfies every clause and is not a row
-of $T_0$; it is polynomial-time (`checkBin_polyTime`), and the encoding
-of a state in the domains is no longer than the encoded domain sizes,
-which bounds the certificate.
-
-#### Hardness.
-
-A CNF formula $\varphi$ becomes the instance with one attribute per
-variable, after renumbering the variables densely, domain $\{0,1\}$ for
-each, one clause per clause of $\varphi$ (a literal becomes $A_i = 1$ or
-$A_i = 0$), and $T_0 = \emptyset$. Satisfying assignments are then
-exactly the missing states, which gives the reductions from SAT and from
-UNSAT. Composed with Section 3:
+#### Decision problems and counting.
 
     theorem MissingNonempty_npComplete_bin : NPComplete encInstBin MissingNonempty
     theorem Complete_coNPComplete_bin : coNPComplete encInstBin Complete
@@ -243,223 +690,79 @@ UNSAT. Composed with Section 3:
         NPComplete encInstBin {I : Inst | (missing I.con I.table).Nonempty}
     theorem complete_finset_coNPComplete_bin :
         coNPComplete encInstBin {I : Inst | missing I.con I.table = ∅}
-
-The same results hold for Boolean domains, with Complexitylib’s CNF
-formulas as constraints (namespace `Latc.PaperD`).
-
-## 5 Counting
-
-Let `missingCount I` be `(missing I.con I.table).card`, the size of the
-missing set of the denoted table.
-
-#### Membership in \#P.
-
-A certificate is the encoding of a state, padded with `false` to the
-length of the encoded domain sizes. The verifier accepts a certificate
-only when the state it describes is missing *and* the certificate is the
-canonical one for that state, so each missing tuple is counted once
-(`missingCount_eq_acceptCount`).
-
-#### Hardness.
-
-The reduction of Section 4 preserves counts:
-`SharpSAT φ = missingCount (fromSAT φ)` (`sharpSAT_eq_missingCount`).
-Composing with the parsimonious Cook–Levin theorem gives
-
+    theorem missingCount_eq_acceptCount (I : Inst) :
+        missingCount I = acceptCount cverifier I (certLen I)
+    theorem sharpSAT_eq_missingCount (φ : CNF ℕ) : SharpSAT φ = missingCount (fromSAT φ)
     theorem missingCount_sharpPComplete_bin : SharpPComplete encInstBin missingCount
 
-For Boolean domains there is also a reduction *to* \#SAT, adding to the
-constraints one clause per row of $T_0$ of the right length that says
-the tuple differs from that row (`countMissing_eq_sharpSAT`).
+#### One-call reductions and Valiant (namespace `Latc.PaperD.Valiant` for the last two).
 
-#### The monotone two-literal case.
-
-Russell ([Russell 2026a](#ref-PaperA)) notes that counting the valid
-states stays \#P-complete when every clause is $A_i = 1 \lor A_j = 1$
-over domains $\{0,1\}$, citing Valiant ([Valiant
-1979](#ref-Valiant1979enumeration)). As with Complexitylib’s
-`SharpThreeSAT`, both counting functions are total: `SharpMonotone2SAT`
-and `countValidMonotone2` return $0$ on inputs of any other shape.
-Deciding such instances is trivial, since the all-ones state is valid,
-so no parsimonious reduction from \#SAT exists unless P = NP, and
-hardness needs a weaker reduction. We define one-call reductions in
-Complexitylib’s model, $f(a) = \mathit{post}(a, g(r(a)))$ for
-polynomial-time $r$ and $\mathit{post}$, and prove membership in \#P
-(`countValidMonotone2_mem_SharpP_bin`) and a parsimonious reduction from
-\#Monotone-2SAT (`sharpMonotone2SAT_reduces`, to the unary-index
-encoding; the binary form follows by re-encoding). Hardness follows from
-Valiant’s theorem in its one-call form, which we prove:
-
+    def OneCallReducible (encA : α ↪ List Bool) (encB : β ↪ List Bool) (f : α → ℕ) (g : β → ℕ) :
+        Prop :=
+      ∃ (r : α → β) (post : α → ℕ → ℕ), ComputableInPolyTime r encA encB ∧
+        ComputableInPolyTime (fun p : α × ℕ => post p.1 p.2) (encPair encA encNat) encNat ∧
+          ∀ a, f a = post a (g (r a))
     theorem sharpMonotone2SAT_oneCallSharpPHard :
         OneCallSharpPHard encCNF SharpMonotone2SAT
     theorem countValidMonotone2_sharpPComplete_oneCall :
         OneCallSharpPComplete encInstBin countValidMonotone2
 
-Valiant proved the result under polynomial-time Turing reductions,
-interpolating over many oracle calls; the one-call form is stronger.
-Senellart and Gnatenko machine-check it in a model where \#P is defined
-logically and reductions are first-order ([Senellart and Gnatenko
-2026](#ref-SenellartGnatenko2026)). We prove it in Complexitylib’s model
-by a single reduction from \#SAT. After relabelling the variables
-densely, a conflict graph has a vertex for each variable and value and
-one for each literal occurrence, read “the first true literal of its
-clause”. Its vertices split into $n + m$ cliques for $n$ variables and
-$m$ clauses, and its independent sets of size $n + m$ are in bijection
-with the models (`modelCount_eq_card`), for any CNF. Giving each vertex
-$t = n + 1$ pendant leaves and turning each edge $\{u, w\}$ into the
-clause $x_u \lor x_w$ yields a monotone two-literal formula with
-$\sum_S 2^{t(N - |S|)}$ models, over the independent sets $S$ of the
-$N$-vertex graph (`modelCount_psi`). With $x$ the oracle’s answer and
-$K = n + m$, the post-processing returns the digit
-$x \cdot 2^{tK} / 2^{tN} \bmod 2^t$, which is \#SAT
-(`sharpSAT_eq_post`); multiplying before dividing avoids subtracting
-$N - K$, which fails for formulas with empty clauses. Composing with
-Complexitylib’s parsimonious \#P-hardness of \#SAT needs only that a
-parsimonious reduction followed by a one-call reduction is one-call. The
-conditional form, with Valiant’s theorem as a hypothesis `hValiant`, is
-kept as `countValidMonotone2_oneCallSharpPComplete_bin`.
+#### Tractability.
 
-## 6 Where the hardness comes from
-
-The SAT reduction uses clause constraints and as many attributes as the
-formula has variables. Removing either ingredient makes the problems
-polynomial-time (Table 1).
-
-#### No constraints.
-
-Then $|M(T_0)| = \prod_i d_i - r$, where $r$ is the number of distinct
-rows of $T_0$ inside the declared domains
-(`missingCount_eq_of_noConstraints`). The product can be exponential in
-the input length, but its binary encoding is no longer than those of the
-factors together, so it is computed exactly in binary by a fold with
-bounded growth, and the count is polynomial-time
-(`missingCountNoConstraints_polyTime`); completeness and non-emptiness
-are in P (`completeNoConstraints_mem_P`,
-`missingNonemptyNoConstraints_mem_P`).
-
-#### At most $k$ attributes.
-
-With binary domain sizes, $|\mathcal{D}|$ is not polynomial even for
-$k = 1$, so $\mathcal{D}$ cannot be enumerated. Let $N$ be the number of
-values written in the instance. A value written nowhere can be replaced
-by one at most $N$ that is also written nowhere, without changing which
-conditions hold, and a state with such a value is not a row of $T_0$. A
-missing state therefore exists if and only if one exists whose values
-are among $0, \dots, N$ and the written values; there are at most
-$(2N+1)^k$ such states (`length_candidateStates_le`), and both decision
-problems are in P for each $k$ (`completeFixedAttrs_mem_P`,
-`missingNonemptyFixedAttrs_mem_P`).
-
-Counting needs more, since a candidate state with an unwritten value
-stands for all the unwritten values of that attribute. For each
-attribute, split its domain into classes: each written value in the
-domain alone, and one class of the unwritten values (possibly empty).
-Which conditions a state satisfies depends only on its vector of
-classes, so $|\mathcal{V}|$ is the sum, over valid class vectors, of the
-product of the class sizes (`missingCount_eq_weighted_of_le`). There are
-at most $(N+1)^k$ class vectors (`length_classStates_le`); the weights
-are products of domain sizes, computed in binary by the bounded-growth
-fold of the no-constraint case. Subtracting the valid distinct rows
-of $T_0$, the count is polynomial-time for each $k$, with binary or
-unary attribute indices (`missingCountFixedAttrs_polyTime`,
-`missingCountFixedAttrs_polyTime_unary`).
-
-#### An explicit degree.
-
-Polynomial time for each $k$ says nothing about how the degree grows
-with $k$. We make it explicit with Complexitylib’s
-`ComputableTidilyInO`, which keeps explicit bound functions and a single
-constant through composition, case splits and folds; the enumeration of
-candidate values becomes a left fold whose intermediate results are
-explicitly bounded. One machine decides non-emptiness on every instance
-within time and space $c\,(|x|+1)^{d n + d}$, $n$ the number of
-attributes, and likewise for completeness and the count:
-
+    theorem missingCount_eq_of_noConstraints (I : Inst) (h : I.2.1 = []) :
+        missingCount I = domProd I - distinctRows I
+    theorem missingCountFixedAttrs_polyTime (k : ℕ) :
+        ComputableInPolyTime (fun I : Inst => if I.n ≤ k then missingCount I else 0)
+          encInstBin encNat
     theorem missingNonempty_explicitDegree :
         ∃ c d, ComputableTidilyInTimeAndSpace
           (fun I : Inst => decide (missing I.con I.table).Nonempty) encInstBin encBool
           (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
           (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
+    theorem missingNonemptyFixedAttrs_uniform :
+        ∃ c d₀ d₁, ∀ k, ComputableTidilyInTimeAndSpace
+          (fun I : {I : Inst // I.n ≤ k} => decide (missing I.1.con I.1.table).Nonempty)
+          ((Function.Embedding.subtype _).trans encInstBin) encBool
+          (fun I => c * ((encInstBin I.1).length + 1) ^ (d₀ * k + d₁))
+          (fun I => c * ((encInstBin I.1).length + 1) ^ (d₀ * k + d₁))
 
-Restricted to instances with at most $k$ attributes, this gives
-constants $c, d_0, d_1$ that serve every $k$
-(`missingNonemptyFixedAttrs_uniform` and its two companions); with $k$
-given in unary beside the instance, one machine computes the fixed-$k$
-problems of each $k$ within $c\,(|(k,x)|+1)^{d k + d}$
-(`missingNonemptyWithBound_explicitDegree`). We do not prove the
-remaining variant, a separate machine for each $k$ with $k$ built in and
-constants independent of $k$: the constants of Complexitylib’s
-case-split lemmas depend on the machine.
+## Appendix B: Artifact and reproducibility
 
-<div id="tab:boundary">
+#### Contents.
 
-|                | constraints | attributes  | complexity                                 |
-|:---------------|:------------|:------------|:-------------------------------------------|
-| SAT reduction  | clauses     | unbounded   | NP-, coNP-, \#P-complete                   |
-| no constraints | none        | unbounded   | in P; count polynomial-time                |
-| fixed $k$      | clauses     | at most $k$ | in P; count polynomial-time; degree $O(k)$ |
+The development is the directory `LatcComplexity/` of the repository
+latc-complexity: 4 577 lines of Lean in 15 files, 4 227 without the two
+axiom-audit files, on top of latc-check’s model, copied unchanged into
+`LatcFormal/`. The README lists every theorem with its statement, and
+`docs/paper-facts.md` records the file and line of every theorem this
+paper cites.
 
-Where the hardness comes from.
+#### Versions.
 
-</div>
-
-## 7 Experience and conclusion
-
-#### Effort.
-
-The development is 4 577 lines of Lean in the 15 files of
-`LatcComplexity/`, 4 227 without the two axiom-audit files. Its first
-seven commits ran from 28 October 2026, 14:16, to 29 October, 00:18,
-over about ten hours, building on latc-check’s model and reduction. On
-31 October three more added counting with a fixed number of attributes,
-Valiant’s theorem (1 238 lines) and the explicit degree (692 lines), the
-last two developed in parallel sessions and merged without conflicts.
-
-#### Automation.
-
-Complexitylib’s `fun_prop` discharged many polynomial-time obligations:
-it occurs in 99 lines of the development, often directly after unfolding
-a definition. Proofs by hand were needed where the size of intermediate
-values matters: the product of the domain sizes, whose bounded growth
-rests on Complexitylib’s `length_encNat_mul_le`, and the enumeration of
-candidate states, whose polynomial time is proved by induction on $k$.
-For the graph of Valiant’s reduction, `fun_prop` timed out until each
-vertex-numbering and edge helper had its own composable polynomial-time
-lemma. Reading a list at a binary index needed a library lemma,
-`listGetD_binary`, rather than a new proof.
-
-#### Following a moving library.
-
-Complexitylib changes daily on a release-candidate Lean toolchain. We
-pinned commit `b7acfc2` (28 October 2026) and the matching toolchain
-`v4.36.0-rc1` when the development began, and kept that pin throughout,
-so we met no upstream breakage: the price is falling behind. Three days
-later the library’s main branch was 481 commits ahead, had moved to Lean
-`v4.36.0-rc2`, advanced CSLib and Mathlib with it, and repaired
-`fun_prop` clients broken by the move. Our development nonetheless
-builds against it unchanged: at upstream commit `b9e6241` with Lean
-`v4.36.0-rc2`, no Lean file needed editing. We still publish the
-artifact with its original pin, against which everything was proved. The
-library had also just been reorganised: two weeks before we started, a
-CSLib-based rewrite replaced its earlier version, which
-Russell ([Russell 2026a](#ref-PaperA)) cites and which now lives on as a
+Lean `v4.36.0-rc1`; Complexitylib at commit `b7acfc2` (28 October 2026),
+with the CSLib and Mathlib it pins. The pin was kept throughout the
+development. Complexitylib had just been rewritten on CSLib; the earlier
+version, which Russell ([Russell 2026a](#ref-PaperA)) cites, is a
 separate repository with a different API.
 
-#### Trust.
+#### Build and audit.
 
-`LatcComplexity/Axioms.lean` and `LatcComplexity/Valiant/Axioms.lean`
-print the axioms of 300 theorems, among them every theorem of this
-development that the paper cites; each depends only on `propext`,
-`Classical.choice` and `Quot.sound`, or fewer (253 use all three), and
-none depends on `sorryAx`. A cold build of the final commit, from a
-fresh clone downloading precompiled Mathlib, took about nine minutes on
-four cores and 12 GB of disk.
+From a fresh clone, downloading precompiled Mathlib, `lake build`
+completed 18 645 jobs with no warnings or errors in about nine minutes
+on four cores, using 12 GB of disk. The axiom audit (the two files
+`Axioms.lean` of `LatcComplexity/` and of its subdirectory `Valiant/`)
+prints 300 theorems: 253 use all three standard axioms, 47 fewer, none
+`sorryAx`. The development also builds without any change against
+Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2` (18 717 jobs), but
+the artifact is published with the pin above, against which the results
+were proved.
 
-#### What remains.
+#### History.
 
-The per-$k$ machine with constants independent of $k$ described in
-Section 6. Valiant’s reduction uses only Complexitylib’s notions apart
-from one-call reductions, and could be offered upstream.
+The core results took seven commits over about ten hours on 28–29
+October 2026. On 31 October, counting with a fixed number of attributes,
+the Valiant reduction (1 238 lines) and the explicit degree (692 lines)
+were added, the last two in parallel and merged without conflicts.
 
 ## References
 
@@ -469,15 +772,6 @@ from one-call reductions, and could be offered upstream.
 
 Balbach, Frank J. 2023. “The Cook-Levin Theorem.” *Archive of Formal
 Proofs*.
-
-</div>
-
-<div id="ref-CSLib2026" class="csl-entry">
-
-Barrett, Clark, Swarat Chaudhuri, Fabrizio Montesi, Jim Grundy, Pushmeet
-Kohli, Leonardo de Moura, Alexandre Rademaker, and Sorrachai
-Yingchareonthawornchai. 2026. “CSLib: The Lean Computer Science
-Library.” <https://arxiv.org/abs/2602.04846>.
 
 </div>
 

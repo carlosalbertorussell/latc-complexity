@@ -2,10 +2,13 @@
 import re,sys,subprocess,tempfile
 sys.argv[1:] = [tempfile.mkdtemp()]
 s=open('main.tex').read()
-num={'intro':1,'setting':2,'encoding':3,'decision':4,'counting':5,'boundary':6,'conclusion':7}
+num={'intro':1,'prelim':2,'encoding':3,'decision':4,'counting':5,'monotone':6,'boundary':7,'related':8,'formal':9,'conclusion':10}
 def cref(m):
     ks=m.group(1).split(',')
-    if ks[0].startswith('tab:'): return 'Table 1'
+    if ks[0].startswith('tab:'): return {'tab:contrib':'Table 1','tab:boundary':'Table 2'}[ks[0]]
+    if ks[0].startswith('app:'): return {'app:statements':'Appendix A','app:artifact':'Appendix B'}[ks[0]]
+    if ks[0].startswith('def:'): return 'Definition 1'
+    if ks[0].startswith('thm:'): return 'Theorem '+str({'thm:decision':2,'thm:counting':3,'thm:valiant':4}[ks[0]])
     ns=[str(num[k[4:]]) for k in ks]
     return ('Section ' if len(ns)==1 else 'Sections ')+' and '.join(ns)
 s=re.sub(r'\\Cref\{([^}]*)\}',cref,s)
@@ -32,6 +35,8 @@ open('draft.md','w').write(head+body)
 t=open('draft.md').read(); i=[0]
 def n(m):
     if m.group(1)=='References': return m.group(0)
-    i[0]+=1; return '## %d %s'%(i[0],m.group(1))
+    i[0]+=1
+    if i[0]>10: return '## Appendix %s: %s'%('AB'[i[0]-11],m.group(1))
+    return '## %d %s'%(i[0],m.group(1))
 t=re.sub(r'^## (.+)$',n,t,flags=re.M)
 open('draft.md','w').write(t)
