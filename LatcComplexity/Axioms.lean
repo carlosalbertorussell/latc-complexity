@@ -6,6 +6,7 @@ import LatcComplexity.CountingGeneral
 import LatcComplexity.Monotone
 import LatcComplexity.Binary
 import LatcComplexity.Tractable
+import LatcComplexity.ExplicitDegree
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -201,3 +202,51 @@ import LatcComplexity.Tractable
 #print axioms Latc.PaperD.General.countClasses_polyTime
 #print axioms Latc.PaperD.General.missingCountFixedAttrs_polyTime
 #print axioms Latc.PaperD.General.missingCountFixedAttrs_polyTime_unary
+
+-- An explicit degree in the number of attributes (`LatcComplexity/ExplicitDegree.lean`)
+#print axioms Latc.PaperD.General.mul_pow_le_pow_add
+#print axioms Latc.PaperD.General.XPBounded.of_le
+#print axioms Latc.PaperD.General.XPBounded.mono_exp
+#print axioms Latc.PaperD.General.XPBounded.add
+#print axioms Latc.PaperD.General.XPBounded.const
+#print axioms Latc.PaperD.General.XPBounded.of_poly
+#print axioms Latc.PaperD.General.XPBounded.const_mul
+#print axioms Latc.PaperD.General.XPBounded.size_self
+#print axioms Latc.PaperD.General.XPBounded.pow
+#print axioms Latc.PaperD.General.XPBounded.pow_mul_succ
+#print axioms Latc.PaperD.General.timeAndSpace_of_inO_xp
+#print axioms Latc.PaperD.General.inO_pow_of_polyTime
+#print axioms Latc.PaperD.General.allSections_eq
+#print axioms Latc.PaperD.General.foldl_secStep_invariant
+#print axioms Latc.PaperD.General.length_encList_reverse
+#print axioms Latc.PaperD.General.length_state_le
+#print axioms Latc.PaperD.General.secStep_polyTime
+#print axioms Latc.PaperD.General.reverse_polyTime
+#print axioms Latc.PaperD.General.fold_bound_arith
+#print axioms Latc.PaperD.General.allSections_inO
+#print axioms Latc.PaperD.General.one_le_instSize
+#print axioms Latc.PaperD.General.pipeline_inO
+#print axioms Latc.PaperD.General.candLists_polyTime
+#print axioms Latc.PaperD.General.anyCheck_polyTime
+#print axioms Latc.PaperD.General.anyCheck_allSections
+#print axioms Latc.PaperD.General.someCandidateMissing_inO
+#print axioms Latc.PaperD.General.classStateWeight_le_domProd_of_length
+#print axioms Latc.PaperD.General.countTest_polyTime
+#print axioms Latc.PaperD.General.classLists_polyTime
+#print axioms Latc.PaperD.General.countTest_allSections
+#print axioms Latc.PaperD.General.missingCount_inO
+#print axioms Latc.PaperD.General.timeAndSpace_of_xp
+#print axioms Latc.PaperD.General.not_inO
+#print axioms Latc.PaperD.General.fixedAttrs_of_timeAndSpace
+#print axioms Latc.PaperD.General.withBound_timeAndSpace
+#print axioms Latc.PaperD.General.decide_nonempty_eq
+#print axioms Latc.PaperD.General.decide_empty_eq
+#print axioms Latc.PaperD.General.missingNonempty_explicitDegree
+#print axioms Latc.PaperD.General.complete_explicitDegree
+#print axioms Latc.PaperD.General.missingCount_explicitDegree
+#print axioms Latc.PaperD.General.missingNonemptyFixedAttrs_uniform
+#print axioms Latc.PaperD.General.completeFixedAttrs_uniform
+#print axioms Latc.PaperD.General.missingCountFixedAttrs_uniform
+#print axioms Latc.PaperD.General.missingNonemptyWithBound_explicitDegree
+#print axioms Latc.PaperD.General.completeWithBound_explicitDegree
+#print axioms Latc.PaperD.General.missingCountWithBound_explicitDegree
