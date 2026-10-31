@@ -19,9 +19,9 @@ objects. Complementary polynomial-time results locate the hardness: all
 three problems are polynomial without constraints, and with a fixed
 number of attributes, where one machine runs within $c\,(|x|+1)^{dn+d}$
 on instances with $n$ attributes. For monotone two-literal constraints,
-counting remains \#P-complete under reductions with a single oracle
-call; for this we prove a one-call version of Valiant’s theorem on
-\#Monotone-2SAT in the same Turing-machine model.
+counting the valid states remains \#P-complete under reductions with a
+single oracle call; for this we prove a one-call version of Valiant’s
+theorem on \#Monotone-2SAT in the same Turing-machine model.
 
 ## 1 Introduction
 
@@ -64,7 +64,8 @@ Table 1 separates what this paper adds from what it reuses.
     5): non-emptiness of $M(T_0)$ is NP-complete, completeness
     coNP-complete and counting \#P-complete, for finite domains with
     clause constraints, with every number of the input written in
-    binary. Hardness holds already for Boolean domains and empty tables.
+    binary. The reductions produce only instances with Boolean domains
+    and empty tables, so hardness holds already there.
 
 2.  **Adequacy** (Section 3): the encoded problems are exactly
     latc-check’s set-based ones.
@@ -76,9 +77,10 @@ Table 1 separates what this paper adds from what it reuses.
 
 4.  **One-call hardness for monotone two-literal counting** (Section 6):
     a definition of one-call reductions in Complexitylib’s model, and a
-    one-call version of Valiant’s theorem, from which counting the
-    missing combinations stays \#P-complete under one-call reductions
-    when every constraint is $A_i = 1 \lor A_j = 1$.
+    one-call version of Valiant’s theorem, from which counting the valid
+    states (the missing combinations of an empty table) stays
+    \#P-complete under one-call reductions when every constraint is
+    $A_i = 1 \lor A_j = 1$.
 
 <div class="tabular">
 
@@ -139,17 +141,24 @@ is moreover in \#P.
 
 </div>
 
-A one-call reduction is a polynomial-time Turing reduction that makes
-exactly one oracle query, whose answer is post-processed together with
-the input. Parsimonious reductions are one-call, with
-$\mathit{post}(a, y) = y$; so \#P-hardness implies one-call
-\#P-hardness, and a parsimonious reduction followed by a one-call
-reduction is one-call. One-call hardness implies hardness under
-polynomial-time Turing reductions, the notion of Valiant ([Valiant
-1979](#ref-Valiant1979enumeration)). It is weaker than parsimonious
-hardness, which matters below: a problem whose decision version is
-trivial cannot be parsimoniously \#P-hard unless P = NP, but can be
-one-call \#P-hard. Our hardness proofs start from Complexitylib’s
+The running time of $\mathit{post}$ is polynomial in the length of $a$
+and of the oracle’s answer. For a target $g$ whose values have
+polynomially many bits, as for every function in \#P, a one-call
+reduction is a polynomial-time Turing reduction making exactly one
+oracle query, whose answer is post-processed together with the input,
+and one-call hardness implies hardness under polynomial-time Turing
+reductions, the notion of Valiant ([Valiant
+1979](#ref-Valiant1979enumeration)). (Without that bound the notion
+would be too weak: a $g$ with doubly exponential values gives
+$\mathit{post}$ exponential time in $|a|$ while carrying no information.
+We use one-call hardness only for \#Monotone-2SAT, whose value is at
+most $2^{\#\text{variables}}$, and for a target proved to be in \#P.)
+Parsimonious reductions are one-call, with $\mathit{post}(a, y) = y$; so
+\#P-hardness implies one-call \#P-hardness, and a parsimonious reduction
+followed by a one-call reduction is one-call. It is weaker than
+parsimonious hardness, which matters below: a problem whose decision
+version is trivial cannot be parsimoniously \#P-hard unless P = NP, but
+can be one-call \#P-hard. Our hardness proofs start from Complexitylib’s
 Cook–Levin theorem and its parsimonious form: SAT is NP-hard, UNSAT
 coNP-complete, and \#SAT \#P-hard under parsimonious reductions.
 
@@ -254,8 +263,9 @@ about constraint languages other than clauses.
 <div class="theorem">
 
 <span id="thm:decision" label="thm:decision"></span> Under `encInstBin`,
-*MissingNonempty* is NP-complete and *Complete* is coNP-complete. Both
-remain hard on instances with domains $\{0,1\}$ and $T_0 = \emptyset$.
+*MissingNonempty* is NP-complete and *Complete* is coNP-complete. The
+reductions use only instances with domains $\{0,1\}$ and
+$T_0 = \emptyset$.
 
 </div>
 
@@ -285,17 +295,19 @@ with latc-check’s `missing`. ◻
 The empty table shows where the hardness lies: in the constraints, not
 in the rows. With $T_0 = \emptyset$, completeness is unsatisfiability of
 the constraints. Rows only remove states, and Section 7 shows that
-without constraints they cannot make the problems hard. The same results
-hold with Boolean domains and Complexitylib’s CNF formulas as
-constraints (Appendix A).
+without constraints they cannot make the problems hard. The development
+also has a separate Boolean model, whose attributes are the variables of
+a Complexitylib CNF formula used as the constraints and whose rows are
+bit vectors; NP-, coNP- and \#P-completeness are proved for it too
+(Appendix A), without an adequacy theorem.
 
 ## 5 Counting
 
 <div class="theorem">
 
 <span id="thm:counting" label="thm:counting"></span> Under `encInstBin`,
-*missingCount* is \#P-complete under parsimonious reductions, and
-remains \#P-hard on instances with domains $\{0,1\}$ and
+*missingCount* is \#P-complete under parsimonious reductions; the
+hardness reduction uses only instances with domains $\{0,1\}$ and
 $T_0 = \emptyset$.
 
 </div>
@@ -337,11 +349,13 @@ stating that the tuple differs from that row
 Russell ([Russell 2026a](#ref-PaperA)) notes that counting the valid
 states stays \#P-complete when every clause is $A_i = 1 \lor A_j = 1$
 over domains $\{0,1\}$, citing Valiant ([Valiant
-1979](#ref-Valiant1979enumeration)). Deciding such instances is trivial:
-with domains $\{0,1\}$ and only positive two-literal clauses, the
-all-ones state is valid. So counting cannot be \#P-hard under
-parsimonious reductions unless P = NP, and the right notion is the
-one-call reduction of Definition 1.
+1979](#ref-Valiant1979enumeration)). Deciding such instances is easy:
+with domains $\{0,1\}$ and only positive two-literal clauses on existing
+attributes, the all-ones state is valid (a condition on a nonexistent
+attribute acts as a unit clause, which is still decided in polynomial
+time). So counting cannot be \#P-hard under parsimonious reductions
+unless P = NP, and the right notion is the one-call reduction of
+Definition 1.
 
 Let *SharpMonotone2SAT* be the number of models of a CNF formula whose
 clauses are all $x_i \lor x_j$, and *countValidMonotone2* the number of
@@ -387,7 +401,8 @@ occurrence in each clause that $\sigma$ makes true, with every earlier
 literal false. That occurrence is unique given $\sigma$, so these
 independent sets are in bijection with the models of $\varphi$
 (`modelCount_eq_card`). The “first true literal” choice is what makes
-the correspondence exact, for any CNF: repeated and complementary
+the correspondence exact, for any CNF with densely numbered variables
+(the hypotheses of `modelCount_eq_card`): repeated and complementary
 literals need no special case. An empty clause has no vertex, so no
 independent set reaches $K$, and the count is $0$, as it should be.
 
@@ -424,17 +439,18 @@ multiples of $2^t$, and sets with $|S| = K$ contribute $1$ each. Their
 number is $\#\mathrm{SAT}(\varphi) \le 2^n < 2^t$. So
 $$\#\mathrm{SAT}(\varphi) \;=\; \Bigl\lfloor \frac{x \cdot 2^{tK}}{2^{tN}} \Bigr\rfloor \bmod 2^t
 \qquad (\text{\texttt{sharpSAT_eq_post}}).$$ Multiplying before dividing
-avoids computing $N - K$, which is negative when $\varphi$ has empty
-clauses ($K$ counts them, $N$ does not); then the quotient is $0$, which
-is correct. The post-processing needs only binary multiplication,
-division, remainder and powers of two on numbers of polynomially many
-bits, all polynomial-time in Complexitylib; the construction of $\psi$
-is polynomial-time; and the oracle is called once, on $\psi$
-(`toMonotone_polyTime`, `post_polyTime`, `sharpSAT_oneCallReducible`).
-Composing with the parsimonious \#P-hardness of \#SAT gives
-`sharpMonotone2SAT_oneCallSharpPHard`, and with the reduction to
-*countValidMonotone2*, the second half of Theorem 4. The development
-also keeps the conditional form,
+avoids computing $N - K$, which can be negative when $\varphi$ has empty
+clauses ($K$ counts them, $N$ does not). Then every term $2^{t(K-|S|)}$
+has $|S| < K$, so the quotient is a multiple of $2^t$ and the digit is
+$0$, which is correct. The post-processing needs only binary
+multiplication, division, remainder and powers of two on numbers of
+polynomially many bits, all polynomial-time in Complexitylib; the
+construction of $\psi$ is polynomial-time; and the oracle is called
+once, on $\psi$ (`toMonotone_polyTime`, `post_polyTime`,
+`sharpSAT_oneCallReducible`). Composing with the parsimonious
+\#P-hardness of \#SAT gives `sharpMonotone2SAT_oneCallSharpPHard`, and
+with the reduction to *countValidMonotone2*, the second half of Theorem
+4. The development also keeps the conditional form,
 `countValidMonotone2_oneCallSharpPComplete_bin`, which takes
 \#Monotone-2SAT’s hardness as a hypothesis; Theorem 4 discharges it.
 
@@ -536,8 +552,8 @@ parsimonious
 none & unbounded & P & polynomial-time & –  
 clauses & at most $k$ & P, degree $O(k)$ & polynomial-time, degree
 $O(k)$ & –  
-monotone two-literal & unbounded & trivial & one-call \#P-complete &
-one-call  
+monotone two-literal, $T_0 = \emptyset$ & unbounded & polynomial &
+one-call \#P-complete & one-call  
 
 </div>
 
@@ -622,7 +638,7 @@ an instance to the table it denotes, each a few lines (Sections 2 and
 
 #### Engineering.
 
-The development has 4 227 lines of Lean, besides the audit files.
+The development has 4 236 lines of Lean, besides the audit files.
 Complexitylib’s `fun_prop` discharged most composition steps of
 polynomial-time proofs. Proofs by hand were needed where the size of
 intermediate values matters: the binary product of the domain sizes, the
@@ -638,13 +654,13 @@ commit on the next toolchain (Appendix B).
 
 #### Worst case and practice.
 
-NP-hardness does not make real DMN tables slow to check. Their
-constraints are often absent or sparse, and their number of input
-columns is small: exactly the regimes of Section 7. What the
-classification rules out is a polynomial algorithm for all tables with
-clause constraints, unless P = NP; what the tractable cases show is that
-the difficulty comes from the constraints across many attributes, not
-from the size of the domains or of the table.
+NP-hardness does not make real DMN tables slow to check. Tables with few
+input columns, or without constraints across columns, fall in the
+polynomial regimes of Section 7. What the classification rules out is a
+polynomial algorithm for all tables with clause constraints, unless
+P = NP; what the tractable cases show is that the difficulty comes from
+the constraints across many attributes, not from the size of the domains
+or of the table.
 
 ## 10 Conclusion
 
@@ -653,12 +669,13 @@ finding a missing combination NP-complete, and counting them
 \#P-complete, with machine-checked proofs on Turing machines that apply
 to latc-check’s set-based definitions; without constraints, or with a
 fixed number of attributes, all three are polynomial, with a degree
-linear in the number of attributes. For monotone two-literal constraints
-counting stays \#P-complete under one-call reductions, by a one-call
-version of Valiant’s theorem proved in the same model. What remains open
-in the formalisation is the per-$k$ machine with constants independent
-of $k$. The one-call reductions and the Valiant reduction use only
-Complexitylib’s notions and could be offered upstream.
+linear in the number of attributes. For monotone two-literal
+constraints, counting the valid states stays \#P-complete under one-call
+reductions, by a one-call version of Valiant’s theorem proved in the
+same model. What remains open in the formalisation is the per-$k$
+machine with constants independent of $k$. The one-call reductions and
+the Valiant reduction use only Complexitylib’s notions and could be
+offered upstream.
 
 ## Appendix A: Main Lean statements
 
@@ -681,6 +698,15 @@ type of instances of Section 3.
     def MissingNonempty : Set Inst :=
       {I | ∃ s, InDomains I.1 s ∧ Valid I.2.1 s ∧ s ∉ I.2.2}
     def Complete : Set Inst := MissingNonemptyᶜ
+
+#### The Boolean model (namespace `Latc.PaperD`).
+
+    theorem MissingNonempty_npComplete : NPComplete encInst MissingNonempty
+    theorem Complete_coNPComplete : coNPComplete encInst Complete
+    theorem countMissing_sharpPComplete : SharpPComplete encInst countMissing
+
+Here `Inst`, `encInst` and `MissingNonempty` are those of the Boolean
+model, a different namespace from the general one below.
 
 #### Decision problems and counting.
 
@@ -731,7 +757,7 @@ type of instances of Section 3.
 #### Contents.
 
 The development is the directory `LatcComplexity/` of the repository
-latc-complexity: 4 577 lines of Lean in 15 files, 4 227 without the two
+latc-complexity: 4 586 lines of Lean in 15 files, 4 236 without the two
 axiom-audit files, on top of latc-check’s model, copied unchanged into
 `LatcFormal/`. The README lists every theorem with its statement, and
 `docs/paper-facts.md` records the file and line of every theorem this
@@ -761,8 +787,9 @@ were proved.
 
 The core results took seven commits over about ten hours on 28–29
 October 2026. On 31 October, counting with a fixed number of attributes,
-the Valiant reduction (1 238 lines) and the explicit degree (692 lines)
-were added, the last two in parallel and merged without conflicts.
+the Valiant reduction (1 140 lines, besides its audit file) and the
+explicit degree (692 lines) were added, the last two in parallel and
+merged without conflicts.
 
 ## References
 
