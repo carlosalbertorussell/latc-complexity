@@ -7,3 +7,8 @@ import LatcComplexity.Monotone
 import LatcComplexity.Binary
 import LatcComplexity.Tractable
 import LatcComplexity.Axioms
+import LatcComplexity.Valiant.Gadget
+import LatcComplexity.Valiant.Counting
+import LatcComplexity.Valiant.Pendant
+import LatcComplexity.Valiant.OneCall
+import LatcComplexity.Valiant.Axioms
