@@ -85,8 +85,8 @@ an existing formalisation of decision-table completion with the Cook--Levin theo
 parsimonious form in Complexitylib, a library of complexity theory on multi-tape Turing
 machines. An adequacy theorem ties the encoded problems to the original set-based definitions,
 and matching tractability results show where the hardness comes from: without domain
-constraints all three problems are solvable in polynomial time, and with a fixed number of
-attributes both decision problems are. For tables whose constraints are monotone two-literal
+constraints all three problems are solvable in polynomial time, and they remain so with a fixed
+number of attributes. For tables whose constraints are monotone two-literal
 clauses, counting is in \#P and \#Monotone-2SAT reduces to it; its \#P-hardness is stated
 conditionally on Valiant's theorem.
 \end{abstract}
@@ -124,7 +124,8 @@ the three standard axioms of Lean.
   from \#SAT (\Cref{sec:counting}).
 \item \textbf{The tractable side:} without domain constraints, completeness and non-emptiness
   are in P and the count is computable in polynomial time; with at most $k$ attributes, both
-  decision problems are in P for each~$k$. Hardness needs both constraints and an unbounded
+  decision problems are in P and the count is computable in polynomial time, for each~$k$.
+  Hardness needs both constraints and an unbounded
   number of attributes (\Cref{sec:boundary}).
 \item \textbf{An adequacy theorem} linking the word-encoded problems to latc-check's set-based
   definitions, so that the theorems speak about the original objects (\Cref{sec:encoding}).
@@ -331,6 +332,17 @@ there are at most $(2N+1)^k$ such states (\lstinline{length_candidateStates_le})
 decision problems are in P for each~$k$ (\lstinline{completeFixedAttrs_mem_P},
 \lstinline{missingNonemptyFixedAttrs_mem_P}).
 
+Counting needs more, since a candidate state with an unwritten value stands for all the
+unwritten values of that attribute. For each attribute, split its domain into classes: each
+written value in the domain alone, and one class of the unwritten values (possibly empty).
+Which conditions a state satisfies depends only on its vector of classes, so $|\mathcal{V}|$ is
+the sum, over valid class vectors, of the product of the class sizes
+(\lstinline{missingCount_eq_weighted_of_le}). There are at most $(N+1)^k$ class vectors
+(\lstinline{length_classStates_le}); the weights are products of domain sizes, computed in binary
+by the bounded-growth fold of the no-constraint case. Subtracting the valid distinct rows
+of~$T_0$, the count is polynomial-time for each~$k$, with binary or unary attribute indices
+(\lstinline{missingCountFixedAttrs_polyTime}, \lstinline{missingCountFixedAttrs_polyTime_unary}).
+
 \begin{table}[t]
 \caption{Where the hardness comes from.}
 \label{tab:boundary}
@@ -341,7 +353,7 @@ decision problems are in P for each~$k$ (\lstinline{completeFixedAttrs_mem_P},
 \hline
 SAT reduction & clauses & unbounded & NP-, coNP-, \#P-complete \\
 no constraints & none & unbounded & in P; count polynomial-time \\
-fixed $k$ & clauses & at most $k$ & decision problems in P for each $k$ \\
+fixed $k$ & clauses & at most $k$ & in P; count polynomial-time, for each $k$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -351,13 +363,14 @@ fixed $k$ & clauses & at most $k$ & decision problems in P for each $k$ \\
 \label{sec:conclusion}
 
 \subparagraph*{Effort.}
-The development is 1\,966 lines of Lean in the nine files of \texttt{LatcComplexity/}, 1\,809 without the axiom-audit file.
-Its history runs from 28 October 2026, 14:16, to 29 October, 00:18: seven commits over about
-ten hours, building on latc-check's model and reduction.
+The development is 2\,598 lines of Lean in the nine files of \texttt{LatcComplexity/}, 2\,395 without the axiom-audit file.
+Its first seven commits ran from 28 October 2026, 14:16, to 29 October, 00:18, over about ten
+hours, building on latc-check's model and reduction; an eighth, on 31 October, added counting
+with a fixed number of attributes.
 
 \subparagraph*{Automation.}
 Complexitylib's \lstinline{fun_prop} discharged many polynomial-time obligations: it occurs in
-48 lines of the development, often directly after unfolding a definition. Proofs by hand were
+66 lines of the development, often directly after unfolding a definition. Proofs by hand were
 needed where the size of intermediate values matters: the product of the domain sizes, whose
 bounded growth rests on Complexitylib's \lstinline{length_encNat_mul_le}, and the enumeration of
 candidate states, whose polynomial time is proved by induction on~$k$. Reading a list at a
@@ -377,16 +390,15 @@ and which now lives on as a separate repository with a different API.
 % (Lean rc2), #1694 (CSLib and Mathlib on rc2), #1657 (fun_prop clients on rc2).
 
 \subparagraph*{Trust.}
-\texttt{LatcComplexity/Axioms.lean} prints the axioms of 130 theorems, among them every theorem of this development that the paper cites; each depends only on
+\texttt{LatcComplexity/Axioms.lean} prints the axioms of 174 theorems, among them every theorem of this development that the paper cites; each depends only on
 \lstinline{propext}, \lstinline{Classical.choice} and \lstinline{Quot.sound}, or fewer. A
 cold build, from a fresh clone downloading precompiled Mathlib, took about seven minutes and 12\,GB of disk at an
 earlier commit; it will be re-measured at the final one.
 
 \subparagraph*{What remains.}
-Valiant's theorem in Complexitylib's model, which would discharge \lstinline{hValiant}; counting
-with a fixed number of attributes, which needs each candidate state weighted by the number of
-unwritten values it stands for; and an explicit formula in~$k$ for the degree of the
-fixed-attribute bound, which we prove polynomial for each~$k$ without extracting the degree.
+Valiant's theorem in Complexitylib's model, which would discharge \lstinline{hValiant}; and an
+explicit formula in~$k$ for the degree of the fixed-attribute bounds, which we prove polynomial
+for each~$k$ without extracting the degree.
 
 %-----------------------------------------------------------------------------------------------
 \bibliography{../docs/paper-refs,extra}

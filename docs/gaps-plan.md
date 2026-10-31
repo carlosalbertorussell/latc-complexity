@@ -8,10 +8,10 @@ descriptive-complexity (`fc068f6`) contain on that date.
 | Gap | What it closes | Size | Order |
 |---|---|---|---|
 | 1. Valiant's theorem in Complexitylib's model | the hypothesis `hValiant`; the monotone case becomes unconditional | large | second |
-| 2. Counting with a fixed number of attributes | the counting half of the tractable side | moderate | first |
-| 3. An explicit degree in k | uniformity of the fixed-attribute bound | small maths, heavy bookkeeping | last, or only if a referee asks |
+| 2. Counting with a fixed number of attributes | the counting half of the tractable side | moderate | first; **done** (`242311b`) |
+| 3. An explicit degree in k | uniformity of the fixed-attribute bounds | small maths, heavy bookkeeping | last; started 2026-10-31 |
 
-None of them blocks the ITP 2027 submission: the draft states all three as open.
+None of them blocks the ITP 2027 submission. Gap 2 is closed; the draft states the other two as open.
 
 ## Gap 1: Valiant's theorem in Complexitylib's model
 
@@ -72,8 +72,11 @@ over at most (N+1)ᵏ class vectors, N the number of written values.
 the weights in binary, reusing the bounded-growth fold of `domProd_polyTime` (every partial sum is
 at most ∏ dᵢ); polynomial time by the induction on k of `candidateStates_polyTime`.
 
-**Status.** Started on 2026-10-31 in a separate cloud session, which installs Lean, builds, and
-pushes to `main` only after a clean build and axiom audit.
+**Status.** Done on 2026-10-31, commit `242311b`, pushed to `main` after a clean build and axiom
+audit (174 theorems, each on a subset of the three standard axioms):
+`missingCount_eq_weighted_of_le`, `length_classStates_le`, `missingCountFixedAttrs_polyTime` and
+`missingCountFixedAttrs_polyTime_unary`, in `Tractable.lean`. The weights are summed by
+`countClasses`, a bounded-growth fold (`countClasses_polyTime`).
 
 ## Gap 3: an explicit degree in k
 
@@ -87,4 +90,12 @@ relation between them; the search space is bounded by (2N+1)ᵏ with N ≤ |x|.
 constant and degree. Redo `boundedSections_polyTime` and the fixed-k decider with explicit time
 bounds through each composition, since the library's composition lemmas are existential.
 
-**Priority.** Lowest. For the paper, polynomial time for each k plus the (2N+1)ᵏ bound suffices.
+**Scope.** Both fixed-attribute bounds: the decider (search space (2N+1)ᵏ) and, since Gap 2, the
+counter (at most (N+1)ᵏ class vectors).
+
+**Priority.** Lowest. For the paper, polynomial time for each k plus these bounds suffices.
+
+**Status.** Started on 2026-10-31 in a separate cloud session, on branch
+`claude/gap3-explicit-degree` (new file `LatcComplexity/ExplicitDegree.lean` preferred), with
+progress in `docs/gap3-progress.md` on that branch. It merges to `main` only after a clean build
+and axiom audit.

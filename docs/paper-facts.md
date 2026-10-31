@@ -2,13 +2,19 @@
 
 Checked 2026-10-29 against commit `011cd1a` of latc-complexity, for Paper D, "Machine-Checked
 Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was changed.
+Updated 2026-10-31 for commit `242311b` (counting with a fixed number of attributes, Gap 2 of
+`docs/gaps-plan.md`): line numbers in `Tractable.lean`, the §6 entries, the audit count and the
+line counts.
 
 ## Summary
 
-* **Theorems: 49/49 found.** These are the 49 rows of the README's theorem tables (47 names;
+* **Theorems: 52/52 found.** These are the 52 rows of the README's theorem tables (50 names;
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
   `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). The 49th,
-  `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31. They include all 24
+  `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
+  last three, the counting result of commit `242311b` (`missingCount_eq_weighted_of_le`,
+  `length_classStates_le`, `missingCountFixedAttrs_polyTime`); §6 below also records its `_unary`
+  corollary, which the paper draft cites. They include all 24
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
   first checked, and the 24 its section table cites after the edits of 2026-10-30 and 31. Of four
@@ -80,13 +86,13 @@ with the first list:
 | 5 | `countValidMonotone2_mem_SharpP_bin` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin` | `LatcComplexity/Binary.lean:171` | exists, exact name (added 2026-10-31) |
 | 5 | `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name; targets `encInst`, no `_bin` form |
 | 5 | `countValidMonotone2_oneCallSharpPComplete_bin` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` | `LatcComplexity/Binary.lean:179` | exists, exact name (added 2026-10-31) |
-| 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:184` | exists, exact name |
-| 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
-| 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:153` | exists, exact name |
-| 6 | `missingCount_eq_of_noConstraints` | `Latc.PaperD.General.missingCount_eq_of_noConstraints` | `LatcComplexity/Tractable.lean:91` | exists, exact name |
-| 6 | `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
-| 6 | `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:456` | exists, exact name |
-| 6 | `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:281` | exists, exact name |
+| 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
+| 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:208` | exists, exact name |
+| 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:165` | exists, exact name |
+| 6 | `missingCount_eq_of_noConstraints` | `Latc.PaperD.General.missingCount_eq_of_noConstraints` | `LatcComplexity/Tractable.lean:103` | exists, exact name |
+| 6 | `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:480` | exists, exact name |
+| 6 | `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
+| 6 | `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:293` | exists, exact name |
 
 Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the outline on
 2026-10-30; 1 and 4 still apply.
@@ -110,13 +116,14 @@ Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the o
    one-call reductions, defined in `Monotone.lean`, and is not Complexitylib's parsimonious
    `SharpPHard`.
 
-A side note on the audit file: it prints 130 of the 147 `theorem`/`lemma` declarations in
-`LatcComplexity/`. The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
+A side note on the audit file: it prints 174 of the 191 `theorem`/`lemma` declarations in
+`LatcComplexity/` (130 of 147 at `011cd1a`; commit `242311b` added 44 declarations to
+`Tractable.lean`, all printed). The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
 `assignment_pad`, `condHoldsB_polyTime`, `encList_polyTime`, `fromSAT_get`, `fromSAT_n`,
 `getElem?_toList_boolTuple`, `length_certWord`, `length_domains_le`, `length_encCNF_le`,
 `length_tuple`, `lookup_polyTime`, `mem_vars_denseRelabel_iff`, `ofFn_certFun`, `ofFn_getD` and
 `pos2B_emptyClauseInst`. The README says the file covers "every theorem", which is not literally
-true. All 49 theorems below are printed.
+true. All 53 theorems below are printed.
 
 ## Theorems by paper section
 
@@ -563,7 +570,7 @@ theorem countValidMonotone2_oneCallSharpPComplete_bin
 
 #### `Latc.PaperD.General.missingCount_eq_of_noConstraints` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:91`
+- Exists: yes, `LatcComplexity/Tractable.lean:103`
 - Reading: Without constraints, |M(T₀)| equals the product of the domain sizes minus the number of distinct rows of T₀ inside the declared domains.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -574,7 +581,7 @@ theorem missingCount_eq_of_noConstraints (I : Inst) (h : I.2.1 = []) :
 
 #### `Latc.PaperD.General.missingCountNoConstraints_polyTime` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:153`
+- Exists: yes, `LatcComplexity/Tractable.lean:165`
 - Reading: Without constraints, |M(T₀)| is computable exactly in polynomial time under `encInstBin` (the function is zero on instances with constraints).
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -586,7 +593,7 @@ theorem missingCountNoConstraints_polyTime :
 
 #### `Latc.PaperD.General.completeNoConstraints_mem_P` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:184`
+- Exists: yes, `LatcComplexity/Tractable.lean:196`
 - Reading: Deciding completeness of tables without constraints is in P, for any number of attributes and binary domain sizes.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -597,7 +604,7 @@ theorem completeNoConstraints_mem_P :
 
 #### `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:196`
+- Exists: yes, `LatcComplexity/Tractable.lean:208`
 - Reading: Deciding non-emptiness of the missing set for tables without constraints is in P.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -608,7 +615,7 @@ theorem missingNonemptyNoConstraints_mem_P :
 
 #### `Latc.PaperD.General.length_candidateStates_le` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:281`
+- Exists: yes, `LatcComplexity/Tractable.lean:293`
 - Reading: With `N` the number of values written in the instance, at most (2N + 1)ᵏ candidate states are searched for `k` attributes.
 - Axioms: `[propext, Quot.sound]`
 
@@ -619,7 +626,7 @@ theorem length_candidateStates_le (k : ℕ) (I : Inst) :
 
 #### `Latc.PaperD.General.candidateStates_polyTime`
 
-- Exists: yes, `LatcComplexity/Tractable.lean:347`
+- Exists: yes, `LatcComplexity/Tractable.lean:359`
 - Reading: For each fixed `k`, the list of candidate states is computable in polynomial time under `encInstBin`.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -630,7 +637,7 @@ theorem candidateStates_polyTime (k : ℕ) :
 
 #### `Latc.PaperD.General.exists_missing_candidate_iff`
 
-- Exists: yes, `LatcComplexity/Tractable.lean:387`
+- Exists: yes, `LatcComplexity/Tractable.lean:399`
 - Reading: With at most `k` attributes, a missing state exists iff some candidate state (values among 0..N and the written values) passes the check.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -641,7 +648,7 @@ theorem exists_missing_candidate_iff {k : ℕ} {I : Inst} (hk : I.n ≤ k) :
 
 #### `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:456`
+- Exists: yes, `LatcComplexity/Tractable.lean:468`
 - Reading: For each fixed `k`, deciding non-emptiness of the missing set for tables with at most `k` attributes (any clause constraints, binary domain sizes) is in P.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -652,7 +659,7 @@ theorem missingNonemptyFixedAttrs_mem_P (k : ℕ) :
 
 #### `Latc.PaperD.General.completeFixedAttrs_mem_P` (outline)
 
-- Exists: yes, `LatcComplexity/Tractable.lean:468`
+- Exists: yes, `LatcComplexity/Tractable.lean:480`
 - Reading: For each fixed `k`, deciding completeness of tables with at most `k` attributes is in P.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
@@ -661,9 +668,59 @@ theorem completeFixedAttrs_mem_P (k : ℕ) :
     {I : Inst | I.n ≤ k ∧ missing I.con I.table = ∅} ∈ P encInstBin
 ```
 
+#### `Latc.PaperD.General.missingCount_eq_weighted_of_le`
+
+- Exists: yes, `LatcComplexity/Tractable.lean:840`
+- Reading: With at most `k` attributes, |M(T₀)| is the sum, over the class vectors (each written value alone, or the unwritten class, per attribute) that are valid and not rows of T₀, of the number of states each stands for.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem missingCount_eq_weighted_of_le {k : ℕ} {I : Inst} (hk : I.n ≤ k) :
+    missingCount I = ((classStates k I).map fun c =>
+      if validB (I, c) then classStateWeight (I, c) else 0).sum
+```
+
+#### `Latc.PaperD.General.length_classStates_le`
+
+- Exists: yes, `LatcComplexity/Tractable.lean:857` (declared `lemma`)
+- Reading: With `N` the number of values written in the instance, at most (N + 1)ᵏ class vectors are summed for `k` attributes.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+lemma length_classStates_le (k : ℕ) (I : Inst) :
+    (classStates k I).length ≤ (I.numVals + 1) ^ k
+```
+
+#### `Latc.PaperD.General.missingCountFixedAttrs_polyTime`
+
+- Exists: yes, `LatcComplexity/Tractable.lean:1052`
+- Reading: For each fixed `k`, |M(T₀)| for tables with at most `k` attributes (any clause constraints, binary domain sizes) is computable exactly in polynomial time under `encInstBin` (the function is zero on instances with more attributes).
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem missingCountFixedAttrs_polyTime (k : ℕ) :
+    ComputableInPolyTime (fun I : Inst => if I.n ≤ k then missingCount I else 0)
+      encInstBin encNat
+```
+
+#### `Latc.PaperD.General.missingCountFixedAttrs_polyTime_unary`
+
+- Exists: yes, `LatcComplexity/Tractable.lean:1094`
+- Reading: The same under `encInst`, by composing with `encInst_to_encInstBin_polyTime`. Not a row of the README's tables; cited by the paper draft.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem missingCountFixedAttrs_polyTime_unary (k : ℕ) :
+    ComputableInPolyTime (fun I : Inst => if I.n ≤ k then missingCount I else 0)
+      encInst encNat
+```
+
+Axiom lines for these four: the README's audit (build of 2026-10-31, commit `242311b`) lists every
+theorem that prints fewer than all three axioms, and none of the four is among them.
+
 ## Line counts
 
-Counted with `wc -l` (every line, including blank lines and comments) at `011cd1a`.
+Counted with `wc -l` (every line, including blank lines and comments) at `242311b`.
 
 | File | Lines | Theorems/lemmas |
 |---|---|---|
@@ -674,10 +731,10 @@ Counted with `wc -l` (every line, including blank lines and comments) at `011cd1
 | `LatcComplexity/CountingGeneral.lean` | 262 | 20 |
 | `LatcComplexity/Monotone.lean` | 191 | 15 |
 | `LatcComplexity/Binary.lean` | 186 | 21 |
-| `LatcComplexity/Tractable.lean` | 513 | 37 |
-| `LatcComplexity/Axioms.lean` | 157 | 0 (130 `#print axioms`) |
-| **`LatcComplexity/` total** | **1966** | **147** |
-| `LatcComplexity/` without `Axioms.lean` | 1809 | 147 |
+| `LatcComplexity/Tractable.lean` | 1099 | 81 |
+| `LatcComplexity/Axioms.lean` | 203 | 0 (174 `#print axioms`) |
+| **`LatcComplexity/` total** | **2598** | **191** |
+| `LatcComplexity/` without `Axioms.lean` | 2395 | 191 |
 | `LatcComplexity.lean` (root import file) | 9 | |
 | `LatcFormal/Basic.lean` | 114 | |
 | `LatcFormal/Thm1.lean` | 130 | |
@@ -690,11 +747,12 @@ Counted with `wc -l` (every line, including blank lines and comments) at `011cd1
 | `LatcFormal/Prop7.lean` | 121 | |
 | `LatcFormal/Examples.lean` | 96 | |
 | `LatcFormal/Axioms.lean` | 95 | |
-| **`LatcFormal/` total** (copied unchanged from latc-check) | **1786** | |
+| **`LatcFormal/` total** (copied unchanged from latc-check) | **1777** | |
 | `LatcFormal.lean` (root import file) | 11 | |
-| **Repository total, all `.lean` files** | **3763** | |
+| **Repository total, all `.lean` files** | **4395** | |
 
-Paper D's new development is `LatcComplexity/`: 1966 lines, or 1809 without the audit file.
+Paper D's new development is `LatcComplexity/`: 2598 lines, or 2395 without the audit file (1966
+and 1809 at `011cd1a`, before the counting result).
 
 ## References
 
