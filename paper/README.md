@@ -2,7 +2,7 @@
 
 "Machine-Checked Complexity of Decision-Table Completeness in Lean", planned as an ITP 2027
 short paper. `main.tex` is the first full draft (2026-10-31), in the LIPIcs class
-`lipics-v2021`, written from this repository at commit `011cd1a` and from
+`lipics-v2021`, written from this repository at commit `242311b` and from
 `../docs/paper-facts.md`, which records the statement, file and line of every theorem it cites.
 
 ## Build
@@ -14,6 +14,17 @@ latexmk -pdf main.tex
 ```
 
 The bibliography is `../docs/paper-refs.bib` (the verified references) plus `extra.bib`.
+
+## Reading copy
+
+`draft.md` is a Markdown rendering of `main.tex` for reading on screen, made with pandoc
+(citations resolved from the same bibliography). Regenerate it after editing `main.tex`:
+
+```bash
+python3 tomd.py
+```
+
+`main.tex` is the source; do not edit `draft.md` by hand.
 
 ## Not yet checked
 
