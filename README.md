@@ -102,7 +102,7 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Binary` | The attribute index of a condition in binary: every theorem above for the encoding `encInstBin` |
 | `LatcComplexity.Tractable` | The tractable side: no constraints, or at most `k` attributes, in polynomial time |
 | `LatcComplexity.ExplicitDegree` | The fixed-attribute bounds with an explicit degree, uniform in `k`: time and space `c · (\|x\| + 1) ^ (d · n + d)` |
-| `LatcComplexity.Axioms` | `#print axioms` on every theorem of the `LatcComplexity` files (`LatcComplexity.Valiant.Axioms` for `Valiant/`) |
+| `LatcComplexity.Axioms` | `#print axioms` on every main theorem of the `LatcComplexity` files (17 helper lemmas are not printed) (`LatcComplexity.Valiant.Axioms` for `Valiant/`) |
 
 ## Theorems
 

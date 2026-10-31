@@ -2,6 +2,9 @@
 
 Checked 2026-10-29 against commit `011cd1a` of latc-complexity, for Paper D, "Machine-Checked
 Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was changed.
+Updated 2026-10-31 for commits `a21b85f` and `3b6f523` (the monotone result for any T₀ and the
+tightened shape tests): their §5 entries, the outline names (31) and the line counts; and after two
+referee reads of the paper, the summary and the references added after them.
 Updated 2026-10-31 for commit `cbf016b` (an explicit degree in k, Gap 3, merged from `d6980bb`):
 the §6 explicit-degree entries, the audit count and the line counts.
 Updated 2026-10-31 for commit `43d7e25` (Valiant's theorem, Gap 1, merged from `3bb09ae`): the §5

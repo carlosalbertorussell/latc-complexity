@@ -3,7 +3,7 @@
 "Machine-Checked Complexity of Decision-Table Completeness in Lean", planned as an ITP 2027
 paper. `main.tex` is the revised draft (2026-10-31), restructured as a regular paper after
 four referee reports, in the LIPIcs class
-`lipics-v2021`, written from this repository at commit `42b9977` and from
+`lipics-v2021`, written from this repository at commit `3b6f523` and from
 `../docs/paper-facts.md`, which records the statement, file and line of every theorem it cites.
 
 ## Build
@@ -33,7 +33,7 @@ python3 tomd.py
   `texlive-latex-extra`, `texlive-publishers`, `texlive-science`, `texlive-fonts-extra`,
   `texlive-plain-generic`, `lmodern`, `cm-super`) and `lipics-v2021.cls` v3.1.3 (2023/05/12) from
   Dagstuhl's [styles repository](https://github.com/dagstuhl-publishing/styles), which Debian's
-  `texlive-publishers` lacks; put it on `TEXINPUTS`. `latexmk -pdf main.tex` gives 13 pages
+  `texlive-publishers` lacks; put it on `TEXINPUTS`. `latexmk -pdf main.tex` gives 16 pages
   (10 sections, references, two appendices) with no errors, no undefined references or
   citations, and no overfull boxes. BibTeX warns that `plainurl` does not know `@software`.
 * `../docs/paper-refs.bib` uses `@software` for two entries, which BibTeX's `plainurl` style does
