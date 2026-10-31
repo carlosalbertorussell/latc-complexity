@@ -12,7 +12,10 @@ line counts.
 
 ## Summary
 
-* **Theorems: 59/59 found, plus Gap 3.** The README's Valiant table (7 rows, Gap 1) is checked in
+* **Theorems: all found (status at `3b6f523`).** Since the first check the README has gained the
+  any-T₀ monotone theorems (`Valiant/AnyTable.lean`, §5 below) and the all-ones lemmas of the
+  tightened shape tests; every theorem the paper cites exists as written (checked again by an
+  independent audit and a referee read on 2026-10-31). Earlier status: 59/59 found, plus Gap 3. The README's Valiant table (7 rows, Gap 1) is checked in
   §5 below, under "Valiant's theorem"; its explicit-degree table (3 rows naming 9 theorems, Gap 3)
   in §6, under "An explicit degree". The other 52 are the earlier rows of the README's theorem tables (50 names;
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
@@ -24,7 +27,7 @@ line counts.
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
   first checked, and the 29 its section table cites after the edits of 2026-10-30 and 31. Of four
-  cautions in the next section, two were resolved in the outline and two still apply.
+  cautions in the next section, three are resolved and one (namespaces) still applies.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
   states no preferred citation. (complexitylib was later resolved from the repository itself:
@@ -44,11 +47,12 @@ line counts.
   tables with unknown entries, not for completeness, so the claim must be about completeness;
   Menghi et al. (IEEE TSE 2025) prove completeness of Simulink Requirements Tables undecidable
   over real-valued signals (Novelty, items 6 and 7).
-* **Axiom audit:** the axiom lines below are copied from the audit recorded in the README (build of
-  2026-10-29, `LatcComplexity/Axioms.lean`). The audit was **not re-run** in this session: the
-  sandbox refused to install the Lean toolchain. A whole-word search of every `.lean` file for
-  `sorry`, `admit`, `native_decide` and `axiom` was re-run and finds them only in `#print axioms`
-  commands.
+* **Axiom audit:** the per-theorem axiom lines below were first copied from the README's audit
+  (build of 2026-10-29). The full audit was later re-run in cloud sessions with Lean installed:
+  300 theorems at the final cold build (`6603497`), 318 after the monotone additions (`3b6f523`):
+  268 on all three standard axioms, 50 on fewer, none on `sorryAx` (README, "Axiom audit"). A
+  whole-word search of every `.lean` file for `sorry`, `admit`, `native_decide` and `axiom`
+  finds them only in `#print axioms` commands.
 
 ## Outline names: check and cautions
 

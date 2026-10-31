@@ -9,12 +9,13 @@ Carlos A. Russell, Independent Researcher, Buenos Aires, Argentina
 **Abstract.** A decision table is complete when every combination of its declared
 condition values that the domain constraints allow is covered by a row.
 We prove in Lean 4, over multi-tape Turing machines and with no unproved
-assumptions, that for finite-domain decision tables with clause
-constraints, deciding whether a combination is missing is NP-complete,
-deciding completeness is coNP-complete, and counting the missing
-combinations is \#P-complete. An adequacy theorem ties these word
-problems to the set-based definitions of an existing formalisation of
-decision-table completion, so the results speak about the original
+assumptions beyond the definitions themselves, that for finite-domain
+decision tables with clause constraints and rows that are complete
+condition tuples, deciding whether some combination is missing is
+NP-complete, deciding completeness is coNP-complete, and counting the
+missing combinations is \#P-complete. An adequacy theorem ties these
+word problems to the set-based definitions of an existing formalisation
+of decision-table completion, so the results speak about the original
 objects. Complementary polynomial-time results locate the hardness: all
 three problems are polynomial without constraints, and with a fixed
 number of attributes, where one machine runs within $c\,(|x|+1)^{dn+d}$
@@ -44,17 +45,26 @@ that completeness under clause constraints is coNP-complete and that
 counting $|M(T_0)|$ is \#P-complete (Proposition 5 there). The
 accompanying Lean development, latc-check ([Russell
 2026b](#ref-latc_check_0_1_0)), formalised the decision-table model and
-the combinatorial reduction, but not the complexity classes: those need
-a model of computation, polynomial-time bounds and encodings, which
-latc-check did not have.
+a combinatorial reduction from its own propositional formulas, but not
+the complexity classes: those need a model of computation,
+polynomial-time bounds and encodings, which latc-check did not have.
 
 This paper supplies them. We compose latc-check’s model with
 Complexitylib ([Schlesinger and The Complexitylib contributors
 2026](#ref-Complexitylib)), a Lean 4 library of complexity theory on
 multi-tape Turing machines with a machine-checked Cook–Levin theorem,
 and prove the classification end to end, together with results that
-neither earlier development contains. Every theorem depends only on
-Lean’s three standard axioms, and none on `sorry`.
+neither earlier development contains. On paper the classification is
+elementary: with no rows, completeness is unsatisfiability of the
+constraints. The contribution is its mechanisation on Turing machines
+with an adequacy theorem, the tractability boundary with an explicit
+degree, and the one-call Valiant theorem. Every theorem we cite depends
+only on Lean’s three standard axioms, and the build contains no `sorry`.
+
+*Scope.* Throughout, a row of the table is a complete tuple of condition
+values, as in latc-check. Tables with compact rows, such as DMN rules
+with wildcards or ranges, are a different problem: there completeness is
+coNP-hard even without constraints (Section 8).
 
 #### Contributions.
 
@@ -65,35 +75,39 @@ Table 1 separates what this paper adds from what it reuses.
     coNP-complete and counting \#P-complete, for finite domains with
     clause constraints, with every number of the input written in
     binary. The reductions produce only instances with Boolean domains
-    and empty tables, so hardness holds already there.
+    and empty tables, so hardness holds already there (by inspection of
+    the reduction, not as a separate Lean theorem).
 
 2.  **Adequacy** (Section 3): the encoded problems are exactly
     latc-check’s set-based ones.
 
-3.  **The tractability boundary** (Section 7): polynomial time without
-    constraints, and with a fixed number of attributes, for both
-    decision problems and for counting, with an explicit degree linear
-    in the number of attributes.
-
-4.  **One-call hardness for monotone two-literal counting** (Section 6):
+3.  **One-call hardness for monotone two-literal counting** (Section 6):
     a definition of one-call reductions in Complexitylib’s model, and a
     one-call version of Valiant’s theorem, from which counting the
     missing combinations stays \#P-complete under one-call reductions
-    when every constraint is $A_i = 1 \lor A_j = 1$, for tables with any
-    rows.
+    when every constraint is $A_i = 1 \lor A_j = 1$, for tables with
+    arbitrary rows (hard already with none).
+
+4.  **The tractability boundary** (Section 7): polynomial time without
+    constraints, and with a fixed number of attributes, for both
+    decision problems and for counting, with an explicit degree linear
+    in the number of attributes.
 
 <div class="tabular">
 
 L0.38L0.26L0.26 result & before this paper & here  
 decision-table model, missing set & latc-check (Lean) & reused  
-SAT to missing states, combinatorially & latc-check (Lean) & reused  
+SAT reduction to missing states & latc-check, from its own formulas &
+new, from Complexitylib’s CNF  
 NP/coNP-completeness, \#P-completeness & on paper ([Russell
 2026a](#ref-PaperA), Prop. 5) & Turing machines, in Lean  
 adequacy of the encoded problems & – & new  
-polynomial cases: no constraints, fixed $k$ & – & new  
+polynomial cases: no constraints, fixed $k$ & analogues for
+firewalls ([Hamilton, Roughan, and Nguyen
+2022](#ref-HamiltonRoughanNguyen2022)) & new for decision tables  
 explicit degree in the number of attributes & – & new  
-one-call reductions, one-call Valiant & Valiant, Turing reductions & new
-in this model  
+one-call reductions, one-call Valiant & Valiant (Turing reductions);
+Senellart–Gnatenko (logical model) & new in Complexitylib’s model  
 
 </div>
 
@@ -106,7 +120,8 @@ lists the main Lean statements and Appendix B the artifact.
 
 #### Machines, encodings and classes.
 
-Complexitylib works with multi-tape Turing machines over a binary
+Complexitylib, built on CSLib ([Barrett et al. 2026](#ref-CSLib2026))
+and Mathlib, works with multi-tape Turing machines over a binary
 alphabet. A type $\alpha$ is given an encoding, an injection
 $\alpha \hookrightarrow \{0,1\}^*$; pairs, lists and natural numbers
 have standard encodings, numbers in binary (`encNat`) or in unary
@@ -117,8 +132,11 @@ is in P when its characteristic function is; in NP when it is the set of
 inputs having a certificate of polynomially bounded length accepted by a
 polynomial-time verifier; and coNP is the class of complements. A
 function $f$ into $\mathbb{N}$ is in \#P when $f(a)$ is the number of
-certificates of a polynomially bounded length that a polynomial-time
-verifier accepts on $a$.
+certificates of length exactly $p(|a|)$, for a polynomial $p$, that a
+polynomial-time verifier accepts on $a$. A library lemma,
+`mem_SharpP_of_polyTime_length`, lets the certificate length be any
+polynomial-time computable function of the input instead; our counting
+verifiers use it.
 
 #### Reductions.
 
@@ -127,7 +145,7 @@ polynomial-time $r$ with $a \in A \iff r(a) \in B$; NP-, coNP-hardness
 and completeness are defined with it. A *parsimonious* reduction from
 $f$ to $g$ is a polynomial-time $r$ with $f(a) = g(r(a))$; Complexitylib
 defines \#P-hardness with it. These two are Complexitylib’s. The third
-is ours:
+is defined in this development:
 
 <div class="definition">
 
@@ -172,11 +190,12 @@ condition tuples. The valid space is
 $\mathcal{V} = \{x \in \mathcal{D} : C(x)\}$, the missing set is
 $M(T_0) = \mathcal{V} \setminus T_0$, and the table is complete when
 $M(T_0) = \emptyset$. In Lean these are `validSpace C` and
-`missing C T`, both `Finset`s, so duplicate rows play no role. Two
-lemmas identify latc-check’s clause constraints and satisfiability with
-Complexitylib’s CNF formulas (`holdsAll_eq_eval`,
-`satisfiable_decode_iff`), which lets the two developments share the SAT
-reduction.
+`missing C T`, both `Finset`s, so duplicate rows play no role; this
+model, not latc-check’s own reduction, is what the present development
+reuses. Two lemmas check that latc-check’s clause constraints and
+satisfiability agree with Complexitylib’s CNF formulas
+(`holdsAll_eq_eval`, `satisfiable_decode_iff`); the hardness proofs
+below use a new reduction stated directly on Complexitylib’s CNF.
 
 ## 3 Instances, encoding and adequacy
 
@@ -238,7 +257,9 @@ that the default $0$ matches no value: an out-of-range attribute fails
 the condition, as the semantics requires. A second encoding, `encInst`,
 writes the attribute index in unary. The identity is polynomial-time
 from `encInst` to `encInstBin`, so hardness for the unary encoding
-transfers to the binary one; every result below holds for both.
+transfers to the binary one; every result below holds for both, except
+the explicit-degree bounds of Section 7, which are stated for
+`encInstBin` only.
 
 #### Adequacy.
 
@@ -294,12 +315,13 @@ with latc-check’s `missing`. ◻
 
 The empty table shows where the hardness lies: in the constraints, not
 in the rows. With $T_0 = \emptyset$, completeness is unsatisfiability of
-the constraints. Rows only remove states, and Section 7 shows that
-without constraints they cannot make the problems hard. The development
-also has a separate Boolean model, whose attributes are the variables of
-a Complexitylib CNF formula used as the constraints and whose rows are
-bit vectors; NP-, coNP- and \#P-completeness are proved for it too
-(Appendix A), without an adequacy theorem.
+the constraints. Rows that are complete tuples only remove single
+states, and Section 7 shows that without constraints they cannot make
+the problems hard; compact rows could (Section 8). The development also
+has a separate Boolean model, whose attributes are the variables of a
+Complexitylib CNF formula used as the constraints and whose rows are bit
+vectors; NP-, coNP- and \#P-completeness are proved for it too (Appendix
+A), without an adequacy theorem.
 
 ## 5 Counting
 
@@ -339,9 +361,9 @@ parsimonious Cook–Levin theorem gives
 
 </div>
 
-For Boolean domains there is also a parsimonious reduction *to* \#SAT:
-add to the constraints, for each row of the right length, the clause
-stating that the tuple differs from that row
+In the separate Boolean model there is also a parsimonious reduction
+*to* \#SAT: add to the constraints, for each row of the right length,
+the clause stating that the tuple differs from that row
 (`countMissing_eq_sharpSAT`).
 
 ## 6 Monotone two-literal constraints and Valiant’s theorem
@@ -353,9 +375,9 @@ over domains $\{0,1\}$, citing Valiant ([Valiant
 with domains $\{0,1\}$ and only positive two-literal clauses on existing
 attributes, the all-ones state is valid; the shape tests also require
 every condition to name an existing attribute, so every such instance
-has a missing state (`mem_missingNonempty_of_pos2B`). So counting cannot
-be \#P-hard under parsimonious reductions unless P = NP, and the right
-notion is the one-call reduction of Definition 1.
+with no rows has a missing state (`mem_missingNonempty_of_pos2B`). So
+counting cannot be \#P-hard under parsimonious reductions unless P = NP,
+and the right notion is the one-call reduction of Definition 1.
 
 Let *SharpMonotone2SAT* be the number of models of a CNF formula whose
 clauses are all $x_i \lor x_j$, and *countValidMonotone2* the number of
@@ -520,18 +542,19 @@ polynomial-time for each $k$ (`missingCountFixedAttrs_polyTime`).
 “Polynomial time for each $k$” allows the polynomial to depend on $k$
 arbitrarily. We bound it with Complexitylib’s `ComputableTidilyInO`,
 which keeps explicit bound functions and a single constant through
-composition, case splits and folds. Three statements are proved, each
-for non-emptiness, completeness and counting, each for time and space:
+composition, case splits and folds. The following are proved, each for
+non-emptiness, completeness and counting, each for time and space, under
+`encInstBin`:
 
 1.  *One machine for all instances.* There are $c, d$ such that one
     machine decides non-emptiness on every instance within
     $c\,(|x|+1)^{dn+d}$, where $n$ is the instance’s number of
     attributes (`missingNonempty_explicitDegree`; Appendix A).
 
-2.  *Uniform in $k$* (`missingNonemptyFixedAttrs_uniform`). There are
-    $c, d_0, d_1$ such that for every $k$, on instances with at most $k$
-    attributes, one machine decides the problem within
-    $c\,(|x|+1)^{d_0 k + d_1}$.
+2.  *Uniform in $k$*, a direct corollary of 1
+    (`missingNonemptyFixedAttrs_uniform`). There are $c, d_0, d_1$ such
+    that for every $k$, on instances with at most $k$ attributes, one
+    machine decides the problem within $c\,(|x|+1)^{d_0 k + d_1}$.
 
 3.  *$k$ in the input.* There are $c, d$ such that one machine, given
     $k$ in unary and an instance, decides “at most $k$ attributes and
@@ -553,19 +576,37 @@ all instances with $k$ given as input.
 
 <div class="tabular">
 
-L0.15L0.11L0.17L0.2L0.17 constraints & attributes & deciding & counting
-& hardness via  
-clauses & unbounded & NP-, coNP-complete & \#P-complete & many-one,
-parsimonious  
-none & unbounded & P & polynomial-time & –  
-clauses & at most $k$ & P, degree $O(k)$ & polynomial-time, degree
-$O(k)$ & –  
-monotone two-literal & unbounded & polynomial & one-call \#P-complete &
-one-call  
+L0.11L0.13L0.12L0.15L0.16L0.14 rows & constraints & attributes &
+deciding & counting & hardness via  
+tuples & clauses & unbounded & NP-, coNP-complete & \#P-complete &
+many-one, parsimonious  
+tuples & none & unbounded & P & polynomial-time & –  
+tuples & clauses & at most $k$ & P, degree $O(k)$ & polynomial-time,
+degree $O(k)$ & –  
+tuples & monotone two-literal & unbounded & trivial if $T_0 = \emptyset$
+& one-call \#P-complete & one-call  
+compact (wildcards) & none & unbounded & coNP-complete (on paper) &
+\#P-complete (on paper) & DNF tautology, \#SAT  
 
 </div>
 
 ## 8 Related work
+
+#### Compact rows.
+
+Our rows are complete tuples, as in latc-check. In DMN and in many rule
+bases a row is compact: a conjunction of tests, with wildcards or
+ranges, standing for many tuples. Then the rows form a DNF formula,
+completeness is its tautology problem, coNP-complete even without
+constraints ([Cook 1971](#ref-Cook1971)), and the uncovered inputs are
+the models of its negation, a CNF, so counting them is \#SAT.
+Russell ([Russell 2026a](#ref-PaperA)) makes the same observation.
+Elmallah and Gouda’s firewall rules are compact rows over integer
+ranges ([Elmallah and Gouda 2017](#ref-ElmallahGouda2017)), and Thiemann
+and Yamada’s patterns are compact rows over terms ([Thiemann and Yamada
+2026](#ref-ThiemannYamada2026)). With complete tuples as rows, as here,
+the rows are not the source of hardness: the constraints are (Section
+7).
 
 #### Hardness of coverage.
 
@@ -578,8 +619,43 @@ paper ([Thiemann and Yamada 2026](#ref-ThiemannYamada2026)). Kapur et
 al. showed quasi-reducibility co-NP complete ([Kapur et al.
 1991](#ref-KapurNRZ1991)), and the volume of a union of boxes is
 \#P-hard ([Bringmann and Friedrich 2010](#ref-BringmannFriedrich2010)).
+For firewalls with a fixed number of header fields, Hamilton, Roughan
+and Nguyen give polynomial-time algorithms ([Hamilton, Roughan, and
+Nguyen 2022](#ref-HamiltonRoughanNguyen2022)), an analogue of our
+fixed-$k$ results.
 
-#### Rule bases and tables.
+#### Decision tables and tabular specifications.
+
+Checking tables for completeness and consistency is long established: in
+expert-system checkers ([Suwa, Scott, and Shortliffe
+1982](#ref-SuwaScottShortliffe1982)), for decision tables ([Vanthienen,
+Mues, and Aerts 1998](#ref-VanthienenMA1998)), for SCR and RSML
+requirements ([Heitmeyer, Jeffords, and Labaw
+1996](#ref-HeitmeyerJL1996); [Heimdahl and Leveson
+1996](#ref-HeimdahlLeveson1996)), and for DMN, where Calvanese et
+al. give analysis algorithms ([Calvanese et al.
+2016](#ref-CalvaneseDLMMT2016), [2018](#ref-CalvaneseDLMMT2018)) and,
+with background knowledge, an ExpTime upper bound ([Calvanese et al.
+2019](#ref-CalvaneseMDM2019)). PVS generates coverage and disjointness
+obligations for tabular specifications ([Owre, Rushby, and Shankar
+1997](#ref-OwreRushbyShankar1997)): proof obligations about given
+tables, not complexity results. Menghi et al. prove completeness of
+Simulink Requirements Tables undecidable, by reduction from Hilbert’s
+tenth problem, because their conditions range over real-valued signals,
+and check it with SMT ([Menghi et al. 2025](#ref-MenghiEtAl2025);
+[Zanenga et al. 2025](#ref-ZanengaEtAl2025)). Vu and Demetrovics study
+decision tables whose entries may be unknown: for one given input,
+deciding its possible and certain decisions is NP- and coNP-complete,
+and counting the valuations yielding a decision \#P-hard, all by
+encoding a formula in the constraints on the unknowns; a fixed number of
+unknowns is polynomial, another analogue of our fixed-$k$ case ([Vu and
+Demetrovics 2026](#ref-VuDemetrovics2026)). They define completeness for
+a single input but state no complexity for deciding it. Their model asks
+what a partly unknown table says about one input; ours asks whether a
+fully specified table covers every input its declared domains and
+constraints allow.
+
+#### Rule-base verification.
 
 Levy and Rousset gave the first complexity results for verifying rule
 bases ([Levy and Rousset 1996](#ref-LevyRousset1996),
@@ -590,98 +666,98 @@ negation. Their “input completeness” constraints restrict which inputs
 are legal, and they leave output completeness open. Coverage of a
 propositional table could be phrased in their framework, but its
 complexity is lower: coNP for completeness, as shown here, with NP for
-non-emptiness and \#P for counting. Menghi et al. prove completeness of
-Simulink Requirements Tables undecidable, by reduction from Hilbert’s
-tenth problem, because their conditions range over real-valued signals,
-and check it with SMT ([Menghi et al. 2025](#ref-MenghiEtAl2025);
-[Zanenga et al. 2025](#ref-ZanengaEtAl2025)). Vu and Demetrovics study
-decision tables whose entries may be unknown: for one given input,
-deciding its possible and certain decisions is NP- and coNP-complete,
-and counting the valuations yielding a decision \#P-hard, all by
-encoding a formula in the constraints on the unknowns ([Vu and
-Demetrovics 2026](#ref-VuDemetrovics2026)). They define completeness for
-a single input but state no complexity for deciding it. Their model asks
-what a partly unknown table says about one input; ours asks whether a
-fully specified table covers every input its declared domains and
-constraints allow, which is the check a DMN analyser performs. The
-closest precedent for tables in a proof assistant is PVS, which
-generates coverage and disjointness obligations for tabular
-specifications ([Owre, Rushby, and Shankar
-1997](#ref-OwreRushbyShankar1997)): proof obligations about given
-tables, not complexity results. To our knowledge, none of these works
-classifies the completeness of decision tables over declared finite
+non-emptiness and \#P for counting.
+
+To our knowledge, none of these works classifies the completeness of
+decision tables with complete tuples as rows over declared finite
 domains, or counts their missing combinations, and none of the hardness
 proofs is machine-checked.
 
-#### Mechanised complexity.
+#### Mechanised computability and complexity.
 
 Cook–Levin has been mechanised in ACL2 ([Gamboa and Cowles
 2004](#ref-GamboaCowles2004)), Coq ([Gäher and Kunze
 2021](#ref-GaeherKunze2021)) and Isabelle ([Balbach
-2023](#ref-Cook_Levin-AFP)), and Senellart and Gnatenko prove all 21 of
-Karp’s problems NP-complete in Lean ([Senellart and Gnatenko
-2026](#ref-SenellartGnatenko2026)), with NP defined in
-descriptive-complexity terms and first-order reductions. Our setting
-needs explicit encodings and running times, but its classes are the
-textbook ones on Turing machines, so polynomial time, binary encodings
-of numbers and the size of the input, the quantities the tractability
-results of Section 7 are about, are first-class.
+2023](#ref-Cook_Levin-AFP)); reductions between Karp’s problems are
+verified in Isabelle ([“Automatic Refinements and Polynomial-Time
+Reductions in Isabelle/HOL,” n.d.](#ref-PolyReductionsIsabelle)); and
+Senellart and Gnatenko prove all 21 of Karp’s problems NP-complete in
+Lean ([Senellart and Gnatenko 2026](#ref-SenellartGnatenko2026)), with
+NP defined in descriptive-complexity terms and first-order reductions,
+and also prove \#Monotone-2SAT one-call \#P-complete in that setting.
+Computability and time complexity have been mechanised through partial
+recursive functions in Lean ([Carneiro 2019](#ref-Carneiro2019)) and the
+weak call-by-value $\lambda$-calculus in Coq ([Forster et al.
+2021](#ref-ForsterKSW2021)). Our setting needs explicit encodings and
+running times, but its classes are the textbook ones on Turing machines,
+so polynomial time, binary encodings of numbers and the size of the
+input, the quantities the tractability results of Section 7 are about,
+are first-class.
 
 ## 9 The formalisation
 
 #### Trust.
 
-The axiom audit prints the axioms of 318 theorems, among them every
-theorem this paper cites; each uses only `propext`, `Classical.choice`
-and `Quot.sound`, or fewer, and none uses `sorryAx`. This shows that no
-proof is left unfinished and no axiom is added. It does not show that
-the definitions are the intended ones. The trusted base is Lean’s
-kernel; Complexitylib’s definitions of machines, running time, encodings
-and the classes P, NP, coNP and \#P; our encoding of instances; and
-Definition 1. The adequacy theorems remove one item from that list: the
-encoded problems are proved equal to latc-check’s, so a reader need
-trust only latc-check’s definition of the missing set and our map from
-an instance to the table it denotes, each a few lines (Sections 2 and
-3).
+The axiom audit prints the axioms of 318 of the development’s 335
+theorem and lemma declarations, among them every theorem this paper
+cites (the other 17 are helper lemmas used by audited theorems); each
+uses only `propext`, `Classical.choice` and `Quot.sound`, or fewer, and
+none uses `sorryAx`. This shows that no proof is left unfinished and no
+axiom is added. It does not show that the definitions are the intended
+ones. The trusted base is Lean’s kernel; Complexitylib’s definitions of
+machines, running time, encodings and the classes P, NP, coNP and \#P;
+our encodings of instances; Definition 1; and the problem definitions
+themselves: *MissingNonempty*, *missingCount*, the monotone shape tests
+and *SharpMonotone2SAT*. The adequacy theorems shrink the list: the
+general problems are proved equal to latc-check’s, so for them a reader
+need trust only latc-check’s definition of the missing set and our map
+from an instance to the table it denotes, each a few lines (Sections 2
+and 3). For the monotone counts, adequacy holds only on instances that
+pass the shape test, so the shape test is trusted; an earlier version of
+it accepted conditions on nonexistent attributes, which the present one
+rejects.
 
 #### Engineering.
 
 The development has 4 418 lines of Lean, besides the audit files.
-Complexitylib’s `fun_prop` discharged most composition steps of
-polynomial-time proofs. Proofs by hand were needed where the size of
-intermediate values matters: the binary product of the domain sizes, the
-enumeration of candidate states (by induction on $k$), the explicit
-bounds of Section 7, and the arithmetic of Valiant’s post-processing.
-For the graph of Section 6, `fun_prop` timed out until each
-vertex-numbering and edge helper had its own composable polynomial-time
-lemma. Reading a list at a binary index needed a library lemma,
-`listGetD_binary`, rather than a new proof. The development pins one
-commit of Complexitylib, a library that changes daily on a
-release-candidate toolchain; it also builds unchanged against a later
-commit on the next toolchain (Appendix B).
+Mathlib’s `fun_prop` tactic, with Complexitylib’s polynomial-time
+lemmas, discharged most composition steps of polynomial-time proofs.
+Proofs by hand were needed where the size of intermediate values
+matters: the binary product of the domain sizes, the enumeration of
+candidate states (by induction on $k$), the explicit bounds of Section
+7, and the arithmetic of Valiant’s post-processing. For the graph of
+Section 6, `fun_prop` timed out until each vertex-numbering and edge
+helper had its own composable polynomial-time lemma. Reading a list at a
+binary index needed a library lemma, `listGetD_binary`, rather than a
+new proof. The development pins one commit of Complexitylib, a library
+that changes daily on a release-candidate toolchain; a version of the
+development taken before the last two monotone changes also built
+unchanged against a later commit on the next toolchain (Appendix B).
 
 #### Worst case and practice.
 
-NP-hardness does not make real DMN tables slow to check. Tables with few
-input columns, or without constraints across columns, fall in the
-polynomial regimes of Section 7. What the classification rules out is a
-polynomial algorithm for all tables with clause constraints, unless
-P = NP; what the tractable cases show is that the difficulty comes from
-the constraints across many attributes, not from the size of the domains
-or of the table.
+The classification rules out a polynomial algorithm for all tables with
+clause constraints, unless P = NP; it does not say that tables met in
+practice are slow to check. For tables whose rows are complete tuples,
+few input columns or the absence of constraints give the polynomial
+regimes of Section 7, and the difficulty comes from constraints across
+many attributes, not from the size of the domains or of the table. For
+compact rows, as in DMN, the rows themselves can carry the hardness
+(Section 8), and our tractability results do not apply.
 
 ## 10 Conclusion
 
-Decision-table completeness under clause constraints is coNP-complete,
-finding a missing combination NP-complete, and counting them
-\#P-complete, with machine-checked proofs on Turing machines that apply
-to latc-check’s set-based definitions; without constraints, or with a
-fixed number of attributes, all three are polynomial, with a degree
-linear in the number of attributes. For monotone two-literal
-constraints, counting the missing combinations stays \#P-complete under
-one-call reductions, for any table, by a one-call version of Valiant’s
-theorem proved in the same model. What remains open in the formalisation
-is the per-$k$ machine with constants independent of $k$. The one-call
+For decision tables whose rows are complete tuples, completeness under
+clause constraints is coNP-complete, finding a missing combination
+NP-complete, and counting them \#P-complete, with machine-checked proofs
+on Turing machines that apply to latc-check’s set-based definitions. All
+three are polynomial without constraints; they are also polynomial with
+a fixed number of attributes, with a degree linear in that number. For
+monotone two-literal constraints, counting the missing combinations
+stays \#P-complete under one-call reductions, on tables with arbitrary
+rows and already with none, by a one-call version of Valiant’s theorem
+proved in the same model. What remains open in the formalisation is the
+per-$k$ machine with constants independent of $k$. The one-call
 reductions and the Valiant reduction use only Complexitylib’s notions
 and could be offered upstream.
 
@@ -729,7 +805,10 @@ model, a different namespace from the general one below.
     theorem sharpSAT_eq_missingCount (φ : CNF ℕ) : SharpSAT φ = missingCount (fromSAT φ)
     theorem missingCount_sharpPComplete_bin : SharpPComplete encInstBin missingCount
 
-#### One-call reductions and Valiant (namespace `Latc.PaperD.Valiant` for the last two).
+#### One-call reductions and Valiant.
+
+`OneCallReducible` is in `Latc.PaperD.General`; the four theorems after
+it are in `Latc.PaperD.Valiant`.
 
     def OneCallReducible (encA : α ↪ List Bool) (encB : β ↪ List Bool) (f : α → ℕ) (g : β → ℕ) :
         Prop :=
@@ -792,29 +871,47 @@ theorem file was added; with that file, and with the monotone shape
 tests tightened, the build has 18 647 jobs, again clean. The axiom audit
 (the two files `Axioms.lean` of `LatcComplexity/` and of its
 subdirectory `Valiant/`) prints 318 theorems: 268 use all three standard
-axioms, 50 fewer, none `sorryAx`. The development also builds without
-any change against Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2`
-(18 717 jobs), but the artifact is published with the pin above, against
-which the results were proved.
+axioms, 50 fewer, none `sorryAx`. The development as of commit
+`6603497`, before the monotone result for arbitrary rows and the
+tightened shape tests, also built without any change against
+Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2` (18 717 jobs); the
+final version was not re-tested against it. The artifact is published
+with the pin above, against which the results were proved.
 
 #### History.
 
-The core results took seven commits over about ten hours on 28–29
-October 2026. On 31 October, counting with a fixed number of attributes,
-the Valiant reduction (1 140 lines, besides its audit file) and the
-explicit degree (692 lines) were added, the last two in parallel and
-merged without conflicts; then the monotone result for tables with any
-rows, and a check in the monotone shape tests that every condition names
-an existing attribute.
+The core results were committed in seven commits between 28 October
+2026, 14:16, and 29 October, 00:18. On 31 October, counting with a fixed
+number of attributes, the Valiant reduction (1 140 lines when merged,
+besides its audit file) and the explicit degree (692 lines) were added,
+the last two in parallel and merged without conflicts; then the monotone
+result for tables with any rows, and a check in the monotone shape tests
+that every condition names an existing attribute.
 
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
+<div id="ref-PolyReductionsIsabelle" class="csl-entry">
+
+“Automatic Refinements and Polynomial-Time Reductions in Isabelle/HOL.”
+n.d. <https://github.com/rosskopfs/poly-reductions>.
+
+</div>
+
 <div id="ref-Cook_Levin-AFP" class="csl-entry">
 
 Balbach, Frank J. 2023. “The Cook-Levin Theorem.” *Archive of Formal
 Proofs*.
+
+</div>
+
+<div id="ref-CSLib2026" class="csl-entry">
+
+Barrett, Clark, Swarat Chaudhuri, Fabrizio Montesi, Jim Grundy, Pushmeet
+Kohli, Leonardo de Moura, Alexandre Rademaker, and Sorrachai
+Yingchareonthawornchai. 2026. “CSLib: The Lean Computer Science
+Library.” <https://arxiv.org/abs/2602.04846>.
 
 </div>
 
@@ -839,11 +936,61 @@ Proceedings*, edited by Marcello La Rosa, Peter Loos, and Oscar Pastor,
 
 </div>
 
+<div id="ref-CalvaneseDLMMT2018" class="csl-entry">
+
+———. 2018. “Semantics, Analysis and Simplification of DMN Decision
+Tables.” *Information Systems* 78: 112–25.
+<https://doi.org/10.1016/j.is.2018.01.010>.
+
+</div>
+
+<div id="ref-CalvaneseMDM2019" class="csl-entry">
+
+Calvanese, Diego, Marco Montali, Marlon Dumas, and Fabrizio M. Maggi.
+2019. “Semantic DMN: Formalizing and Reasoning about Decisions in the
+Presence of Background Knowledge.” *Theory and Practice of Logic
+Programming* 19 (4): 536–73.
+<https://doi.org/10.1017/S1471068418000479>.
+
+</div>
+
+<div id="ref-Carneiro2019" class="csl-entry">
+
+Carneiro, Mario. 2019. “<span class="nocase">Formalizing Computability
+Theory via Partial Recursive Functions</span>.” In *10th International
+Conference on Interactive Theorem Proving (ITP 2019)*, edited by John
+Harrison, John O’Leary, and Andrew Tolmach, 141:12:1–17. Leibniz
+International Proceedings in Informatics (LIPIcs). Dagstuhl, Germany:
+Schloss Dagstuhl – Leibniz-Zentrum für Informatik.
+<https://doi.org/10.4230/LIPIcs.ITP.2019.12>.
+
+</div>
+
+<div id="ref-Cook1971" class="csl-entry">
+
+Cook, Stephen A. 1971. “The Complexity of Theorem-Proving Procedures.”
+In *Proceedings of the Third Annual ACM Symposium on Theory of Computing
+(STOC ’71)*, 151–58. ACM. <https://doi.org/10.1145/800157.805047>.
+
+</div>
+
 <div id="ref-ElmallahGouda2017" class="csl-entry">
 
 Elmallah, Ehab S., and Mohamed G. Gouda. 2017. “Hardness of Firewall
 Analysis.” *IEEE Transactions on Dependable and Secure Computing* 14
 (3): 339–49. <https://doi.org/10.1109/TDSC.2015.2455532>.
+
+</div>
+
+<div id="ref-ForsterKSW2021" class="csl-entry">
+
+Forster, Yannick, Fabian Kunze, Gert Smolka, and Maximilian Wuttke.
+2021. “A Mechanised Proof of the Time Invariance Thesis for the Weak
+Call-by-Value $\lambda$-Calculus.” In *12th International Conference on
+Interactive Theorem Proving (ITP 2021)*, 193:19:1–20. Leibniz
+International Proceedings in Informatics (LIPIcs). Schloss Dagstuhl –
+Leibniz-Zentrum für Informatik.
+<https://doi.org/10.4230/LIPIcs.ITP.2021.19>.
 
 </div>
 
@@ -867,6 +1014,32 @@ International Conference, TPHOLs 2004, Park City, Utah, USA, September
 14-17, 2004, Proceedings*, edited by Konrad Slind, Annette Bunker, and
 Ganesh Gopalakrishnan, 3223:99–116. Lecture Notes in Computer Science.
 Springer. <https://doi.org/10.1007/978-3-540-30142-4_8>.
+
+</div>
+
+<div id="ref-HamiltonRoughanNguyen2022" class="csl-entry">
+
+Hamilton, Adam, Matthew Roughan, and Giang T. Nguyen. 2022. “Boolean
+Expressions in Firewall Analysis.”
+<https://doi.org/10.48550/arXiv.2205.04210>.
+
+</div>
+
+<div id="ref-HeimdahlLeveson1996" class="csl-entry">
+
+Heimdahl, M. P. E., and N. G. Leveson. 1996. “Completeness and
+Consistency in Hierarchical State-Based Requirements.” *IEEE
+Transactions on Software Engineering* 22 (6): 363–77.
+<https://doi.org/10.1109/32.508311>.
+
+</div>
+
+<div id="ref-HeitmeyerJL1996" class="csl-entry">
+
+Heitmeyer, Constance L., Ralph D. Jeffords, and Bruce G. Labaw. 1996.
+“Automated Consistency Checking of Requirements Specifications.” *ACM
+Transactions on Software Engineering and Methodology* 5 (3): 231–61.
+<https://doi.org/10.1145/234426.234431>.
 
 </div>
 
@@ -969,6 +1142,15 @@ Deciding Pattern Completeness with Optimal Asymptotic Complexity.”
 Valiant, Leslie G. 1979. “The Complexity of Enumeration and Reliability
 Problems.” *SIAM Journal on Computing* 8 (3): 410–21.
 <https://doi.org/10.1137/0208032>.
+
+</div>
+
+<div id="ref-VanthienenMA1998" class="csl-entry">
+
+Vanthienen, J., C. Mues, and A. Aerts. 1998. “An Illustration of
+Verification and Validation in the Modelling Phase of KBS Development.”
+*Data & Knowledge Engineering* 27 (3): 337–52.
+<https://doi.org/10.1016/S0169-023X(98)80003-7>.
 
 </div>
 
