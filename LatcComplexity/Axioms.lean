@@ -86,6 +86,9 @@ import LatcComplexity.ExplicitDegree
 #print axioms Latc.PaperD.General.OneCallSharpPHard.trans_parsimonious
 #print axioms Latc.PaperD.General.sharpSAT_oneCallSharpPHard
 #print axioms Latc.PaperD.General.countValidMonotone2_eq_card_validSpace
+#print axioms Latc.PaperD.General.inDomains_replicate_one
+#print axioms Latc.PaperD.General.valid_replicate_one_of_pos2B
+#print axioms Latc.PaperD.General.mem_missingNonempty_of_pos2B
 #print axioms Latc.PaperD.General.pos2B_polyTime
 #print axioms Latc.PaperD.General.monotone2B_polyTime
 #print axioms Latc.PaperD.General.fromMonotone2_polyTime
@@ -114,6 +117,7 @@ import LatcComplexity.ExplicitDegree
 #print axioms Latc.PaperD.General.certLen_polyTime_bin
 #print axioms Latc.PaperD.General.missingCount_mem_SharpP_bin
 #print axioms Latc.PaperD.General.missingCount_sharpPComplete_bin
+#print axioms Latc.PaperD.General.pos2Clauses_polyTime_bin
 #print axioms Latc.PaperD.General.pos2B_polyTime_bin
 #print axioms Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin
 #print axioms Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin

@@ -18,7 +18,10 @@ the hypothesis is discharged in `LatcComplexity/Valiant/OneCall.lean`.
 * `SharpMonotone2SAT`: `#SAT` on monotone two-literal formulas, count zero on other syntax (the
   convention of Complexitylib's `SharpThreeSAT`).
 * `countValidMonotone2`: |𝒱| = |M(∅)| of latc-check's model on instances with domains {0, 1},
-  clauses of two conditions Aᵢ = 1, Aⱼ = 1 and T₀ = ∅; count zero on other syntax.
+  clauses of two conditions Aᵢ = 1, Aⱼ = 1 on declared attributes (`i, j` below the number of
+  attributes) and T₀ = ∅ (`pos2B`); count zero on other syntax.
+* `valid_replicate_one_of_pos2B`: on these instances the all-ones state is valid, so the decision
+  version is trivial (`mem_missingNonempty_of_pos2B`).
 * `sharpMonotone2SAT_reduces`: `#Monotone-2SAT` reduces parsimoniously to `countValidMonotone2`.
 * `countValidMonotone2_mem_SharpP`: membership in `#P`.
 * `countValidMonotone2_oneCallSharpPComplete`: **if** `#Monotone-2SAT` is one-call `#P`-hard (the
@@ -101,9 +104,13 @@ def monotone2B (φ : CNF ℕ) : Bool := φ.all fun c => c.length == 2 && c.all (
 /-- `#Monotone-2SAT`: the model count of a monotone two-literal formula; zero on other syntax. -/
 def SharpMonotone2SAT (φ : CNF ℕ) : ℕ := if monotone2B φ then SharpSAT φ else 0
 
-/-- Domains {0, 1}, clauses of two conditions with value 1, and T₀ = ∅. -/
+/-- Domains {0, 1}, clauses of two conditions with value 1 on declared attributes (index below
+the number of attributes), and T₀ = ∅. -/
 def pos2B (I : Inst) : Bool :=
-  I.1.all (· == 2) && I.2.1.all (fun c => c.length == 2 && c.all (·.2 == 1)) && I.2.2.isEmpty
+  I.1.all (· == 2) &&
+      I.2.1.all (fun c =>
+        c.length == 2 && c.all (fun a => decide (a.1 < I.1.length) && a.2 == 1)) &&
+    I.2.2.isEmpty
 
 /-- |𝒱| for clause constraints of two conditions Aᵢ = 1, Aⱼ = 1 over domains {0, 1}, in
 latc-check's model (`missingCount` with T₀ = ∅); zero on other syntax. -/
@@ -120,6 +127,33 @@ theorem countValidMonotone2_eq_card_validSpace (I : Inst) (h : pos2B I = true) :
     simp [Inst.table, hT]
   simp only [countValidMonotone2, h, ↓reduceIte, missingCount, htab, Latc.missing,
     Finset.sdiff_empty]
+
+/-! ### The decision version is trivial -/
+
+theorem inDomains_replicate_one {d : List ℕ} (h : ∀ x ∈ d, x = 2) :
+    InDomains d (List.replicate d.length 1) := by
+  induction d with
+  | nil => exact List.Forall₂.nil
+  | cons x d ih =>
+    exact List.Forall₂.cons (by simp [h x (by simp)]) (ih fun y hy => h y (by simp [hy]))
+
+/-- **On instances passing `pos2B` the all-ones state is valid**: each clause has a condition
+Aᵢ = 1 with `i` a declared attribute. So deciding |𝒱| > 0 is trivial on these instances. -/
+theorem valid_replicate_one_of_pos2B {I : Inst} (h : pos2B I = true) :
+    Valid I.2.1 (List.replicate I.1.length 1) := by
+  simp only [pos2B, Bool.and_eq_true, List.all_eq_true, beq_iff_eq, decide_eq_true_eq] at h
+  intro c hc
+  obtain ⟨hlen, hall⟩ := h.1.2 c hc
+  obtain ⟨a, ha⟩ : ∃ a, a ∈ c := List.exists_mem_of_length_pos (by omega)
+  obtain ⟨hlt, h1⟩ := hall a ha
+  exact ⟨a, ha, by simp [CondHolds, hlt, h1]⟩
+
+/-- Every instance passing `pos2B` has M(∅) ≠ ∅: the all-ones state is a missing state. -/
+theorem mem_missingNonempty_of_pos2B {I : Inst} (h : pos2B I = true) : I ∈ MissingNonempty := by
+  refine ⟨_, inDomains_replicate_one ?_, valid_replicate_one_of_pos2B h, ?_⟩ <;>
+    simp only [pos2B, Bool.and_eq_true, List.all_eq_true, beq_iff_eq, List.isEmpty_iff] at h
+  · exact h.1.1
+  · simp [h.2]
 
 /-! ### The reduction -/
 
@@ -152,15 +186,19 @@ theorem fromMonotone2_polyTime : ComputableInPolyTime fromMonotone2 encCNF encIn
 theorem pos2B_fromSAT (φ : CNF ℕ) (h : monotone2B φ = true) : pos2B (fromSAT φ) = true := by
   simp only [monotone2B, List.all_eq_true, Bool.and_eq_true, beq_iff_eq] at h
   unfold pos2B fromSAT
-  simp only [Bool.and_eq_true, List.all_eq_true, beq_iff_eq, List.isEmpty_nil, and_true]
+  simp only [Bool.and_eq_true, List.all_eq_true, beq_iff_eq, List.isEmpty_nil, and_true,
+    decide_eq_true_eq, List.length_replicate]
   refine ⟨fun x hx => List.eq_of_mem_replicate hx, fun c' hc' => ?_⟩
   obtain ⟨c₁, hc₁, rfl⟩ := List.mem_map.1 hc'
+  have hlt : ∀ l ∈ c₁, l.1 < φ.numVars := fun l hl =>
+    CNF.mem_vars_denseRelabel_lt φ (CNF.mem_vars.2 ⟨c₁, hc₁, l.2, hl⟩)
   simp only [CNF.denseRelabel, CNF.relabel] at hc₁
   obtain ⟨c, hc, rfl⟩ := List.mem_map.1 hc₁
   refine ⟨by simp [Clause.relabel, (h c hc).1], fun a ha => ?_⟩
   obtain ⟨l, hl, rfl⟩ := List.mem_map.1 ha
+  have hl' := hlt l hl
   obtain ⟨l₀, hl₀, rfl⟩ := List.mem_map.1 hl
-  simp [toCond, (h c hc).2 l₀ hl₀]
+  exact ⟨hl', by simp [toCond, (h c hc).2 l₀ hl₀]⟩
 
 theorem pos2B_emptyClauseInst : pos2B emptyClauseInst = false := by decide
 

@@ -163,10 +163,30 @@ theorem missingCount_sharpPComplete_bin : SharpPComplete encInstBin missingCount
 
 /-! ### The monotone two-literal case -/
 
+/-- The clause part of `pos2B` and `pos2AnyB`, binary attribute index: the index is compared with
+the number of attributes in binary. -/
+theorem pos2Clauses_polyTime_bin : ComputableTidilyInPolyTime (fun I : Inst => I.2.1.all fun c =>
+    c.length == 2 && c.all fun a => decide (a.1 < I.1.length) && a.2 == 1) encInstBin encBool := by
+  have hlen : ComputableTidilyInPolyTime (fun I : Inst => I.1.length) encInstBin encNat :=
+    ComputableTidilyInPolyTime.unary_to_binary.comp (by fun_prop)
+  have hcond : ComputableTidilyInPolyTime
+      (fun q : ℕ × Cond => decide (q.2.1 < q.1) && q.2.2 == 1)
+      (encPair encNat (encPair encNat encNat)) encBool :=
+    ComputableTidilyInPolyTime.bool_and'
+      (ComputableTidilyInPolyTime.binary_lt' (by fun_prop) (by fun_prop)) (by fun_prop)
+  have hclause : ComputableTidilyInPolyTime
+      (fun p : ℕ × List Cond =>
+        p.2.length == 2 && p.2.all fun a => decide (a.1 < p.1) && a.2 == 1)
+      (encPair encNat (encList (encPair encNat encNat))) encBool :=
+    ComputableTidilyInPolyTime.bool_and' (by fun_prop)
+      (ComputableTidilyInPolyTime.allWith hcond (by fun_prop) (by fun_prop))
+  exact ComputableTidilyInPolyTime.allWith hclause hlen (by fun_prop)
+
 theorem pos2B_polyTime_bin : ComputableInPolyTime pos2B encInstBin encBool := by
   refine .of_tidy ?_
   unfold pos2B
-  fun_prop
+  exact ComputableTidilyInPolyTime.bool_and'
+    (ComputableTidilyInPolyTime.bool_and' (by fun_prop) pos2Clauses_polyTime_bin) (by fun_prop)
 
 theorem countValidMonotone2_mem_SharpP_bin : countValidMonotone2 ∈ SharpP encInstBin := by
   have h := SharpP.ite_mem pos2B_polyTime_bin missingCount_mem_SharpP_bin

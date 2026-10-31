@@ -5,7 +5,8 @@ import LatcComplexity.Valiant.OneCall
 
 `countValidMonotone2` counts |𝒱| = |M(∅)| and requires T₀ = ∅. This file drops that requirement:
 `countMissingMonotone2` counts |M(T₀)| for any table T₀, on instances with domains {0, 1} and
-clauses of two conditions Aᵢ = 1, Aⱼ = 1 (`pos2AnyB`), zero on other syntax.
+clauses of two conditions Aᵢ = 1, Aⱼ = 1 on declared attributes (`pos2AnyB`), zero on other
+syntax. On these instances the all-ones state is valid (`valid_replicate_one_of_pos2AnyB`).
 
 * `countMissingMonotone2_mem_SharpP(_bin)`: membership in `#P`, via `SharpP.ite_mem`.
 * `sharpMonotone2SAT_reduces_countMissing`: the reduction `fromMonotone2` of `Monotone.lean` is
@@ -21,9 +22,12 @@ namespace Latc.PaperD.Valiant
 
 open Cslib.Complexity Cslib.Logic.PL Turing.MultiTapeTM Latc.PaperD.General
 
-/-- Domains {0, 1} and clauses of two conditions with value 1; any table T₀. -/
+/-- Domains {0, 1} and clauses of two conditions with value 1 on declared attributes (index below
+the number of attributes); any table T₀. -/
 def pos2AnyB (I : General.Inst) : Bool :=
-  I.1.all (· == 2) && I.2.1.all (fun c => c.length == 2 && c.all (·.2 == 1))
+  I.1.all (· == 2) &&
+    I.2.1.all (fun c =>
+      c.length == 2 && c.all (fun a => decide (a.1 < I.1.length) && a.2 == 1))
 
 /-- |M(T₀)| for clause constraints of two conditions Aᵢ = 1, Aⱼ = 1 over domains {0, 1}, any
 table T₀, in latc-check's model; zero on other syntax. -/
@@ -46,6 +50,17 @@ theorem pos2AnyB_of_pos2B {I : General.Inst} (h : pos2B I = true) : pos2AnyB I =
 theorem countMissingMonotone2_eq_countValidMonotone2 {I : General.Inst} (h : pos2B I = true) :
     countMissingMonotone2 I = countValidMonotone2 I := by
   simp only [countMissingMonotone2, countValidMonotone2, h, pos2AnyB_of_pos2B h, ↓reduceIte]
+
+/-- **On instances passing `pos2AnyB` the all-ones state is valid**: each clause has a condition
+Aᵢ = 1 with `i` a declared attribute. -/
+theorem valid_replicate_one_of_pos2AnyB {I : General.Inst} (h : pos2AnyB I = true) :
+    General.Valid I.2.1 (List.replicate I.1.length 1) := by
+  simp only [pos2AnyB, Bool.and_eq_true, List.all_eq_true, beq_iff_eq, decide_eq_true_eq] at h
+  intro c hc
+  obtain ⟨hlen, hall⟩ := h.2 c hc
+  obtain ⟨a, ha⟩ : ∃ a, a ∈ c := List.exists_mem_of_length_pos (by omega)
+  obtain ⟨hlt, h1⟩ := hall a ha
+  exact ⟨a, ha, by simp [General.CondHolds, hlt, h1]⟩
 
 theorem pos2AnyB_emptyClauseInst : pos2AnyB emptyClauseInst = false := by decide
 
@@ -74,7 +89,7 @@ theorem pos2AnyB_polyTime : ComputableInPolyTime pos2AnyB General.encInst encBoo
 theorem pos2AnyB_polyTime_bin : ComputableInPolyTime pos2AnyB encInstBin encBool := by
   refine .of_tidy ?_
   unfold pos2AnyB
-  fun_prop
+  exact ComputableTidilyInPolyTime.bool_and' (by fun_prop) pos2Clauses_polyTime_bin
 
 theorem countMissingMonotone2_mem_SharpP : countMissingMonotone2 ∈ SharpP General.encInst := by
   have h := SharpP.ite_mem pos2AnyB_polyTime missingCount_mem_SharpP

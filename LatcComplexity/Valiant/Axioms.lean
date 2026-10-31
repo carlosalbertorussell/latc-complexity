@@ -102,6 +102,7 @@ open Latc.PaperD.Valiant
 #print axioms pos2B_eq
 #print axioms pos2AnyB_of_pos2B
 #print axioms countMissingMonotone2_eq_countValidMonotone2
+#print axioms valid_replicate_one_of_pos2AnyB
 #print axioms pos2AnyB_emptyClauseInst
 #print axioms countMissingMonotone2_fromMonotone2
 #print axioms sharpMonotone2SAT_reduces_countMissing
