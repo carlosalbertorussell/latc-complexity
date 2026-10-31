@@ -1,4 +1,4 @@
-import LatcComplexity.Valiant.OneCall
+import LatcComplexity.Valiant.AnyTable
 
 /-!
 # Axiom audit of the Valiant files
@@ -96,3 +96,18 @@ open Latc.PaperD.Valiant
 #print axioms sharpMonotone2SAT_oneCallSharpPHard
 #print axioms countValidMonotone2_sharpPComplete_oneCall
 #print axioms countValidMonotone2_sharpPComplete_oneCall_unary
+
+-- AnyTable.lean: missing combinations of monotone-shaped tables, any T₀
+#print axioms countMissingMonotone2_eq_card_missing
+#print axioms pos2B_eq
+#print axioms pos2AnyB_of_pos2B
+#print axioms countMissingMonotone2_eq_countValidMonotone2
+#print axioms pos2AnyB_emptyClauseInst
+#print axioms countMissingMonotone2_fromMonotone2
+#print axioms sharpMonotone2SAT_reduces_countMissing
+#print axioms pos2AnyB_polyTime
+#print axioms pos2AnyB_polyTime_bin
+#print axioms countMissingMonotone2_mem_SharpP
+#print axioms countMissingMonotone2_mem_SharpP_bin
+#print axioms countMissingMonotone2_sharpPComplete_oneCall
+#print axioms countMissingMonotone2_sharpPComplete_oneCall_unary
