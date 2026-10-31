@@ -28,9 +28,13 @@ python3 tomd.py
 
 ## Not yet checked
 
-* The draft has **not been compiled**: no TeX installation was available in the session that
-  wrote it. Expect small LaTeX fixes, in particular to the Unicode-to-math mapping of the Lean
-  listings (`literate=` in the preamble).
+* **Compiled** on 2026-10-31 with pdfTeX 1.40.25 (TeX Live 2023/Debian; packages
+  `texlive-latex-extra`, `texlive-publishers`, `texlive-science`, `texlive-fonts-extra`,
+  `texlive-plain-generic`, `lmodern`, `cm-super`) and `lipics-v2021.cls` v3.1.3 (2023/05/12) from
+  Dagstuhl's [styles repository](https://github.com/dagstuhl-publishing/styles), which Debian's
+  `texlive-publishers` lacks; put it on `TEXINPUTS`. `latexmk -pdf main.tex` gives 8 pages, no
+  errors, no undefined references or citations, and five overfull boxes (the widest 76 pt, in
+  Section 3), to fix in the revision.
 * `../docs/paper-refs.bib` uses `@software` for two entries, which BibTeX's `plainurl` style does
   not know; it falls back to `@misc` with a warning.
 * Page count against the ITP 2027 short-paper limit, once the call is out.
