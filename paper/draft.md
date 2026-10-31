@@ -813,6 +813,29 @@ per-$k$ machine with constants independent of $k$. The one-call
 reductions and the Valiant reduction use only Complexitylib’s notions
 and could be offered upstream.
 
+## Use of generative AI
+
+Claude (Anthropic) \[model and dates of use\] was used as follows.
+
+- *Formalisation.* It wrote the Lean proofs of the counting result with
+  a fixed number of attributes, the one-call Valiant theorem, the
+  explicit degree, and the monotone results for tables with arbitrary
+  rows and the tightened shape tests, in separate sessions from written
+  task descriptions \[that the author set and approved\]. Lean checks
+  every proof; the builds and the axiom audit are in Appendix B.
+
+- *Writing.* It drafted the text of this paper, which \[the author
+  reviewed and revised\].
+
+- *Literature.* It searched for related work and checked bibliographic
+  records against the publishers’ records; \[the author verified every
+  reference\].
+
+- *Checking.* It checked the paper against the Lean source and produced
+  draft referee reports, which led to revisions.
+
+\[The author\] remain\[s\] responsible for all content.
+
 ## Appendix A: Main Lean statements
 
 The statements below are copied from the source up to `:=`. Unless
@@ -932,16 +955,6 @@ tightened shape tests, also built without any change against
 Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2` (18 717 jobs); the
 final version was not re-tested against it. The artifact is published
 with the pin above, against which the results were proved.
-
-#### History.
-
-The core results were committed in seven commits between 28 October
-2026, 14:16, and 29 October, 00:18. On 31 October, counting with a fixed
-number of attributes, the Valiant reduction (1 140 lines when merged,
-besides its audit file) and the explicit degree (692 lines) were added,
-the last two in parallel and merged without conflicts; then the monotone
-result for tables with any rows, and a check in the monotone shape tests
-that every condition names an existing attribute.
 
 ## References
 

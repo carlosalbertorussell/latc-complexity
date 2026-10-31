@@ -34,7 +34,7 @@ body=body.replace('<div id="refs"','## References\n\n<div id="refs"',1)
 open('draft.md','w').write(head+body)
 t=open('draft.md').read(); i=[0]
 def n(m):
-    if m.group(1)=='References': return m.group(0)
+    if m.group(1) in ('References','Use of generative AI'): return m.group(0)
     i[0]+=1
     if i[0]>10: return '## Appendix %s: %s'%('AB'[i[0]-11],m.group(1))
     return '## %d %s'%(i[0],m.group(1))
