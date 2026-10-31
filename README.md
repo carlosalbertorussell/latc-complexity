@@ -6,7 +6,9 @@ composed with the Cook–Levin theorems of
 Lean 4. Completeness of a decision table whose constraints are clauses is coNP-complete, and
 non-emptiness of its missing set M(T₀) is NP-complete, for general finite domains. Both become
 polynomial-time without constraints, or with a fixed number of attributes, and so does counting
-|M(T₀)|; the hardness needs constraints and an unbounded number of attributes together. These are
+|M(T₀)|; the hardness needs constraints and an unbounded number of attributes together. Counting
+stays #P-complete, under one-call reductions, for monotone two-literal constraints: Valiant's theorem
+is proved here in Complexitylib's model, not assumed. These are
 theorems about Turing machines with explicit encodings and polynomial-time bounds, not citations.
 
 ## Versions
@@ -48,6 +50,11 @@ result added to `Tractable`, `lake build` recompiled `Tractable`, `Axioms` and `
 again ended with `Build completed successfully (18625 jobs)` and exit code 0, with no warnings and
 no errors.
 
+Gap 1 (Valiant's theorem, `LatcComplexity/Valiant/`) was built on its branch, at commit `3bb09ae`
+on top of `fcdf0ef` (before the counting result of (b)): `Build completed successfully (18643
+jobs)`, no warnings, no errors. It was merged into `main` (`43d7e25`) without conflicts; it adds
+new files and import lines only. A build of the merged commit has not yet been run.
+
 Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
 Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
 9047 Mathlib files came from the cache); `lake build` 241 s, `Build completed successfully (18603
@@ -66,10 +73,11 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Adequacy` | The word-encoded problems are latc-check's `Latc.missing` on the tables they denote |
 | `LatcComplexity.Counting` | Boolean domains: counting \|M(T₀)\| is in #P, hence #P-complete |
 | `LatcComplexity.CountingGeneral` | General finite domains: counting \|M(T₀)\| of latc-check's model is #P-complete |
-| `LatcComplexity.Monotone` | Clauses of two conditions Aᵢ = 1, Aⱼ = 1: counting \|𝒱\| is in #P and, assuming Valiant's theorem as a hypothesis, one-call #P-complete |
+| `LatcComplexity.Monotone` | Clauses of two conditions Aᵢ = 1, Aⱼ = 1: counting \|𝒱\| is in #P, and one-call #P-complete given Valiant's theorem as a hypothesis |
+| `LatcComplexity.Valiant` | Valiant's theorem in its one-call form, proved: #Monotone-2SAT is one-call #P-hard, so the monotone case is unconditional (`Gadget`, `Counting`, `Pendant`, `OneCall`, `Axioms`) |
 | `LatcComplexity.Binary` | The attribute index of a condition in binary: every theorem above for the encoding `encInstBin` |
 | `LatcComplexity.Tractable` | The tractable side: no constraints, or at most `k` attributes, in polynomial time |
-| `LatcComplexity.Axioms` | `#print axioms` on every theorem of the `LatcComplexity` files |
+| `LatcComplexity.Axioms` | `#print axioms` on every theorem of the `LatcComplexity` files (`LatcComplexity.Valiant.Axioms` for `Valiant/`) |
 
 ## Theorems
 
@@ -163,10 +171,11 @@ needs a weaker reduction. The file defines one-call counting reductions in Compl
 `OneCallSharpPHard`, `OneCallSharpPComplete` from them. Parsimonious reductions are one-call
 reductions, so #SAT is one-call #P-hard (`sharpSAT_oneCallSharpPHard`).
 
-**Valiant's theorem is a hypothesis here, not a proof.** It is not proved in Complexitylib's model.
-Valiant proved #Monotone-2SAT #P-complete under polynomial-time Turing reductions; its one-call form
-is machine-checked in another model (first-order reductions, #P via existential second-order logic)
-as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
+In this file Valiant's theorem is the hypothesis `hValiant`; `LatcComplexity/Valiant/` (next
+section) proves it, so the monotone case holds unconditionally. Valiant proved #Monotone-2SAT
+#P-complete under polynomial-time Turing reductions; its one-call form is also machine-checked in
+another model (first-order reductions, #P via existential second-order logic) as
+`sharpMonotoneTwoSat_sharpP_oneCallComplete` of
 [descriptive-complexity](https://github.com/PierreSenellart/descriptive-complexity).
 
 | Theorem | Statement |
@@ -179,6 +188,29 @@ as `sharpMonotoneTwoSat_sharpP_oneCallComplete` of
 `SharpMonotone2SAT` is #SAT on formulas whose clauses are `xᵢ ∨ xⱼ`, and zero on other syntax;
 `countValidMonotone2` is |𝒱| on instances with domains {0, 1}, clauses of two conditions with value 1
 and T₀ = ∅, and zero on other syntax. This is the convention of Complexitylib's `SharpThreeSAT`.
+
+### Valiant's theorem (`LatcComplexity/Valiant/`, namespace `Latc.PaperD.Valiant`)
+
+One reduction from #SAT to #Monotone-2SAT with a single oracle call, so the hypothesis `hValiant`
+above is a theorem. After dense relabelling, a conflict graph has a vertex for each variable and
+value and one per literal occurrence, read "the first true literal of its clause"; its vertices
+split into `n + m` cliques, and its independent sets of size `n + m` are in bijection with the
+models (`modelCount_eq_card`), for any CNF. Each vertex gets `t = n + 1` pendant leaves and each
+edge `{u, w}` becomes the clause `x_u ∨ x_w`, so the models of the monotone formula number
+Σ over independent sets `S` of `2^(t(N − |S|))` (`modelCount_psi`). The post-processing reads
+#SAT off as one digit, `x · 2^(tK) / 2^(tN) mod 2^t`. The only composition needed is parsimonious
+then one-call (`ParsimoniousReducible.trans_oneCall`), from Complexitylib's
+`CookLevin.SharpSAT_sharpPHard`. Details and the route are in `docs/gap1-progress.md`.
+
+| Theorem | Statement |
+|---|---|
+| `sharpMonotone2SAT_oneCallSharpPHard` | `OneCallSharpPHard encCNF SharpMonotone2SAT` |
+| `countValidMonotone2_sharpPComplete_oneCall` | `OneCallSharpPComplete encInstBin countValidMonotone2` |
+| `countValidMonotone2_sharpPComplete_oneCall_unary` | `OneCallSharpPComplete General.encInst countValidMonotone2` |
+| `sharpSAT_oneCallReducible` | `OneCallReducible encCNF encCNF SharpSAT SharpMonotone2SAT` |
+| `sharpSAT_eq_post` | `SharpSAT φ = post φ (SharpMonotone2SAT (toMonotone φ))` |
+| `toMonotone_polyTime` | `ComputableInPolyTime toMonotone encCNF encCNF` |
+| `post_polyTime` | `ComputableInPolyTime (fun p : CNF ℕ × ℕ => post p.1 p.2) (encPair encCNF encNat) encNat` |
 
 ### The binary attribute index (`LatcComplexity/Binary.lean`, namespace `Latc.PaperD.General`)
 
@@ -293,6 +325,10 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
   `Latc.PaperD.General.boundedSections_zero` and `Latc.PaperD.General.boundedSections_succ` print
   `[Quot.sound]`. `countValidMonotone2_oneCallSharpPComplete` takes Valiant's theorem as its argument
   `hValiant`; an argument is not an axiom, so it does not appear in this list.
+* `LatcComplexity/Valiant/Axioms.lean`, 80 theorems, in the build of the Gap 1 branch (`3bb09ae`):
+  each prints a subset of `[propext, Classical.choice, Quot.sound]`, and the three main theorems
+  (`sharpMonotone2SAT_oneCallSharpPHard` and the two `countValidMonotone2_sharpPComplete_oneCall`
+  forms) print all three. `hValiant` is discharged there by proof, not by an axiom.
 * `LatcFormal/Axioms.lean`, 69 theorems: 66 print `[propext, Classical.choice, Quot.sound]` and
   `Latc.Prop5.decode_encode`, `Latc.Prop5.encode_decode` and `Latc.Prop5.encode_size` print
   `[propext, Quot.sound]`, as in latc-check.
@@ -302,10 +338,6 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* Valiant's theorem in Complexitylib's model: that #Monotone-2SAT is one-call #P-hard. It is the
-  hypothesis `hValiant` of `countValidMonotone2_oneCallSharpPComplete`. Proving it needs Valiant's
-  chain (or one through counting independent sets, as descriptive-complexity does) with
-  polynomial-time certificates for every step.
 * An explicit formula in `k` for the degree of the time bounds of (b); what is proved is
   polynomial time for each `k` and the bounds `(2N + 1)ᵏ` on the number of states searched and
   `(N + 1)ᵏ` on the number of class vectors summed.

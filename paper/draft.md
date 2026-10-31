@@ -21,9 +21,9 @@ problems to the original set-based definitions, and matching
 tractability results show where the hardness comes from: without domain
 constraints all three problems are solvable in polynomial time, and they
 remain so with a fixed number of attributes. For tables whose
-constraints are monotone two-literal clauses, counting is in \#P and
-\#Monotone-2SAT reduces to it; its \#P-hardness is stated conditionally
-on Valiant’s theorem.
+constraints are monotone two-literal clauses, counting stays
+\#P-complete under one-call reductions; for this we prove Valiant’s
+theorem in Complexitylib’s model, by a single-call reduction from \#SAT.
 
 ## 1 Introduction
 
@@ -77,10 +77,10 @@ only the three standard axioms of Lean.
     latc-check’s set-based definitions, so that the theorems speak about
     the original objects (Section 3).
 
-5.  **The monotone two-literal case:** membership in \#P and a
-    parsimonious reduction from \#Monotone-2SAT, unconditionally;
-    \#P-hardness under one-call reductions, conditional on Valiant’s
-    theorem as an explicit hypothesis (Section 5).
+5.  **The monotone two-literal case:** membership in \#P, a parsimonious
+    reduction from \#Monotone-2SAT, and \#P-hardness under one-call
+    reductions, with Valiant’s theorem itself proved in Complexitylib’s
+    model by a one-call reduction from \#SAT (Section 5).
 
 #### Related work.
 
@@ -267,20 +267,37 @@ Complexitylib’s model, $f(a) = \mathit{post}(a, g(r(a)))$ for
 polynomial-time $r$ and $\mathit{post}$, and prove membership in \#P
 (`countValidMonotone2_mem_SharpP_bin`) and a parsimonious reduction from
 \#Monotone-2SAT (`sharpMonotone2SAT_reduces`, to the unary-index
-encoding; the binary form follows by re-encoding) unconditionally.
-Hardness takes Valiant’s theorem as an explicit hypothesis:
+encoding; the binary form follows by re-encoding). Hardness follows from
+Valiant’s theorem in its one-call form, which we prove:
 
-    theorem countValidMonotone2_oneCallSharpPComplete_bin
-        (hValiant : OneCallSharpPHard encCNF SharpMonotone2SAT) :
+    theorem sharpMonotone2SAT_oneCallSharpPHard :
+        OneCallSharpPHard encCNF SharpMonotone2SAT
+    theorem countValidMonotone2_sharpPComplete_oneCall :
         OneCallSharpPComplete encInstBin countValidMonotone2
 
-Valiant proved the result under polynomial-time Turing reductions;
-`hValiant` asks for the stronger one-call form. That form is
-machine-checked by Senellart and Gnatenko ([Senellart and Gnatenko
-2026](#ref-SenellartGnatenko2026)), in a model where \#P is defined
-logically and reductions are first-order, so the link to our hypothesis
-is informal. A hypothesis is not an axiom, so Lean’s axiom audit does
-not show it; we therefore state it wherever the theorem appears.
+Valiant proved the result under polynomial-time Turing reductions,
+interpolating over many oracle calls; the one-call form is stronger.
+Senellart and Gnatenko machine-check it in a model where \#P is defined
+logically and reductions are first-order ([Senellart and Gnatenko
+2026](#ref-SenellartGnatenko2026)). We prove it in Complexitylib’s model
+by a single reduction from \#SAT. After relabelling the variables
+densely, a conflict graph has a vertex for each variable and value and
+one for each literal occurrence, read “the first true literal of its
+clause”. Its vertices split into $n + m$ cliques for $n$ variables and
+$m$ clauses, and its independent sets of size $n + m$ are in bijection
+with the models (`modelCount_eq_card`), for any CNF. Giving each vertex
+$t = n + 1$ pendant leaves and turning each edge $\{u, w\}$ into the
+clause $x_u \lor x_w$ yields a monotone two-literal formula with
+$\sum_S 2^{t(N - |S|)}$ models, over the independent sets $S$ of the
+$N$-vertex graph (`modelCount_psi`). With $x$ the oracle’s answer and
+$K = n + m$, the post-processing returns the digit
+$x \cdot 2^{tK} / 2^{tN} \bmod 2^t$, which is \#SAT
+(`sharpSAT_eq_post`); multiplying before dividing avoids subtracting
+$N - K$, which fails for formulas with empty clauses. Composing with
+Complexitylib’s parsimonious \#P-hardness of \#SAT needs only that a
+parsimonious reduction followed by a one-call reduction is one-call. The
+conditional form, with Valiant’s theorem as a hypothesis `hValiant`, is
+kept as `countValidMonotone2_oneCallSharpPComplete_bin`.
 
 ## 6 Where the hardness comes from
 
@@ -343,21 +360,24 @@ Where the hardness comes from.
 
 #### Effort.
 
-The development is 2 598 lines of Lean in the nine files of
-`LatcComplexity/`, 2 395 without the axiom-audit file. Its first seven
-commits ran from 28 October 2026, 14:16, to 29 October, 00:18, over
-about ten hours, building on latc-check’s model and reduction; an
-eighth, on 31 October, added counting with a fixed number of attributes.
+The development is 3 836 lines of Lean in the 14 files of
+`LatcComplexity/`, 3 535 without the two axiom-audit files. Its first
+seven commits ran from 28 October 2026, 14:16, to 29 October, 00:18,
+over about ten hours, building on latc-check’s model and reduction. On
+31 October two more added counting with a fixed number of attributes
+and, in 1 238 lines, Valiant’s theorem.
 
 #### Automation.
 
 Complexitylib’s `fun_prop` discharged many polynomial-time obligations:
-it occurs in 66 lines of the development, often directly after unfolding
+it occurs in 90 lines of the development, often directly after unfolding
 a definition. Proofs by hand were needed where the size of intermediate
 values matters: the product of the domain sizes, whose bounded growth
 rests on Complexitylib’s `length_encNat_mul_le`, and the enumeration of
 candidate states, whose polynomial time is proved by induction on $k$.
-Reading a list at a binary index needed a library lemma,
+For the graph of Valiant’s reduction, `fun_prop` timed out until each
+vertex-numbering and edge helper had its own composable polynomial-time
+lemma. Reading a list at a binary index needed a library lemma,
 `listGetD_binary`, rather than a new proof.
 
 #### Following a moving library.
@@ -377,19 +397,20 @@ separate repository with a different API.
 
 #### Trust.
 
-`LatcComplexity/Axioms.lean` prints the axioms of 174 theorems, among
-them every theorem of this development that the paper cites; each
-depends only on `propext`, `Classical.choice` and `Quot.sound`, or
-fewer. A cold build, from a fresh clone downloading precompiled Mathlib,
-took about seven minutes and 12 GB of disk at an earlier commit; it will
-be re-measured at the final one.
+`LatcComplexity/Axioms.lean` and `LatcComplexity/Valiant/Axioms.lean`
+print the axioms of 254 theorems, among them every theorem of this
+development that the paper cites; each depends only on `propext`,
+`Classical.choice` and `Quot.sound`, or fewer. A cold build, from a
+fresh clone downloading precompiled Mathlib, took about seven minutes
+and 12 GB of disk at an earlier commit; it will be re-measured at the
+final one.
 
 #### What remains.
 
-Valiant’s theorem in Complexitylib’s model, which would discharge
-`hValiant`; and an explicit formula in $k$ for the degree of the
-fixed-attribute bounds, which we prove polynomial for each $k$ without
-extracting the degree.
+An explicit formula in $k$ for the degree of the fixed-attribute bounds,
+which we prove polynomial for each $k$ without extracting the degree.
+Valiant’s reduction uses only Complexitylib’s notions apart from
+one-call reductions, and could be offered upstream.
 
 ## References
 

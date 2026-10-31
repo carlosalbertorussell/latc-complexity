@@ -7,11 +7,11 @@ descriptive-complexity (`fc068f6`) contain on that date.
 
 | Gap | What it closes | Size | Order |
 |---|---|---|---|
-| 1. Valiant's theorem in Complexitylib's model | the hypothesis `hValiant`; the monotone case becomes unconditional | large | second |
+| 1. Valiant's theorem in Complexitylib's model | the hypothesis `hValiant`; the monotone case becomes unconditional | large | second; **done** (`3bb09ae`, merged in `43d7e25`) |
 | 2. Counting with a fixed number of attributes | the counting half of the tractable side | moderate | first; **done** (`242311b`) |
 | 3. An explicit degree in k | uniformity of the fixed-attribute bounds | small maths, heavy bookkeeping | last; started 2026-10-31 |
 
-None of them blocks the ITP 2027 submission. Gap 2 is closed; the draft states the other two as open.
+None of them blocks the ITP 2027 submission. Gaps 1 and 2 are closed; the draft states Gap 3 as open.
 
 ## Gap 1: Valiant's theorem in Complexitylib's model
 
@@ -46,7 +46,15 @@ chain of descriptive-complexity (`Problems/CliqueFamily/CountingAll.lean`,
 4. **Glue:** a transitivity lemma for two one-call reductions (only one-call followed by
    parsimonious exists so far).
 
-**Risk.** The largest gap: a new development of graph counting problems in Complexitylib's
+**Status.** Done on 2026-10-31 on branch `claude/gap1-valiant` (`3bb09ae`, clean build of 18643
+jobs, 80 audited theorems on the standard axioms), merged into `main` in `43d7e25`. The proof took
+a shorter route than steps 1–4: one one-call reduction from #SAT that fuses them (a parsimonious
+"first true literal" conflict graph for any CNF, pendant leaves, one digit), so neither #IS_k
+nor #AllIS nor a one-call ∘ one-call lemma was needed; only `ParsimoniousReducible.trans_oneCall`.
+Main theorem: `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`. Details in
+`docs/gap1-progress.md`.
+
+**Risk (as planned).** The largest gap: a new development of graph counting problems in Complexitylib's
 model. Step 1 is the hardest. The result arguably belongs upstream in Complexitylib; done here
 first, it can be offered upstream later.
 

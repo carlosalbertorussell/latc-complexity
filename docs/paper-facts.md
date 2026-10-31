@@ -2,13 +2,16 @@
 
 Checked 2026-10-29 against commit `011cd1a` of latc-complexity, for Paper D, "Machine-Checked
 Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was changed.
+Updated 2026-10-31 for commit `43d7e25` (Valiant's theorem, Gap 1, merged from `3bb09ae`): the §5
+Valiant entries, caution 4, the audit count, the line counts and the notes on Valiant below.
 Updated 2026-10-31 for commit `242311b` (counting with a fixed number of attributes, Gap 2 of
 `docs/gaps-plan.md`): line numbers in `Tractable.lean`, the §6 entries, the audit count and the
 line counts.
 
 ## Summary
 
-* **Theorems: 52/52 found.** These are the 52 rows of the README's theorem tables (50 names;
+* **Theorems: 59/59 found.** The README's Valiant table (7 rows, Gap 1) is checked in §5 below,
+  under "Valiant's theorem". The other 52 are the earlier rows of the README's theorem tables (50 names;
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
   `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). The 49th,
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
@@ -98,7 +101,7 @@ with the first list:
 | 6 | `missingCountFixedAttrs_polyTime` | `Latc.PaperD.General.missingCountFixedAttrs_polyTime` | `LatcComplexity/Tractable.lean:1052` | exists, exact name (added 2026-10-31) |
 
 Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the outline on
-2026-10-30; 1 and 4 still apply.
+2026-10-30, and 4 by the Gap 1 proof on 2026-10-31; 1 still applies.
 
 1. **Namespaces.** `MissingNonempty_npComplete`, `Complete_coNPComplete`, `MissingNonempty_mem_NP`,
    `SAT_reduces` and `fromSAT_polyTime` exist both in `Latc.PaperD` (Boolean domains, `Bridge.lean`)
@@ -114,14 +117,17 @@ Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the o
    `missingNonempty_finset_npComplete_bin` beside `MissingNonempty_npComplete_bin` and
    `Complete_coNPComplete_bin`, and §5's monotone case cites the `_bin` forms (2026-10-31). The tractable theorems are stated for `encInstBin`; their
    `encInst` versions carry the suffix `_unary`.
-4. **`countValidMonotone2_oneCallSharpPComplete(_bin)` is conditional.** Valiant's theorem is its
-   hypothesis `hValiant`, not an axiom, so it does not appear in the axiom audit. Hardness is under
-   one-call reductions, defined in `Monotone.lean`, and is not Complexitylib's parsimonious
-   `SharpPHard`.
+4. **Resolved: `countValidMonotone2_oneCallSharpPComplete(_bin)` is conditional.** Valiant's theorem
+   is its hypothesis `hValiant`, not an axiom, so it does not appear in the axiom audit. Since
+   `43d7e25` the hypothesis is proved (`Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`),
+   and `countValidMonotone2_sharpPComplete_oneCall` states the unconditional result. Hardness is
+   still under one-call reductions, defined in `Monotone.lean`, not Complexitylib's parsimonious
+   `SharpPHard`. The outline's §5 still cites the conditional `_bin` form.
 
 A side note on the audit file: it prints 174 of the 191 `theorem`/`lemma` declarations in
 `LatcComplexity/` (130 of 147 at `011cd1a`; commit `242311b` added 44 declarations to
-`Tractable.lean`, all printed). The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
+`Tractable.lean`, all printed). Gap 1 adds `LatcComplexity/Valiant/Axioms.lean`, which prints all
+80 declarations of `LatcComplexity/Valiant/`. The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
 `assignment_pad`, `condHoldsB_polyTime`, `encList_polyTime`, `fromSAT_get`, `fromSAT_n`,
 `getElem?_toList_boolTuple`, `length_certWord`, `length_domains_le`, `length_encCNF_le`,
 `length_tuple`, `lookup_polyTime`, `mem_vars_denseRelabel_iff`, `ofFn_certFun`, `ofFn_getD` and
@@ -569,6 +575,84 @@ theorem countValidMonotone2_oneCallSharpPComplete_bin
     OneCallSharpPComplete encInstBin countValidMonotone2
 ```
 
+#### Valiant's theorem (`LatcComplexity/Valiant/`, namespace `Latc.PaperD.Valiant`)
+
+Added by Gap 1 (`3bb09ae`, merged in `43d7e25`). Axiom lines are from that session's report of its
+build on the branch: all 80 audited declarations print a subset of `[propext, Classical.choice,
+Quot.sound]`, and the three main theorems print all three. Per-theorem lines for the others were
+not reported; the merged commit has not been rebuilt. The README's other Valiant rows exist as
+written: `sharpSAT_oneCallReducible` (`OneCall.lean:165`), `toMonotone_polyTime`
+(`Gadget.lean:161`), `post_polyTime` (`Gadget.lean:207`); and the composition lemma
+`ParsimoniousReducible.trans_oneCall` (`OneCall.lean:170`).
+
+#### `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`
+
+- Exists: yes, `LatcComplexity/Valiant/OneCall.lean:184`
+- Reading: #Monotone-2SAT is #P-hard under one-call reductions in Complexitylib's model: Valiant's theorem in the form `hValiant` asks for, proved.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem sharpMonotone2SAT_oneCallSharpPHard : OneCallSharpPHard encCNF SharpMonotone2SAT
+```
+
+#### `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall`
+
+- Exists: yes, `LatcComplexity/Valiant/OneCall.lean:191`
+- Reading: Unconditionally, counting valid states of monotone two-condition tables is #P-complete under one-call reductions, for the all-binary encoding.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem countValidMonotone2_sharpPComplete_oneCall :
+    OneCallSharpPComplete encInstBin countValidMonotone2
+```
+
+#### `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall_unary`
+
+- Exists: yes, `LatcComplexity/Valiant/OneCall.lean:196`
+- Reading: The same for the unary-index encoding.
+- Axioms: `[propext, Classical.choice, Quot.sound]`
+
+```lean
+theorem countValidMonotone2_sharpPComplete_oneCall_unary :
+    OneCallSharpPComplete General.encInst countValidMonotone2
+```
+
+#### `Latc.PaperD.Valiant.sharpSAT_eq_post`
+
+- Exists: yes, `LatcComplexity/Valiant/OneCall.lean:140`
+- Reading: #SAT of any CNF is recovered from one #Monotone-2SAT value of the constructed formula by the post-processing `post` (a digit extraction).
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem sharpSAT_eq_post (φ : CNF ℕ) : SharpSAT φ = post φ (SharpMonotone2SAT (toMonotone φ))
+```
+
+#### `Latc.PaperD.Valiant.modelCount_eq_card`
+
+- Exists: yes, `LatcComplexity/Valiant/Counting.lean:481`
+- Reading: For a densely relabelled CNF, its models are in bijection with the independent sets of size n + m (n variables, m clauses) of the conflict graph.
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem modelCount_eq_card (hd : ∀ o ∈ occurrences φ, o.2.2.1 < n)
+    (hn : ∀ i < n, i ∈ φ.vars) :
+    φ.modelCount = (Finset.univ.filter fun g : V0 φ n → Bool =>
+      Indep φ n (falseSet g) ∧ (falseSet g).card = n + φ.length).card
+```
+
+#### `Latc.PaperD.Valiant.modelCount_psi`
+
+- Exists: yes, `LatcComplexity/Valiant/Pendant.lean:115`
+- Reading: With t pendant leaves per vertex, the monotone formula's models number the sum, over independent sets, of 2^(t · (number of vertices outside the set)).
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem modelCount_psi (hd : ∀ o ∈ occurrences φ, o.2.2.1 < n) {t : ℕ} (ht : 0 < t) :
+    (graphClauses φ n ++ leafClauses φ n t).modelCount =
+      ∑ g : V0 φ n → Bool, if Indep φ n (falseSet g) then
+        2 ^ (t * (Finset.univ.filter fun x => g x = true).card) else 0
+```
+
 ### §6. Tractable side
 
 #### `Latc.PaperD.General.missingCount_eq_of_noConstraints` (outline)
@@ -723,7 +807,7 @@ theorem that prints fewer than all three axioms, and none of the four is among t
 
 ## Line counts
 
-Counted with `wc -l` (every line, including blank lines and comments) at `242311b`.
+Counted with `wc -l` (every line, including blank lines and comments) at `43d7e25`.
 
 | File | Lines | Theorems/lemmas |
 |---|---|---|
@@ -736,9 +820,14 @@ Counted with `wc -l` (every line, including blank lines and comments) at `242311
 | `LatcComplexity/Binary.lean` | 186 | 21 |
 | `LatcComplexity/Tractable.lean` | 1099 | 81 |
 | `LatcComplexity/Axioms.lean` | 203 | 0 (174 `#print axioms`) |
-| **`LatcComplexity/` total** | **2598** | **191** |
-| `LatcComplexity/` without `Axioms.lean` | 2395 | 191 |
-| `LatcComplexity.lean` (root import file) | 9 | |
+| `LatcComplexity/Valiant/Gadget.lean` | 227 | 19 |
+| `LatcComplexity/Valiant/Counting.lean` | 518 | 38 |
+| `LatcComplexity/Valiant/Pendant.lean` | 195 | 9 |
+| `LatcComplexity/Valiant/OneCall.lean` | 200 | 14 |
+| `LatcComplexity/Valiant/Axioms.lean` | 98 | 0 (80 `#print axioms`) |
+| **`LatcComplexity/` total** | **3836** | **271** |
+| `LatcComplexity/` without the two `Axioms.lean` | 3535 | 271 |
+| `LatcComplexity.lean` (root import file) | 14 | |
 | `LatcFormal/Basic.lean` | 114 | |
 | `LatcFormal/Thm1.lean` | 130 | |
 | `LatcFormal/Prop1.lean` | 287 | |
@@ -752,10 +841,11 @@ Counted with `wc -l` (every line, including blank lines and comments) at `242311
 | `LatcFormal/Axioms.lean` | 95 | |
 | **`LatcFormal/` total** (copied unchanged from latc-check) | **1777** | |
 | `LatcFormal.lean` (root import file) | 11 | |
-| **Repository total, all `.lean` files** | **4395** | |
+| **Repository total, all `.lean` files** | **5638** | |
 
-Paper D's new development is `LatcComplexity/`: 2598 lines, or 2395 without the audit file (1966
-and 1809 at `011cd1a`, before the counting result).
+Paper D's new development is `LatcComplexity/`: 3836 lines, or 3535 without the two audit files
+(2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
+counting result).
 
 ## References
 
@@ -813,8 +903,9 @@ what.
   reductions. Cite Provan and Ball for bipartite independent sets / vertex covers (equivalently,
   #Monotone-2SAT on a bipartite variable graph), if the paper needs that problem. The README's
   `hValiant` asks for one-call hardness. That is stronger than the Turing-reduction statement
-  either paper proves, which matches the README's remark that the one-call form is
-  machine-checked only in Senellart and Gnatenko's model.
+  either paper proves. The one-call form is machine-checked in Senellart and Gnatenko's model,
+  and, since `43d7e25`, in Complexitylib's model in this repository
+  (`sharpMonotone2SAT_oneCallSharpPHard`).
 
 ### Calvanese et al. (BPM 2016) states no complexity result
 
@@ -857,7 +948,8 @@ problem, not the method:
   first-order reductions, not complexitylib's Turing machines.
 * The same library proves #Monotone-2SAT and the permanent one-call #P-complete
   (`sharpMonotoneTwoSat_sharpP_oneCallComplete`, `sharpCycleCover_sharpP_oneCallComplete`).
-  That is the substance of Paper D's hypothesis `hValiant`, though in another model.
+  That is the substance of Paper D's hypothesis `hValiant`, though in another model; Paper D now
+  proves it in Complexitylib's model too (Gap 1), so the two are independent checks of it.
 * complexitylib, which Paper D builds on, has Cook–Levin, SAT, 3SAT and #SAT; Paper A cites its
   earlier version for Cook–Levin in Lean 4 (references, item 13).
 * In Isabelle/HOL, poly-reductions (formerly Karp21) reduces SAT to all 21 problems, without
