@@ -284,7 +284,9 @@ clause per row of $T_0$ of the right length that says the tuple differs from tha
 \subparagraph*{The monotone two-literal case.}
 Russell~\cite{PaperA} notes that counting the valid states stays \#P-complete when every clause
 is $A_i = 1 \lor A_j = 1$ over domains $\{0,1\}$, citing Valiant~\cite{Valiant1979enumeration}.
-Deciding such instances is trivial, since the all-ones state is valid, so no parsimonious
+As with Complexitylib's \lstinline{SharpThreeSAT}, both counting functions are total:
+\lstinline{SharpMonotone2SAT} and \lstinline{countValidMonotone2} return~$0$ on inputs of any
+other shape. Deciding such instances is trivial, since the all-ones state is valid, so no parsimonious
 reduction from \#SAT exists unless P~=~NP, and hardness needs a weaker reduction. We define
 one-call reductions in Complexitylib's model, $f(a) = \mathit{post}(a, g(r(a)))$ for
 polynomial-time $r$ and $\mathit{post}$, and prove membership in \#P
@@ -349,7 +351,7 @@ fixed $k$ & clauses & at most $k$ & decision problems in P for each $k$ \\
 \label{sec:conclusion}
 
 \subparagraph*{Effort.}
-The development is 1\,966 lines of Lean in nine files, 1\,809 without the axiom-audit file.
+The development is 1\,966 lines of Lean in the nine files of \texttt{LatcComplexity/}, 1\,809 without the axiom-audit file.
 Its history runs from 28 October 2026, 14:16, to 29 October, 00:18: seven commits over about
 ten hours, building on latc-check's model and reduction.
 
