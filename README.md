@@ -59,7 +59,23 @@ branch (`d6980bb`, on top of `242311b`: `Build completed successfully (18627 job
 jobs)`, exit code 0, no warnings, no errors. That merge is `cbf016b` on `main`; the commits between
 `43d7e25` and it change documentation only, so its Lean files are those of that build.
 
-Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
+Cold build at the final commit (2026-10-31, Linux cloud machine, x86_64, 4 cores, commit `6603497`,
+whose Lean files are those of `cbf016b`; fresh clone, no `~/.elan`, `.lake` or Mathlib cache):
+elan install 1.2 s; `lake exe cache get` 173 s, including the toolchain download (all 9047 Mathlib
+files from the cache); `lake build` 361 s, `Build completed successfully (18645 jobs)`, exit code 0,
+no warnings, no errors, compiling from source 27 CSLib, 211 Complexitylib and the 28 repository
+modules. About 9 minutes in all (timed with `date` stamps); 12 GB of disk: the repository with
+`.lake` 7.7 GB, `~/.elan` with Lake's artifact cache 3.1 GB, `~/.cache/mathlib` 453 MB. The later
+merge `42b9977` changes only comments in `Monotone.lean`.
+
+Upstream test (2026-10-31, branch `claude/upstream-complexitylib-test`, not merged): with
+Complexitylib at its then-current main `b9e6241` (2026-10-31 15:57 UTC), Lean `v4.36.0-rc2`, and the
+CSLib (`254e30e`) and Mathlib (`6955275`) that `lake update complexitylib` brings, the development
+builds with no Lean file changed: `Build completed successfully (18717 jobs)`, no warnings, no
+errors, and the same axiom audit. `main` keeps the pin `b7acfc2`, against which everything was
+proved.
+
+Earlier cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
 Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
 9047 Mathlib files came from the cache); `lake build` 241 s, `Build completed successfully (18603
 jobs)`, no warnings, no errors, compiling from source 27 CSLib, 200 Complexitylib and the 18
@@ -328,7 +344,13 @@ The planning note `docs/boundary.md` lists the same statements.
 ## Axiom audit
 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
-(`sorryAx`) and custom axioms would show up here. In the build above:
+(`sorryAx`) and custom axioms would show up here.
+
+Full audit at the final commit (cold build above): 300 theorems. `LatcComplexity/Axioms.lean`, 220:
+188 print `[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
+2 `[Quot.sound]`. `LatcComplexity/Valiant/Axioms.lean`, 80: 65 print all three, 9
+`[propext, Quot.sound]`, 6 `[propext]`. None mentions `sorryAx` or any other axiom. The per-name
+lists below are from the earlier builds:
 
 * `LatcComplexity/Axioms.lean`, 220 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`, 46 of
   `ExplicitDegree`). The 46 of `ExplicitDegree` (Gap 3 build, `d6980bb`) each print a subset of
@@ -361,8 +383,8 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 The three gaps of `docs/gaps-plan.md` are closed: counting with at most `k` attributes (`242311b`),
 Valiant's theorem (`43d7e25`) and an explicit degree in `k` (`cbf016b`). What stays outside the
 development: a per-`k` machine with `k` built in and constants independent of `k` (see the
-explicit-degree paragraph above), and a build against Complexitylib's current `main` (the pin is
-`b7acfc2`).
+explicit-degree paragraph above). The pin stays at `b7acfc2`; the development also builds unchanged
+against Complexitylib `b9e6241` (see Build).
 
 ## Licence
 

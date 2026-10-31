@@ -417,8 +417,10 @@ pinned commit `b7acfc2` (28 October 2026) and the matching toolchain
 so we met no upstream breakage: the price is falling behind. Three days
 later the library’s main branch was 481 commits ahead, had moved to Lean
 `v4.36.0-rc2`, advanced CSLib and Mathlib with it, and repaired
-`fun_prop` clients broken by the move. Whether our development builds
-against it is untested, so we publish the artifact with its pin. The
+`fun_prop` clients broken by the move. Our development nonetheless
+builds against it unchanged: at upstream commit `b9e6241` with Lean
+`v4.36.0-rc2`, no Lean file needed editing. We still publish the
+artifact with its original pin, against which everything was proved. The
 library had also just been reorganised: two weeks before we started, a
 CSLib-based rewrite replaced its earlier version, which
 Russell ([Russell 2026a](#ref-PaperA)) cites and which now lives on as a
@@ -429,17 +431,16 @@ separate repository with a different API.
 `LatcComplexity/Axioms.lean` and `LatcComplexity/Valiant/Axioms.lean`
 print the axioms of 300 theorems, among them every theorem of this
 development that the paper cites; each depends only on `propext`,
-`Classical.choice` and `Quot.sound`, or fewer. A cold build, from a
-fresh clone downloading precompiled Mathlib, took about seven minutes
-and 12 GB of disk at an earlier commit; it will be re-measured at the
-final one.
+`Classical.choice` and `Quot.sound`, or fewer (253 use all three), and
+none depends on `sorryAx`. A cold build of the final commit, from a
+fresh clone downloading precompiled Mathlib, took about nine minutes on
+four cores and 12 GB of disk.
 
 #### What remains.
 
 The per-$k$ machine with constants independent of $k$ described in
-Section 6, and a build against Complexitylib’s current main. Valiant’s
-reduction uses only Complexitylib’s notions apart from one-call
-reductions, and could be offered upstream.
+Section 6. Valiant’s reduction uses only Complexitylib’s notions apart
+from one-call reductions, and could be offered upstream.
 
 ## References
 
