@@ -5,10 +5,11 @@ Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was 
 
 ## Summary
 
-* **Theorems: 48/48 found.** These are the 48 rows of the README's theorem tables (46 names;
+* **Theorems: 49/49 found.** These are the 49 rows of the README's theorem tables (47 names;
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
-  `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). They include all 22
-  theorems the outline names: its 19 explicit names, plus the 3 main theorems of `Adequacy.lean`.
+  `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). The 49th,
+  `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31. They include all 24
+  theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
   first checked, and the 24 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, two were resolved in the outline and two still apply.
@@ -115,12 +116,12 @@ A side note on the audit file: it prints 130 of the 147 `theorem`/`lemma` declar
 `getElem?_toList_boolTuple`, `length_certWord`, `length_domains_le`, `length_encCNF_le`,
 `length_tuple`, `lookup_polyTime`, `mem_vars_denseRelabel_iff`, `ofFn_certFun`, `ofFn_getD` and
 `pos2B_emptyClauseInst`. The README says the file covers "every theorem", which is not literally
-true. All 48 theorems below are printed.
+true. All 49 theorems below are printed.
 
 ## Theorems by paper section
 
 For each theorem below: the full name; whether it exists and where (`(outline)` marks a name the
-outline cites); a one-sentence reading; its axiom line; and the Lean statement, copied verbatim
+outline's section table cites as of 2026-10-31); a one-sentence reading; its axiom line; and the Lean statement, copied verbatim
 from the source up to `:=`. The statements are written inside the theorem's namespace, under
 `open Cslib.Complexity Cslib.Logic.PL Turing.MultiTapeTM` (`Adequacy.lean` opens only
 `Cslib.Complexity`).
@@ -284,7 +285,7 @@ theorem MissingNonempty_npComplete : NPComplete encInst MissingNonempty
 theorem Complete_coNPComplete : coNPComplete encInst Complete
 ```
 
-#### `Latc.PaperD.General.missingNonempty_finset_npComplete` (outline)
+#### `Latc.PaperD.General.missingNonempty_finset_npComplete`
 
 - Exists: yes, `LatcComplexity/Adequacy.lean:136`
 - Reading: Stated directly on latc-check's `Latc.missing`: deciding whether the missing set of the denoted table is non-empty is NP-complete under `encInst`.
@@ -295,7 +296,7 @@ theorem missingNonempty_finset_npComplete :
     NPComplete encInst {I : Inst | (missing I.con I.table).Nonempty}
 ```
 
-#### `Latc.PaperD.General.complete_finset_coNPComplete` (outline)
+#### `Latc.PaperD.General.complete_finset_coNPComplete`
 
 - Exists: yes, `LatcComplexity/Adequacy.lean:145`
 - Reading: Stated directly on latc-check's `Latc.missing`: deciding whether the denoted table is complete is coNP-complete under `encInst`.
@@ -326,7 +327,7 @@ theorem MissingNonempty_npComplete_bin : NPComplete encInstBin MissingNonempty
 theorem Complete_coNPComplete_bin : coNPComplete encInstBin Complete
 ```
 
-#### `Latc.PaperD.General.missingNonempty_finset_npComplete_bin`
+#### `Latc.PaperD.General.missingNonempty_finset_npComplete_bin` (outline)
 
 - Exists: yes, `LatcComplexity/Binary.lean:111`
 - Reading: The `Latc.missing` form of NP-completeness of non-emptiness, under `encInstBin`.
@@ -337,7 +338,7 @@ theorem missingNonempty_finset_npComplete_bin :
     NPComplete encInstBin {I : Inst | (missing I.con I.table).Nonempty}
 ```
 
-#### `Latc.PaperD.General.complete_finset_coNPComplete_bin`
+#### `Latc.PaperD.General.complete_finset_coNPComplete_bin` (outline)
 
 - Exists: yes, `LatcComplexity/Binary.lean:119`
 - Reading: The `Latc.missing` form of coNP-completeness of completeness, under `encInstBin`.
@@ -431,7 +432,7 @@ theorem countMissing_mem_SharpP : countMissing ∈ SharpP encInst
 theorem countMissing_sharpPComplete : SharpPComplete encInst countMissing
 ```
 
-#### `Latc.PaperD.General.missingCount_eq_acceptCount`
+#### `Latc.PaperD.General.missingCount_eq_acceptCount` (outline)
 
 - Exists: yes, `LatcComplexity/CountingGeneral.lean:128`
 - Reading: General domains: |M(T₀)| equals the number of certificates of length `certLen I` that the verifier `cverifier` accepts, one canonical certificate per missing tuple.
@@ -452,7 +453,7 @@ theorem missingCount_eq_acceptCount (I : Inst) :
 theorem missingCount_mem_SharpP : missingCount ∈ SharpP encInst
 ```
 
-#### `Latc.PaperD.General.sharpSAT_eq_missingCount`
+#### `Latc.PaperD.General.sharpSAT_eq_missingCount` (outline)
 
 - Exists: yes, `LatcComplexity/CountingGeneral.lean:205`
 - Reading: The SAT reduction preserves counts: #SAT of φ equals |M(T₀)| of the instance `fromSAT φ`.
@@ -514,7 +515,7 @@ theorem sharpMonotone2SAT_reduces :
     ParsimoniousReducible encCNF encInst SharpMonotone2SAT countValidMonotone2
 ```
 
-#### `Latc.PaperD.General.countValidMonotone2_mem_SharpP` (outline)
+#### `Latc.PaperD.General.countValidMonotone2_mem_SharpP`
 
 - Exists: yes, `LatcComplexity/Monotone.lean:177`
 - Reading: Unconditionally, counting valid states of monotone two-condition tables is in #P.
@@ -524,7 +525,17 @@ theorem sharpMonotone2SAT_reduces :
 theorem countValidMonotone2_mem_SharpP : countValidMonotone2 ∈ SharpP encInst
 ```
 
-#### `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete` (outline)
+#### `Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin` (outline)
+
+- Exists: yes, `LatcComplexity/Binary.lean:171` (added 2026-10-31, when the README's binary table first listed it)
+- Reading: Unconditionally, counting valid states of monotone two-condition tables is in #P under the all-binary encoding.
+- Axioms: `[propext, Classical.choice, Quot.sound]` (audited in `LatcComplexity/Axioms.lean:117`; not among the README's exceptions)
+
+```lean
+theorem countValidMonotone2_mem_SharpP_bin : countValidMonotone2 ∈ SharpP encInstBin
+```
+
+#### `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete`
 
 - Exists: yes, `LatcComplexity/Monotone.lean:186`
 - Reading: Assuming Valiant's theorem in the form that #Monotone-2SAT is #P-hard under one-call reductions, counting valid states of monotone two-condition tables is #P-complete under one-call reductions.
@@ -536,7 +547,7 @@ theorem countValidMonotone2_oneCallSharpPComplete
     OneCallSharpPComplete encInst countValidMonotone2
 ```
 
-#### `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin`
+#### `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` (outline)
 
 - Exists: yes, `LatcComplexity/Binary.lean:179`
 - Reading: The same conditional one-call #P-completeness under the all-binary encoding.
