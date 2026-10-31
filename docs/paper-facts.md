@@ -17,10 +17,10 @@ line counts.
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
   last three, the counting result of commit `242311b` (`missingCount_eq_weighted_of_le`,
   `length_classStates_le`, `missingCountFixedAttrs_polyTime`); §6 below also records its `_unary`
-  corollary, which the paper draft cites. They include all 25
+  corollary, which the paper draft cites. They include all 27
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
-  first checked, and the 25 its section table cites after the edits of 2026-10-30 and 31. Of four
+  first checked, and the 27 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, two were resolved in the outline and two still apply.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
@@ -52,7 +52,7 @@ theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_Missing
 `mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
 **As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
-section table cites the 25 names below, by paper section; all exist exactly as written. Compared
+section table cites the 27 names below, by paper section; all exist exactly as written. Compared
 with the first list:
 
 * three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
@@ -70,7 +70,10 @@ with the first list:
 * also on 2026-10-31, §4 added `complete_finset_coNPComplete_bin`, the binary form of the
   completeness result on `Latc.missing`, beside its non-emptiness counterpart: 24 names;
 * and, after commit `242311b`, §6 added `missingCountFixedAttrs_polyTime`, the counting result
-  with at most `k` attributes: 25 names.
+  with at most `k` attributes: 25 names;
+* and, after the Gap 1 merge (`43d7e25`), §5 added `sharpMonotone2SAT_oneCallSharpPHard` and
+  `countValidMonotone2_sharpPComplete_oneCall`, Valiant's theorem and the unconditional result:
+  27 names.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -91,6 +94,8 @@ with the first list:
 | 5 | `countValidMonotone2_mem_SharpP_bin` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin` | `LatcComplexity/Binary.lean:171` | exists, exact name (added 2026-10-31) |
 | 5 | `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name; targets `encInst`, no `_bin` form |
 | 5 | `countValidMonotone2_oneCallSharpPComplete_bin` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` | `LatcComplexity/Binary.lean:179` | exists, exact name (added 2026-10-31) |
+| 5 | `sharpMonotone2SAT_oneCallSharpPHard` | `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard` | `LatcComplexity/Valiant/OneCall.lean:184` | exists, exact name (added 2026-10-31) |
+| 5 | `countValidMonotone2_sharpPComplete_oneCall` | `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall` | `LatcComplexity/Valiant/OneCall.lean:191` | exists, exact name (added 2026-10-31) |
 | 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
 | 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:208` | exists, exact name |
 | 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:165` | exists, exact name |
@@ -122,7 +127,8 @@ Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the o
    `43d7e25` the hypothesis is proved (`Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`),
    and `countValidMonotone2_sharpPComplete_oneCall` states the unconditional result. Hardness is
    still under one-call reductions, defined in `Monotone.lean`, not Complexitylib's parsimonious
-   `SharpPHard`. The outline's §5 still cites the conditional `_bin` form.
+   `SharpPHard`. The outline's §5 cites both the conditional `_bin` form and the two unconditional
+   theorems.
 
 A side note on the audit file: it prints 174 of the 191 `theorem`/`lemma` declarations in
 `LatcComplexity/` (130 of 147 at `011cd1a`; commit `242311b` added 44 declarations to
@@ -585,7 +591,7 @@ written: `sharpSAT_oneCallReducible` (`OneCall.lean:165`), `toMonotone_polyTime`
 (`Gadget.lean:161`), `post_polyTime` (`Gadget.lean:207`); and the composition lemma
 `ParsimoniousReducible.trans_oneCall` (`OneCall.lean:170`).
 
-#### `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard`
+#### `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard` (outline)
 
 - Exists: yes, `LatcComplexity/Valiant/OneCall.lean:184`
 - Reading: #Monotone-2SAT is #P-hard under one-call reductions in Complexitylib's model: Valiant's theorem in the form `hValiant` asks for, proved.
@@ -595,7 +601,7 @@ written: `sharpSAT_oneCallReducible` (`OneCall.lean:165`), `toMonotone_polyTime`
 theorem sharpMonotone2SAT_oneCallSharpPHard : OneCallSharpPHard encCNF SharpMonotone2SAT
 ```
 
-#### `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall`
+#### `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall` (outline)
 
 - Exists: yes, `LatcComplexity/Valiant/OneCall.lean:191`
 - Reading: Unconditionally, counting valid states of monotone two-condition tables is #P-complete under one-call reductions, for the all-binary encoding.
