@@ -7,6 +7,7 @@
 %     double-blind review; the repository link would go through an anonymous mirror;
 %   * page budget: the ITP 2027 short-paper limit is not yet known (6 pages in 2023);
 %   * cold build: the figures in Section 7 were measured at commit a2ab2f8; re-measure;
+%   * upstream: test the development against complexitylib's current main (Section 7);
 %   * two literature checks: Vu and Demetrovics (2026), and the "input completeness"
 %     constraints of Levy and Rousset's 1998 journal version.
 
@@ -361,9 +362,17 @@ candidate states, whose polynomial time is proved by induction on~$k$. Reading a
 binary index needed a library lemma, \lstinline{listGetD_binary}, rather than a new proof.
 
 \subparagraph*{Following a moving library.}
-Complexitylib changes daily on a release-candidate Lean toolchain; we pin commit
-\texttt{b7acfc2} and the matching toolchain \texttt{v4.36.0-rc1}.
-% TODO: describe any breakage met while following upstream.
+Complexitylib changes daily on a release-candidate Lean toolchain. We pinned commit
+\texttt{b7acfc2} (28 October 2026) and the matching toolchain \texttt{v4.36.0-rc1} when the
+development began, and kept that pin throughout, so we met no upstream breakage: the price is
+falling behind. Three days later the library's main branch was 481 commits ahead, had moved to
+Lean \texttt{v4.36.0-rc2}, advanced CSLib and Mathlib with it, and repaired \lstinline{fun_prop}
+clients broken by the move. Whether our development builds against it is untested, so we publish
+the artifact with its pin. The library had also just been reorganised: two weeks before we
+started, a CSLib-based rewrite replaced its earlier version, which Russell~\cite{PaperA} cites
+and which now lives on as a separate repository with a different API.
+% Upstream figures from cslib-community/complexitylib, main at ff6ac8e on 2026-10-31; PRs #1653
+% (Lean rc2), #1694 (CSLib and Mathlib on rc2), #1657 (fun_prop clients on rc2).
 
 \subparagraph*{Trust.}
 \texttt{LatcComplexity/Axioms.lean} prints the axioms of 130 theorems, among them every theorem of this development that the paper cites; each depends only on
