@@ -197,6 +197,7 @@ because the identity is polynomial-time from `encInst` to `encInstBin`.
 | `missingNonempty_finset_npComplete_bin` | `NPComplete encInstBin {I \| (Latc.missing I.con I.table).Nonempty}` |
 | `complete_finset_coNPComplete_bin` | `coNPComplete encInstBin {I \| Latc.missing I.con I.table = ∅}` |
 | `missingCount_sharpPComplete_bin` | `SharpPComplete encInstBin missingCount` |
+| `countValidMonotone2_mem_SharpP_bin` | `countValidMonotone2 ∈ SharpP encInstBin` (unconditional) |
 | `countValidMonotone2_oneCallSharpPComplete_bin` | `(hValiant : OneCallSharpPHard encCNF SharpMonotone2SAT) → OneCallSharpPComplete encInstBin countValidMonotone2` |
 
 ### The tractable side (`LatcComplexity/Tractable.lean`, namespace `Latc.PaperD.General`)
