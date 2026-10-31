@@ -40,8 +40,10 @@ line counts.
 
   Paper D can claim the first such result for decision tables, with domain constraints, counting
   and a Lean proof, but not the first hardness result for coverage in general. Vu and Demetrovics
-  (Algorithms, 2026), on decision tables with labelled nulls, still need reading in full (see
-  Novelty, item 6).
+  (Algorithms, 2026, read in full) prove NP-, coNP- and #P-hardness for *decision reasoning* in
+  tables with unknown entries, not for completeness, so the claim must be about completeness;
+  Menghi et al. (IEEE TSE 2025) prove completeness of Simulink Requirements Tables undecidable
+  over real-valued signals (Novelty, items 6 and 7).
 * **Axiom audit:** the axiom lines below are copied from the audit recorded in the README (build of
   2026-10-29, `LatcComplexity/Axioms.lean`). The audit was **not re-run** in this session: the
   sandbox refused to install the Lean toolchain. A whole-word search of every `.lean` file for
@@ -1033,9 +1035,9 @@ to do so.
 
 Two checks remain before submission:
 
-* read Vu and Demetrovics (2026, item 6) in full;
-* read the "input completeness" constraints of Levy and Rousset's 1998 journal version (see
-  "Works cited by Paper A" below), which the open 1996 version does not contain.
+* ~~read Vu and Demetrovics (2026, item 6) in full~~: done 2026-10-31, see item 6;
+* ~~read the "input completeness" constraints of Levy and Rousset's 1998 journal version~~: done
+  2026-10-31, see "Works cited by Paper A" below. Both checks are closed.
 
 Close prior work:
 
@@ -1115,36 +1117,68 @@ Close prior work:
      [doi:10.1017/S1471068418000479](https://doi.org/10.1017/S1471068418000479): reasoning tasks,
      completeness included, are decidable in ExpTime over ALCH(D) knowledge bases. That is an
      upper bound only.
-6. **Abstract read; full text not accessible (checked 2026-10-30).** Duc Nghia Vu and Janos
-   Demetrovics, "Labeled Null Semantics for Incomplete Decision Tables: Certain, Possible, and
-   Conditional Decision Reasoning", Algorithms 19(9):725, published 27 August 2026,
-   [doi:10.3390/a19090725](https://doi.org/10.3390/a19090725). The record and abstract come from
-   the publisher's Crossref deposit (`api.crossref.org/works/10.3390/a19090725`). The MDPI
-   article, HTML and PDF pages all returned HTTP 403 to automated access. OpenAlex
-   (`any_repository_has_fulltext: false`) and Semantic Scholar list no copy other than MDPI's.
-   * **What the paper is about** (from the abstract). The setting is decision tables whose
-     *condition values are incomplete*: missing values are labelled nulls, where equal labels
-     denote the same unknown value. A possible world is a valuation of the nulls. On that
-     semantics the authors define "certain, possible, and conditional decisions", "develop
-     symbolic algorithms that avoid explicit enumeration of possible worlds, analyze their
-     computational complexity, and establish precise relationships with rough set
-     approximations". Constraints appear as "labeled null identities and constraints" that rule
-     out tolerant rules that "cannot match in any admissible possible world". The evaluation is a
-     synthetic benchmark (105 instances, up to 500 rules and 32 labelled nulls).
-   * **Relation to Paper D.** The problem differs, on the abstract's evidence. The question there
-     is which decision a table with unknown entries yields for a given input, across valuations
-     of the nulls. Paper D's question is whether the rules of a fully specified table cover every
-     state allowed by the domain constraints (completeness, non-emptiness and counting of M(T₀)).
-     The abstract mentions no hardness of table completeness, no counting result and no proof
-     assistant.
-   * **Not verified.** The abstract does not say which complexity bounds the paper proves. An
-     earlier search-engine summary claimed coNP-completeness results for certain decisions and
-     for being "complete for an input" (some rule matches in every admissible possible world).
-     That summary is still unconfirmed. If those results exist, they concern coverage of a single
-     input under null valuations, which is a coNP-style universal check close in spirit to Paper
-     D's. Paper D should therefore cite this paper as related work on decision tables. Before
-     claiming that *no* decision-table hardness result exists, someone with browser or
-     institutional access should read its complexity section; it is open access (CC BY).
+6. **Full text read (2026-10-31), from the published v2 PDF the author supplied (67 pages).**
+   Duc Nghia Vu and Janos Demetrovics, "Labeled Null Semantics for Incomplete Decision Tables:
+   Certain, Possible, and Conditional Decision Reasoning", Algorithms 19(9):725, received 5 July,
+   published 27 August 2026, [doi:10.3390/a19090725](https://doi.org/10.3390/a19090725), CC BY.
+   (Automated access to MDPI returned HTTP 403, and no repository copy exists.)
+   * **Setting.** A decision table whose *condition entries* may be labelled nulls (equal labels
+     denote the same unknown value), a constraint set Σ over the nulls, and a fixed, complete
+     input object o. A possible world is an admissible valuation ν of the nulls. Hit policies
+     Unique, First and Collect; under Unique a world with no matching rule is a "coverage gap"
+     and one with several is an "overlap" (Section 5).
+   * **Complexity results (Section 7; proofs are sketches, on paper).** Under "arbitrary Boolean
+     constraints" on finite domains: `PossDec-Check` (is δ a possible decision for o?) is
+     NP-complete (Lemma 1, by SAT encoded in Σ with a single always-matching rule);
+     `CertDec-Check` is coNP-complete (Lemma 2, from UNSAT, with rules matching when ϕ is false or
+     true); NonEmpty-CertDec is DP-complete (Corollary 1); counting the admissible worlds yielding
+     δ, decision probabilities and explicit enumeration of valuation cells are #P-hard (Lemma 7,
+     from #SAT with Σ encoding F and one rule). Theorem 1 summarises these. PTIME cases: independent
+     nulls (Lemma 3), a fixed number of nulls (Lemma 4, called FPT in |N|), tree-structured and
+     Horn constraints (Lemmas 5 and 6). The authors state that the hardness "assume[s] that the
+     constraint and condition language is expressive enough to encode Boolean satisfiability"
+     (Section 7.1, assumption 4).
+   * **Completeness.** Definition 26c: T⊥ is *complete for input o under Σ* if "at least one rule
+     matches o in every admissible possible world", equivalently Σ ∧ ¬⋁ψᵣ(o) is unsatisfiable. It
+     is used only as a hypothesis of the rough-set soundness result (Theorem 2, Part 3); **no
+     complexity result is stated for deciding it**, and nothing counts uncovered inputs. The
+     earlier search-engine claim that it is shown coNP-complete is not borne out.
+   * **Relation to Paper D: related, and the nearest hardness result on decision tables, but a
+     different problem.** Their hardness concerns which decision one given input receives when
+     table entries are unknown, and all of it comes from the constraint language over the nulls
+     (Σ encodes the formula; one rule suffices). Paper D asks whether the rows of a fully
+     specified table cover every state the clause constraints allow, over all inputs, and counts
+     the uncovered states; its hardness comes from the coverage question itself, it has matching
+     polynomial cases without constraints or with a fixed number of attributes (their Lemma 4,
+     fixed number of nulls, is the analogue), and its proofs are machine-checked. Paper D should
+     cite it and phrase its novelty as about *completeness (coverage)* of decision tables, not
+     about decision tables in general: "the first complexity classification of decision-table
+     completeness" stands; "the first NP/coNP/#P results on decision tables" would not.
+   * **Two references in its list are garbled.** Its [3] "Maderbacher, B.; Könighofer, R.
+     Completeness and consistency of tabular requirements: An SMT-based approach. IEEE Trans.
+     Softw. Eng. 2025" is Menghi, Balai, Valovcin, Sticksel and Rajhans, "Completeness and
+     Consistency of Tabular Requirements: An SMT-Based Verification Approach", IEEE TSE 51(2):
+     595–620, 2025, [doi:10.1109/TSE.2025.3530820](https://doi.org/10.1109/TSE.2025.3530820)
+     (Crossref). Its [12] "Zhang, Y.; Li, Z.; Wang, Q. Theano … ICSE" is Zanenga, Bisceglia,
+     Ippoliti, Bombarda, Gargantini, Rajhans and Menghi, "Theano: A Tool for Verifying the
+     Consistency and Completeness in Tabular Requirements", FSE Companion '25, pp. 1148–1152,
+     [doi:10.1145/3696630.3728599](https://doi.org/10.1145/3696630.3728599) (Crossref). Both
+     entries are wrong in the paper's own Crossref deposit too (refs 3 and 12). Cite the verified
+     records.
+7. **Full text read (2026-10-31), from the University of Bergamo repository copy
+   (hdl.handle.net/10446/293229, CC BY).** Menghi et al., IEEE TSE 51(2):595–620, 2025 (record as
+   in item 6). Requirements Tables (Simulink) with rows `pre ⇒ post` over real-valued signals,
+   with `prev` and duration operators. Definition 5 (Completeness): "for every output variable
+   y ∈ Y, trace π ∈ Π, and position i, there exist a precondition pre ∈ Pre(rt, y) satisfied by
+   the trace π at position i". Theorem 1: "Checking the completeness of Requirements Tables is an
+   undecidable problem", by reduction from Hilbert's tenth problem (a table `A = 0 ⇒ y = 0` is
+   incomplete iff `A = 0` has a solution); Theorem 2 likewise for consistency. Checking is by SMT
+   (Z3); the paper names no NP, coNP or #P class and counts nothing; for the stateless case it
+   says only that the check is "decidable" for some arithmetic fragments. **Related but
+   different**: infinite, arithmetic domains give undecidability; Paper D's finite declared
+   domains give a decidable problem whose exact complexity it settles. The companion tool demo
+   (Zanenga et al., FSE Companion 2025) was read in abstract only (closed access); it states no
+   complexity result.
 
 Not searched directly: Semantic Scholar (rate-limited), DBLP and the ACM DL (bot checks). Coverage
 of those indexes rests on general web search.
@@ -1207,8 +1241,30 @@ Two points for the novelty claim:
   undecidable when the output rules are. This is output correctness on valid inputs. No theorem
   there decides whether the rules cover every valid input, so it does not anticipate Paper D's
   result. It is the earliest complexity analysis of rule-base verification and should be cited
-  as such. The 1998 journal version was not read; a search summary says it adds "input
-  completeness" constraints, which should be checked before submission.
+  as such.
+* **Levy and Rousset 1998: checked 2026-10-31, not a completeness result either.** Levy and
+  Rousset, "Verification of knowledge bases based on containment checking", Artificial
+  Intelligence 101(1–2):227–250, May 1998,
+  [doi:10.1016/S0004-3702(98)00021-6](https://doi.org/10.1016/S0004-3702(98)00021-6) (Crossref).
+  Read in full in the authors' manuscript served at hak-lt.com/others/misc/RoussetLevy.pdf, whose
+  abstract matches the journal's word for word (ScienceDirect refused automated access; section
+  and result numbers below are the manuscript's). "Input completeness" constraints say when an
+  input is *legal*: "a constraint states that the presence of one fact in the input must imply
+  the presence of another fact in the same input" (Introduction, item 3), given as
+  tuple-generating dependencies (§3.3); rules are verified w.r.t. them if no legal input derives
+  P_out (Definition 5). Results: undecidable in general, since tgd entailment is (§7); decidable
+  for tgds without existential variables on the right (reduced to the I/O-consistency case,
+  Π₂ᵖ when non-recursive) and for "separable" tgds (Theorem 3, via CARIN-ALCNR, doubly
+  exponential upper bound). New in the journal version beyond AAAI-96: I/O dependency
+  constraints (In ⊆ Out; NP-complete non-recursive, Π₂ᵖ-complete with ≠, ≤, < and negation) and
+  the CARIN results. Nothing decides whether the rules cover every valid input, and nothing
+  counts; the authors name "output completeness constraints" as future work (§8.2). **Related
+  but different.** Risk for Paper D (our analysis, not theirs): with ≠ and negation, their I/O
+  dependency framework could encode coverage (In = a valid input, Out = some row fires), so a
+  referee may ask why Paper D is not a special case of their Π₂ᵖ result. The answer: their bounds
+  are for relational inputs and conjunctive-query rules; for propositional finite-domain tables
+  completeness drops to coNP-complete, with NP-completeness of non-emptiness and
+  #P-completeness of counting, which they do not consider.
 * Paper A also states that with compact rules, as in DMN, "deciding whether the rules cover 𝒟 is
   the tautology problem for formulas in disjunctive normal form, coNP-complete", citing Cook.
   Paper D's tractable side (no constraints, in P) is about explicit condition tuples, not compact

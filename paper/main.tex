@@ -6,8 +6,6 @@
 %   * anonymity: Paper A and latc-check are cited in the third person, so the text works for
 %     double-blind review; the repository link would go through an anonymous mirror;
 %   * page budget: the ITP 2027 short-paper limit is not yet known (6 pages in 2023);
-%   * two literature checks: Vu and Demetrovics (2026), and the "input completeness"
-%     constraints of Levy and Rousset's 1998 journal version.
 
 \documentclass[a4paper,UKenglish,cleveref,autoref,thm-restate]{lipics-v2021}
 
@@ -140,9 +138,22 @@ and Yamada prove pattern completeness co-NP hard and verify their decision proce
 Isabelle, the hardness proof being on paper~\cite{ThiemannYamada2026}; Kapur et al.\ showed
 quasi-reducibility co-NP complete~\cite{KapurNRZ1991}; and the volume of a union of boxes is
 \#P-hard~\cite{BringmannFriedrich2010}. Levy and Rousset gave the first complexity results for
-verifying rule bases, for output correctness rather than coverage~\cite{LevyRousset1996}. None
-of these handles domain constraints together with counting, and none of the hardness proofs is
-checked in a proof assistant. Machine-checked NP-completeness is not new either: Cook--Levin has been mechanised
+verifying rule bases~\cite{LevyRousset1996,LevyRousset1998}: whether no legal input derives a
+bad output, for relational inputs and Horn rules, NP-complete to undecidable depending on
+recursion, and $\Pi_2^p$-complete with order predicates and negation; their ``input
+completeness'' constraints restrict which inputs are legal, and they leave output completeness
+open. Coverage of a propositional table could be phrased in their framework, but its complexity
+is lower: coNP for completeness, as we show, with NP-completeness of non-emptiness and
+\#P-completeness of counting. For tables themselves, Menghi et al.\ prove completeness of
+Simulink Requirements Tables undecidable, by reduction from Hilbert's tenth problem, since their
+conditions range over real-valued signals, and check it with SMT~\cite{MenghiEtAl2025,ZanengaEtAl2025};
+and Vu and Demetrovics prove that deciding the possible and certain decisions of a decision table
+with unknown entries is NP- and coNP-complete, and counting the worlds yielding a decision
+\#P-hard, all by encoding a formula in the constraints on the unknowns~\cite{VuDemetrovics2026}.
+They define completeness for a single input but state no complexity for deciding it. None of
+these classifies the completeness of a decision table over its declared finite domains, none
+counts the missing combinations, and none of the hardness proofs is checked in a proof
+assistant. Machine-checked NP-completeness is not new either: Cook--Levin has been mechanised
 in ACL2~\cite{GamboaCowles2004}, Coq~\cite{GaeherKunze2021} and Isabelle~\cite{Cook_Levin-AFP},
 and Senellart and Gnatenko prove all 21 of Karp's problems NP-complete in Lean, in a logical
 model with first-order reductions~\cite{SenellartGnatenko2026}. Our contribution is the problem,

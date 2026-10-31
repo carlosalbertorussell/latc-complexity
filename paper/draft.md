@@ -95,11 +95,30 @@ al. showed quasi-reducibility co-NP complete ([Kapur et al.
 1991](#ref-KapurNRZ1991)); and the volume of a union of boxes is
 \#P-hard ([Bringmann and Friedrich 2010](#ref-BringmannFriedrich2010)).
 Levy and Rousset gave the first complexity results for verifying rule
-bases, for output correctness rather than coverage ([Levy and Rousset
-1996](#ref-LevyRousset1996)). None of these handles domain constraints
-together with counting, and none of the hardness proofs is checked in a
-proof assistant. Machine-checked NP-completeness is not new either:
-Cook–Levin has been mechanised in ACL2 ([Gamboa and Cowles
+bases ([Levy and Rousset 1996](#ref-LevyRousset1996),
+[1998](#ref-LevyRousset1998)): whether no legal input derives a bad
+output, for relational inputs and Horn rules, NP-complete to undecidable
+depending on recursion, and $\Pi_2^p$-complete with order predicates and
+negation; their “input completeness” constraints restrict which inputs
+are legal, and they leave output completeness open. Coverage of a
+propositional table could be phrased in their framework, but its
+complexity is lower: coNP for completeness, as we show, with
+NP-completeness of non-emptiness and \#P-completeness of counting. For
+tables themselves, Menghi et al. prove completeness of Simulink
+Requirements Tables undecidable, by reduction from Hilbert’s tenth
+problem, since their conditions range over real-valued signals, and
+check it with SMT ([Menghi et al. 2025](#ref-MenghiEtAl2025); [Zanenga
+et al. 2025](#ref-ZanengaEtAl2025)); and Vu and Demetrovics prove that
+deciding the possible and certain decisions of a decision table with
+unknown entries is NP- and coNP-complete, and counting the worlds
+yielding a decision \#P-hard, all by encoding a formula in the
+constraints on the unknowns ([Vu and Demetrovics
+2026](#ref-VuDemetrovics2026)). They define completeness for a single
+input but state no complexity for deciding it. None of these classifies
+the completeness of a decision table over its declared finite domains,
+none counts the missing combinations, and none of the hardness proofs is
+checked in a proof assistant. Machine-checked NP-completeness is not new
+either: Cook–Levin has been mechanised in ACL2 ([Gamboa and Cowles
 2004](#ref-GamboaCowles2004)), Coq ([Gäher and Kunze
 2021](#ref-GaeherKunze2021)) and Isabelle ([Balbach
 2023](#ref-Cook_Levin-AFP)), and Senellart and Gnatenko prove all 21 of
@@ -532,6 +551,24 @@ Thirteenth National Conference on Artificial Intelligence (AAAI-96)*,
 
 </div>
 
+<div id="ref-LevyRousset1998" class="csl-entry">
+
+———. 1998. “Verification of Knowledge Bases Based on Containment
+Checking.” *Artificial Intelligence* 101 (1–2): 227–50.
+<https://doi.org/10.1016/S0004-3702(98)00021-6>.
+
+</div>
+
+<div id="ref-MenghiEtAl2025" class="csl-entry">
+
+Menghi, Claudio, Eugene Balai, Darren Valovcin, Christoph Sticksel, and
+Akshay Rajhans. 2025. “Completeness and Consistency of Tabular
+Requirements: An SMT-Based Verification Approach.” *IEEE Transactions on
+Software Engineering* 51 (2): 595–620.
+<https://doi.org/10.1109/TSE.2025.3530820>.
+
+</div>
+
 <div id="ref-OwreRushbyShankar1997" class="csl-entry">
 
 Owre, Sam, John Rushby, and Natarajan Shankar. 1997. “Integration in
@@ -595,6 +632,26 @@ Deciding Pattern Completeness with Optimal Asymptotic Complexity.”
 Valiant, Leslie G. 1979. “The Complexity of Enumeration and Reliability
 Problems.” *SIAM Journal on Computing* 8 (3): 410–21.
 <https://doi.org/10.1137/0208032>.
+
+</div>
+
+<div id="ref-VuDemetrovics2026" class="csl-entry">
+
+Vu, Duc Nghia, and Janos Demetrovics. 2026. “Labeled Null Semantics for
+Incomplete Decision Tables: Certain, Possible, and Conditional Decision
+Reasoning.” *Algorithms* 19 (9): 725.
+<https://doi.org/10.3390/a19090725>.
+
+</div>
+
+<div id="ref-ZanengaEtAl2025" class="csl-entry">
+
+Zanenga, Aurora Francesca, Nunzio Marco Bisceglia, Benedetta Ippoliti,
+Andrea Bombarda, Angelo Gargantini, Akshay Rajhans, and Claudio Menghi.
+2025. “Theano: A Tool for Verifying the Consistency and Completeness in
+Tabular Requirements.” In *Proceedings of the 33rd ACM International
+Conference on the Foundations of Software Engineering (FSE Companion
+’25)*, 1148–52. ACM. <https://doi.org/10.1145/3696630.3728599>.
 
 </div>
 
