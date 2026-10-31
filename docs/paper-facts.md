@@ -678,6 +678,16 @@ theorem countMissingMonotone2_sharpPComplete_oneCall :
     OneCallSharpPComplete encInstBin countMissingMonotone2
 ```
 
+#### `Latc.PaperD.General.mem_missingNonempty_of_pos2B`
+
+- Exists: yes, `LatcComplexity/Monotone.lean:152` (merged in `3b6f523`)
+- Reading: Every instance passing the monotone shape test (domains {0, 1}, clauses of two conditions with value 1 on existing attributes, T₀ = ∅) has a missing state: the all-ones state (`valid_replicate_one_of_pos2B`, line 142). So the decision version is trivial and hardness needs one-call reductions.
+- Axioms: a subset of the three (branch build `574b4ee`; per-theorem line not reported)
+
+```lean
+theorem mem_missingNonempty_of_pos2B {I : Inst} (h : pos2B I = true) : I ∈ MissingNonempty
+```
+
 #### `Latc.PaperD.Valiant.modelCount_psi`
 
 - Exists: yes, `LatcComplexity/Valiant/Pendant.lean:115`
@@ -898,7 +908,7 @@ theorem that prints fewer than all three axioms, and none of the four is among t
 
 ## Line counts
 
-Counted with `wc -l` (every line, including blank lines and comments) at `a21b85f`.
+Counted with `wc -l` (every line, including blank lines and comments) at `3b6f523`.
 
 | File | Lines | Theorems/lemmas |
 |---|---|---|
@@ -907,19 +917,19 @@ Counted with `wc -l` (every line, including blank lines and comments) at `a21b85
 | `LatcComplexity/Adequacy.lean` | 152 | 13 |
 | `LatcComplexity/Counting.lean` | 140 | 10 |
 | `LatcComplexity/CountingGeneral.lean` | 262 | 20 |
-| `LatcComplexity/Monotone.lean` | 200 | 15 |
-| `LatcComplexity/Binary.lean` | 186 | 21 |
+| `LatcComplexity/Monotone.lean` | 238 | 18 |
+| `LatcComplexity/Binary.lean` | 206 | 22 |
 | `LatcComplexity/Tractable.lean` | 1099 | 81 |
 | `LatcComplexity/ExplicitDegree.lean` | 692 | 46 |
-| `LatcComplexity/Axioms.lean` | 252 | 0 (220 `#print axioms`) |
+| `LatcComplexity/Axioms.lean` | 256 | 0 (224 `#print axioms`) |
 | `LatcComplexity/Valiant/Gadget.lean` | 227 | 19 |
 | `LatcComplexity/Valiant/Counting.lean` | 518 | 38 |
 | `LatcComplexity/Valiant/Pendant.lean` | 195 | 9 |
 | `LatcComplexity/Valiant/OneCall.lean` | 200 | 14 |
-| `LatcComplexity/Valiant/AnyTable.lean` | 109 | 13 |
-| `LatcComplexity/Valiant/Axioms.lean` | 113 | 0 (93 `#print axioms`) |
-| **`LatcComplexity/` total** | **4710** | **330** |
-| `LatcComplexity/` without the two `Axioms.lean` | 4345 | 330 |
+| `LatcComplexity/Valiant/AnyTable.lean` | 124 | 14 |
+| `LatcComplexity/Valiant/Axioms.lean` | 114 | 0 (94 `#print axioms`) |
+| **`LatcComplexity/` total** | **4788** | **335** |
+| `LatcComplexity/` without the two `Axioms.lean` | 4418 | 335 |
 | `LatcComplexity.lean` (root import file) | 15 | |
 | `LatcFormal/Basic.lean` | 114 | |
 | `LatcFormal/Thm1.lean` | 130 | |
@@ -934,10 +944,10 @@ Counted with `wc -l` (every line, including blank lines and comments) at `a21b85
 | `LatcFormal/Axioms.lean` | 95 | |
 | **`LatcFormal/` total** (copied unchanged from latc-check) | **1777** | |
 | `LatcFormal.lean` (root import file) | 11 | |
-| **Repository total, all `.lean` files** | **6513** | |
+| **Repository total, all `.lean` files** | **6591** | |
 
-Paper D's new development is `LatcComplexity/`: 4710 lines, or 4345 without the two audit files
-(4577 and 4227 at `cbf016b`, before the Monotone.lean comment update and the any-T₀ monotone
+Paper D's new development is `LatcComplexity/`: 4788 lines, or 4418 without the two audit files
+(4710 and 4345 at `a21b85f`, before the shape tests required declared attribute indices; 4577 and 4227 at `cbf016b`, before the Monotone.lean comment update and the any-T₀ monotone
 result; 3836 and 3535 at `43d7e25`, before the explicit degree; 2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
 counting result).
 
