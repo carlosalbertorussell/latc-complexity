@@ -50,7 +50,13 @@ with the first list:
   `sharpSAT_eq_missingCount`, the general-domain counting lemmas, in §5;
 * two names of the first list are no longer cited: `missingNonempty_finset_npComplete` and
   `complete_finset_coNPComplete`, the unary-index forms (both still exist, `Adequacy.lean:136`
-  and `:145`).
+  and `:145`);
+* on 2026-10-31 the monotone case in §5 moved to the all-binary encoding too:
+  `countValidMonotone2_mem_SharpP_bin` and `countValidMonotone2_oneCallSharpPComplete_bin`
+  replace their unary forms (`Monotone.lean:177` and `:186`, both still present).
+  `sharpMonotone2SAT_reduces` has no `_bin` form; it reduces to `encInst`, and hardness for
+  `encInstBin` follows by composing with the identity re-encoding, as the proof of
+  `countValidMonotone2_oneCallSharpPComplete_bin` does. The count stays at 23.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -67,9 +73,9 @@ with the first list:
 | 5 | `missingCount_eq_acceptCount` | `Latc.PaperD.General.missingCount_eq_acceptCount` | `LatcComplexity/CountingGeneral.lean:128` | exists, exact name (added 2026-10-30) |
 | 5 | `sharpSAT_eq_missingCount` | `Latc.PaperD.General.sharpSAT_eq_missingCount` | `LatcComplexity/CountingGeneral.lean:205` | exists, exact name (added 2026-10-30) |
 | 5 | `countMissing_eq_sharpSAT` | `Latc.PaperD.countMissing_eq_sharpSAT` | `LatcComplexity/Counting.lean:104` | exists, exact name |
-| 5 | `countValidMonotone2_mem_SharpP` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP` | `LatcComplexity/Monotone.lean:177` | exists, exact name |
-| 5 | `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name |
-| 5 | `countValidMonotone2_oneCallSharpPComplete` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete` | `LatcComplexity/Monotone.lean:186` | exists, exact name |
+| 5 | `countValidMonotone2_mem_SharpP_bin` | `Latc.PaperD.General.countValidMonotone2_mem_SharpP_bin` | `LatcComplexity/Binary.lean:171` | exists, exact name (added 2026-10-31) |
+| 5 | `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:170` | exists, exact name; targets `encInst`, no `_bin` form |
+| 5 | `countValidMonotone2_oneCallSharpPComplete_bin` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` | `LatcComplexity/Binary.lean:179` | exists, exact name (added 2026-10-31) |
 | 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:184` | exists, exact name |
 | 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
 | 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:153` | exists, exact name |
@@ -93,9 +99,9 @@ Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the o
    reduction *from* #SAT; only the Boolean case reduces *to* #SAT.
 3. **Resolved: the outline mixed encodings.** §4 now cites the all-binary
    `missingNonempty_finset_npComplete_bin` beside `MissingNonempty_npComplete_bin` and
-   `Complete_coNPComplete_bin`. The tractable theorems are stated for `encInstBin`; their
+   `Complete_coNPComplete_bin`, and §5's monotone case cites the `_bin` forms (2026-10-31). The tractable theorems are stated for `encInstBin`; their
    `encInst` versions carry the suffix `_unary`.
-4. **`countValidMonotone2_oneCallSharpPComplete` is conditional.** Valiant's theorem is its
+4. **`countValidMonotone2_oneCallSharpPComplete(_bin)` is conditional.** Valiant's theorem is its
    hypothesis `hValiant`, not an axiom, so it does not appear in the axiom audit. Hardness is under
    one-call reductions, defined in `Monotone.lean`, and is not Complexitylib's parsimonious
    `SharpPHard`.
