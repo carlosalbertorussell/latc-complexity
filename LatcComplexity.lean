@@ -11,4 +11,5 @@ import LatcComplexity.Valiant.Gadget
 import LatcComplexity.Valiant.Counting
 import LatcComplexity.Valiant.Pendant
 import LatcComplexity.Valiant.OneCall
+import LatcComplexity.Valiant.AnyTable
 import LatcComplexity.Valiant.Axioms
