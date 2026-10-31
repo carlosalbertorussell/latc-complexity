@@ -134,7 +134,8 @@ encoding of $f(a)$ within a polynomial in the input length. A language
 is in P when its characteristic function is; in NP when it is the set of
 inputs having a certificate of polynomially bounded length accepted by a
 polynomial-time verifier; and coNP is the class of complements. A
-function $f$ into $\mathbb{N}$ is in \#P when $f(a)$ is the number of
+function $f$ into $\mathbb{N}$ is in \#P ([Valiant
+1979a](#ref-Valiant1979permanent)) when $f(a)$ is the number of
 certificates of length exactly $p(|a|)$, for a polynomial $p$, that a
 polynomial-time verifier accepts on $a$. A library lemma,
 `mem_SharpP_of_polyTime_length`, lets the certificate length be any
@@ -170,7 +171,7 @@ reduction is a polynomial-time Turing reduction making exactly one
 oracle query, whose answer is post-processed together with the input,
 and one-call hardness implies hardness under polynomial-time Turing
 reductions, the notion of Valiant ([Valiant
-1979](#ref-Valiant1979enumeration)). (Without that bound the notion
+1979b](#ref-Valiant1979enumeration)). (Without that bound the notion
 would be too weak: a $g$ with doubly exponential values gives
 $\mathit{post}$ exponential time in $|a|$ while carrying no information.
 We use one-call hardness only for \#Monotone-2SAT, whose value is at
@@ -379,7 +380,7 @@ the clause stating that the tuple differs from that row
 Russell ([Russell 2026a](#ref-PaperA)) notes that counting the valid
 states stays \#P-complete when every clause is $A_i = 1 \lor A_j = 1$
 over domains $\{0,1\}$, citing Valiant ([Valiant
-1979](#ref-Valiant1979enumeration)). Deciding such instances is easy:
+1979b](#ref-Valiant1979enumeration)). Deciding such instances is easy:
 with domains $\{0,1\}$ and only positive two-literal clauses on existing
 attributes, the all-ones state is valid; the shape tests also require
 every condition to name an existing attribute, so every such instance
@@ -419,7 +420,10 @@ one-call \#P-hard. Hence *countValidMonotone2* and
 </div>
 
 Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing
-reductions, interpolating over many oracle calls. Senellart and Gnatenko
+reductions, interpolating over many oracle calls; since its relation
+$x \lor y$ is not affine, it also lies on the hard side of Creignou and
+Hermann’s dichotomy for counting generalised satisfiability ([Creignou
+and Hermann 1996](#ref-CreignouHermann1996)). Senellart and Gnatenko
 machine-check the one-call form in their descriptive-complexity
 setting ([Senellart and Gnatenko 2026](#ref-SenellartGnatenko2026)). We
 prove it in Complexitylib’s model by one reduction from \#SAT, which is
@@ -579,10 +583,11 @@ and counting, each for time and space, under `encInstBin`:
 The degree grows linearly with the number of attributes. This is an XP
 bound, $|x|^{O(k)}$, not fixed-parameter tractability,
 $f(k) \cdot |x|^{O(1)}$, and FPT is unlikely: an argument we have not
-formalised reduces Multicoloured Clique, which is W\[1\]-hard, to
-non-emptiness with $k$ attributes. Give attribute $i$ the vertices of
-colour class $i$ as values, no rows, and for each non-adjacent pair
-$u, w$ in classes $i \ne j$ the clause
+formalised reduces Multicoloured Clique, which is W\[1\]-hard (([Cygan
+et al. 2015, chap. 13](#ref-CyganEtAl2015))), to non-emptiness with $k$
+attributes. Give attribute $i$ the vertices of colour class $i$ as
+values, no rows, and for each non-adjacent pair $u, w$ in classes
+$i \ne j$ the clause
 $\bigvee_{v \ne u} A_i = v \lor \bigvee_{v \ne w} A_j = v$ (“not both
 $A_i = u$ and $A_j = w$”); the valid states are exactly the
 multicoloured cliques.
@@ -723,17 +728,19 @@ Senellart and Gnatenko prove all 21 of Karp’s problems NP-complete in
 Lean ([Senellart and Gnatenko 2026](#ref-SenellartGnatenko2026)), with
 NP defined in descriptive-complexity terms and first-order reductions,
 and also prove \#Monotone-2SAT one-call \#P-complete in their setting.
-Turing machines and computability have been mechanised in
-Isabelle/HOL ([Xu, Zhang, and Urban 2013](#ref-XuZhangUrban2013)) and
-Coq ([Forster, Kunze, and Wuttke 2020](#ref-ForsterKunzeWuttke2020)),
-computability through partial recursive functions in Lean ([Carneiro
-2019](#ref-Carneiro2019)), and time complexity through the weak
-call-by-value $\lambda$-calculus in Coq ([Forster et al.
-2021](#ref-ForsterKSW2021)). Our setting needs explicit encodings and
-running times, but its classes are the textbook ones on Turing machines,
-so polynomial time, binary encodings of numbers and the size of the
-input, the quantities the tractability results of Section 7 are about,
-are first-class.
+Mathlib ([The mathlib Community 2020](#ref-mathlib2020)) itself defines
+polynomial-time computability for its stack-based Turing machines
+(`TM2ComputableInPolyTime`, by Spelier and van Gent). Turing machines
+and computability have been mechanised in Isabelle/HOL ([Xu, Zhang, and
+Urban 2013](#ref-XuZhangUrban2013)) and Coq ([Forster, Kunze, and Wuttke
+2020](#ref-ForsterKunzeWuttke2020)), computability through partial
+recursive functions in Lean ([Carneiro 2019](#ref-Carneiro2019)), and
+time complexity through the weak call-by-value $\lambda$-calculus in
+Coq ([Forster et al. 2021](#ref-ForsterKSW2021)). Our setting needs
+explicit encodings and running times, but its classes are the textbook
+ones on Turing machines, so polynomial time, binary encodings of numbers
+and the size of the input, the quantities the tractability results of
+Section 7 are about, are first-class.
 
 ## 9 The formalisation
 
@@ -1030,6 +1037,23 @@ In *Proceedings of the Third Annual ACM Symposium on Theory of Computing
 
 </div>
 
+<div id="ref-CreignouHermann1996" class="csl-entry">
+
+Creignou, Nadia, and Miki Hermann. 1996. “Complexity of Generalized
+Satisfiability Counting Problems.” *Information and Computation* 125
+(1): 1–12. <https://doi.org/10.1006/inco.1996.0016>.
+
+</div>
+
+<div id="ref-CyganEtAl2015" class="csl-entry">
+
+Cygan, Marek, Fedor V. Fomin, Łukasz Kowalik, Daniel Lokshtanov, Dániel
+Marx, Marcin Pilipczuk, Michał Pilipczuk, and Saket Saurabh. 2015.
+*Parameterized Algorithms*. Springer.
+<https://doi.org/10.1007/978-3-319-21275-3>.
+
+</div>
+
 <div id="ref-ElmallahGouda2017" class="csl-entry">
 
 Elmallah, Ehab S., and Mohamed G. Gouda. 2017. “Hardness of Firewall
@@ -1208,6 +1232,15 @@ Expert System.” *AI Magazine* 3 (4): 16–21.
 
 </div>
 
+<div id="ref-mathlib2020" class="csl-entry">
+
+The mathlib Community. 2020. “The Lean Mathematical Library.” In
+*Proceedings of the 9th ACM SIGPLAN International Conference on
+Certified Programs and Proofs (CPP 2020)*, 367–81. ACM.
+<https://doi.org/10.1145/3372885.3373824>.
+
+</div>
+
 <div id="ref-ThiemannYamada2026" class="csl-entry">
 
 Thiemann, René, and Akihisa Yamada. 2026. “A Verified Algorithm for
@@ -1217,10 +1250,18 @@ Deciding Pattern Completeness with Optimal Asymptotic Complexity.”
 
 </div>
 
+<div id="ref-Valiant1979permanent" class="csl-entry">
+
+Valiant, Leslie G. 1979a. “The Complexity of Computing the Permanent.”
+*Theoretical Computer Science* 8 (2): 189–201.
+<https://doi.org/10.1016/0304-3975(79)90044-6>.
+
+</div>
+
 <div id="ref-Valiant1979enumeration" class="csl-entry">
 
-Valiant, Leslie G. 1979. “The Complexity of Enumeration and Reliability
-Problems.” *SIAM Journal on Computing* 8 (3): 410–21.
+———. 1979b. “The Complexity of Enumeration and Reliability Problems.”
+*SIAM Journal on Computing* 8 (3): 410–21.
 <https://doi.org/10.1137/0208032>.
 
 </div>

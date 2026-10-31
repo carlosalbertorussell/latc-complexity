@@ -1052,6 +1052,23 @@ from the Library of Congress record; all in `docs/paper-refs.bib`.
   Urban's publications page; Crossref omits it).
 * Pollack, Hicks and Harrison, *Decision Tables: Theory and Practice*, Wiley-Interscience, 1971,
   ISBN 047169150X (Open Library OL4915790M).
+* The Lean mathematical library (The mathlib Community), CPP 2020, pp. 367–381,
+  [doi:10.1145/3372885.3373824](https://doi.org/10.1145/3372885.3373824). Mathlib's polynomial-time
+  Turing machines: `Mathlib/Computability/TuringMachine/Computable.lean` (formerly
+  `TMComputable.lean`), "Authors: Pim Spelier, Daan van Gent", defines `TM2ComputableInPolyTime`
+  (file read on GitHub, master, 2026-10-31).
+* Creignou and Hermann, "Complexity of Generalized Satisfiability Counting Problems", Information
+  and Computation 125(1):1–12, 1996, [doi:10.1006/inco.1996.0016](https://doi.org/10.1006/inco.1996.0016).
+  Abstract read: affine relations give polynomial-time counting, all others #P-complete. That x ∨ y
+  is not affine, so #Monotone-2SAT is on the hard side, is our reading; the full text was not read.
+* Cygan, Fomin, Kowalik, Lokshtanov, Marx, Pilipczuk, Pilipczuk and Saurabh, *Parameterized
+  Algorithms*, Springer, 2015, [doi:10.1007/978-3-319-21275-3](https://doi.org/10.1007/978-3-319-21275-3);
+  Chapter 13, "Fixed-parameter intractability", pp. 421–465 (Crossref). Cited for the standard
+  W[1]-hardness of Multicoloured Clique; the chapter's text was not read (the open PDF host refused
+  automated access).
+* Not added: Papadimitriou and Yannakakis, "On the Complexity of Database Queries", JCSS
+  58(3):407–427, 1999 (record confirmed); only the abstract of the PODS version was read, which does
+  not state the exact W[1]-completeness claim.
 * Not added: whether Valiant's SIAM 1979 paper states #DNF #P-complete could not be checked in the
   full text (a secondary source says so); the paper does not need it, since counting the uncovered
   inputs of compact rows is #SAT of the negated DNF.

@@ -187,7 +187,7 @@ when some machine maps the encoding of every $a$ to the encoding of $f(a)$ withi
 in the input length. A language is in P when its characteristic function is; in NP when it is
 the set of inputs having a certificate of polynomially bounded length accepted by a
 polynomial-time verifier; and coNP is the class of complements. A function $f$ into
-$\mathbb{N}$ is in \#P when $f(a)$ is the number of certificates of length exactly $p(|a|)$,
+$\mathbb{N}$ is in \#P~\cite{Valiant1979permanent} when $f(a)$ is the number of certificates of length exactly $p(|a|)$,
 for a polynomial~$p$, that a polynomial-time verifier accepts on~$a$. A library lemma,
 \lstinline{mem_SharpP_of_polyTime_length}, lets the certificate length be any function of the input that is computable in polynomial
 time with its value written in unary; our counting verifiers use it.
@@ -422,7 +422,9 @@ itself.
 \end{theorem}
 
 Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing reductions,
-interpolating over many oracle calls. Senellart and Gnatenko machine-check the one-call form in their
+interpolating over many oracle calls; since its relation $x \lor y$ is not affine, it also lies on
+the hard side of Creignou and Hermann's dichotomy for counting generalised
+satisfiability~\cite{CreignouHermann1996}. Senellart and Gnatenko machine-check the one-call form in their
 descriptive-complexity setting~\cite{SenellartGnatenko2026}. We prove it in
 Complexitylib's model by one reduction from \#SAT, which is \#P-hard parsimoniously, so by
 \Cref{def:onecall} it suffices to reduce \#SAT to \#Monotone-2SAT with one call.
@@ -560,7 +562,7 @@ for non-emptiness, completeness and counting, each for time and space, under
 \end{enumerate}
 The degree grows linearly with the number of attributes. This is an XP bound, $|x|^{O(k)}$, not
 fixed-parameter tractability, $f(k) \cdot |x|^{O(1)}$, and FPT is unlikely: an argument we have not
-formalised reduces Multicoloured Clique, which is W[1]-hard, to
+formalised reduces Multicoloured Clique, which is W[1]-hard (\cite[Chapter~13]{CyganEtAl2015}), to
 non-emptiness with $k$ attributes. Give attribute $i$ the vertices of colour class $i$ as values,
 no rows, and for each non-adjacent pair $u, w$ in classes $i \ne j$ the clause
 $\bigvee_{v \ne u} A_i = v \lor \bigvee_{v \ne w} A_j = v$ (``not both $A_i = u$ and $A_j = w$'');
@@ -665,8 +667,9 @@ Isabelle~\cite{Cook_Levin-AFP}; reductions between Karp's problems are verified 
 Isabelle~\cite{PolyReductionsIsabelle}; and Senellart and Gnatenko prove all 21 of Karp's
 problems NP-complete in Lean~\cite{SenellartGnatenko2026}, with NP defined in
 descriptive-complexity terms and first-order reductions, and also prove \#Monotone-2SAT one-call
-\#P-complete in their setting. Turing machines and computability have been mechanised in
-Isabelle/HOL~\cite{XuZhangUrban2013} and Coq~\cite{ForsterKunzeWuttke2020}, computability through
+\#P-complete in their setting. Mathlib~\cite{mathlib2020} itself defines polynomial-time computability for its stack-based
+Turing machines (\lstinline{TM2ComputableInPolyTime}, by Spelier and van Gent). Turing machines
+and computability have been mechanised in Isabelle/HOL~\cite{XuZhangUrban2013} and Coq~\cite{ForsterKunzeWuttke2020}, computability through
 partial recursive functions in Lean~\cite{Carneiro2019}, and time complexity through the weak
 call-by-value $\lambda$-calculus in Coq~\cite{ForsterKSW2021}. Our setting needs explicit encodings and running
 times, but its classes are the textbook ones on Turing machines, so polynomial time, binary
