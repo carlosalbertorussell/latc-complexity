@@ -53,7 +53,11 @@ no errors.
 Gap 1 (Valiant's theorem, `LatcComplexity/Valiant/`) was built on its branch, at commit `3bb09ae`
 on top of `fcdf0ef` (before the counting result of (b)): `Build completed successfully (18643
 jobs)`, no warnings, no errors. It was merged into `main` (`43d7e25`) without conflicts; it adds
-new files and import lines only. A build of the merged commit has not yet been run.
+new files and import lines only. Gap 3 (`LatcComplexity/ExplicitDegree.lean`) was built on its
+branch (`d6980bb`, on top of `242311b`: `Build completed successfully (18627 jobs)`) and merged onto
+`43d7e25` in a scratch checkout, where `lake build` ended with `Build completed successfully (18645
+jobs)`, exit code 0, no warnings, no errors. That merge is `cbf016b` on `main`; the commits between
+`43d7e25` and it change documentation only, so its Lean files are those of that build.
 
 Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
 Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
@@ -77,6 +81,7 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Valiant` | Valiant's theorem in its one-call form, proved: #Monotone-2SAT is one-call #P-hard, so the monotone case is unconditional (`Gadget`, `Counting`, `Pendant`, `OneCall`, `Axioms`) |
 | `LatcComplexity.Binary` | The attribute index of a condition in binary: every theorem above for the encoding `encInstBin` |
 | `LatcComplexity.Tractable` | The tractable side: no constraints, or at most `k` attributes, in polynomial time |
+| `LatcComplexity.ExplicitDegree` | The fixed-attribute bounds with an explicit degree, uniform in `k`: time and space `c · (\|x\| + 1) ^ (d · n + d)` |
 | `LatcComplexity.Axioms` | `#print axioms` on every theorem of the `LatcComplexity` files (`LatcComplexity.Valiant.Axioms` for `Valiant/`) |
 
 ## Theorems
@@ -289,11 +294,24 @@ states they stand for (`classStateWeight`); the partition is proved one attribut
 (`classStateWeight_le_domProd`), so the sum is computed in binary by a fold with bounded growth,
 as in (a) (`countClasses_polyTime`).
 
-The degree depends on `k`: informally, the decider runs a polynomial-time check on at most
-`(2N + 1)ᵏ` states, `N` at most the number of values in the input `x`, so it runs in time
-`O(|x|^(c·k + c'))` for constants `c`, `c'` independent of `k`. The machine-checked statement is polynomial time for
-each fixed `k` together with the bound `length_candidateStates_le` on the search space; the
-degree of the time bound itself is not extracted as a formula in `k`.
+**An explicit degree in `k`** (`LatcComplexity/ExplicitDegree.lean`). The theorems above give a
+polynomial for each `k`, with no relation between them. This file makes the degree explicit and
+uniform, in time and in space, with Complexitylib's `ComputableTidilyInO`, which keeps explicit
+bound functions and one constant through composition, case splits and folds; the enumeration of
+candidate values is a left fold with explicitly bounded intermediate results. Below, `|x|` is
+`(encInstBin I).length` and `n = I.n`; each line holds for the non-emptiness decider, the
+completeness decider and the counter (`missingNonempty_…`, `complete_…`, `missingCount_…`).
+
+| Theorems | Statement |
+|---|---|
+| `missingNonempty_explicitDegree`, `complete_explicitDegree`, `missingCount_explicitDegree` | `∃ c d`, one machine on every instance, time and space `c * (\|x\| + 1) ^ (d * I.n + d)` |
+| `missingNonemptyFixedAttrs_uniform`, `completeFixedAttrs_uniform`, `missingCountFixedAttrs_uniform` | `∃ c d₀ d₁, ∀ k`, on `{I : Inst // I.n ≤ k}`, time and space `c * (\|x\| + 1) ^ (d₀ * k + d₁)` |
+| `missingNonemptyWithBound_explicitDegree`, `completeWithBound_explicitDegree`, `missingCountWithBound_explicitDegree` | `∃ c d`, one machine on pairs `(k, I)` (`k` in unary) computing the fixed-`k` set or function of (b) (`I.n ≤ k ∧ …`, or `if I.n ≤ k then missingCount I else 0`), within `c * (\|(k, x)\| + 1) ^ (d * k + d)` |
+
+Not proved: for each `k`, a machine with `k` built in that rejects instances with more than `k`
+attributes, with constants independent of `k`. The constants of Complexitylib's constant-output and
+case-split lemmas depend on the machine. The second and third lines cover the same ground.
+Statements verbatim and details: `docs/gap3-progress.md`.
 
 ### Where the hardness comes from
 
@@ -312,7 +330,9 @@ The planning note `docs/boundary.md` lists the same statements.
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 174 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`):
+* `LatcComplexity/Axioms.lean`, 220 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`, 46 of
+  `ExplicitDegree`). The 46 of `ExplicitDegree` (Gap 3 build, `d6980bb`) each print a subset of
+  `[propext, Classical.choice, Quot.sound]`; the per-name breakdown below covers the other 174:
   152 print `[propext, Classical.choice, Quot.sound]`; `Latc.PaperD.holdsAll_eq_eval`,
   `Latc.PaperD.satisfiable_decode_iff`, and, in `Latc.PaperD.General`, `Inst.toList_injective`,
   `Inst.exists_toList_eq`, `con_iff`, `length_domains_le_bin`, `length_encNat_le_of_mem`,
@@ -338,9 +358,11 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 
 ## Not yet formalised
 
-* An explicit formula in `k` for the degree of the time bounds of (b); what is proved is
-  polynomial time for each `k` and the bounds `(2N + 1)ᵏ` on the number of states searched and
-  `(N + 1)ᵏ` on the number of class vectors summed.
+The three gaps of `docs/gaps-plan.md` are closed: counting with at most `k` attributes (`242311b`),
+Valiant's theorem (`43d7e25`) and an explicit degree in `k` (`cbf016b`). What stays outside the
+development: a per-`k` machine with `k` built in and constants independent of `k` (see the
+explicit-degree paragraph above), and a build against Complexitylib's current `main` (the pin is
+`b7acfc2`).
 
 ## Licence
 

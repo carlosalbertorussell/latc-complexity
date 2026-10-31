@@ -9,9 +9,9 @@ descriptive-complexity (`fc068f6`) contain on that date.
 |---|---|---|---|
 | 1. Valiant's theorem in Complexitylib's model | the hypothesis `hValiant`; the monotone case becomes unconditional | large | second; **done** (`3bb09ae`, merged in `43d7e25`) |
 | 2. Counting with a fixed number of attributes | the counting half of the tractable side | moderate | first; **done** (`242311b`) |
-| 3. An explicit degree in k | uniformity of the fixed-attribute bounds | small maths, heavy bookkeeping | last; started 2026-10-31 |
+| 3. An explicit degree in k | uniformity of the fixed-attribute bounds | small maths, heavy bookkeeping | last; **done** (`d6980bb`, merged in `cbf016b`) |
 
-None of them blocks the ITP 2027 submission. Gaps 1 and 2 are closed; the draft states Gap 3 as open.
+All three are closed (2026-10-31).
 
 ## Gap 1: Valiant's theorem in Complexitylib's model
 
@@ -103,7 +103,10 @@ counter (at most (N+1)ᵏ class vectors).
 
 **Priority.** Lowest. For the paper, polynomial time for each k plus these bounds suffices.
 
-**Status.** Started on 2026-10-31 in a separate cloud session, on branch
-`claude/gap3-explicit-degree` (new file `LatcComplexity/ExplicitDegree.lean` preferred), with
-progress in `docs/gap3-progress.md` on that branch. It merges to `main` only after a clean build
-and axiom audit.
+**Status.** Done on 2026-10-31 on branch `claude/gap3-explicit-degree` (`d6980bb`, 18627 jobs,
+clean; 46 audited theorems on the standard axioms), merged into `main` in `cbf016b`; the merged
+tree built clean (18645 jobs). `LatcComplexity/ExplicitDegree.lean` proves, for the two deciders
+and the counter: one machine on every instance within c·(|x|+1)^(d·n+d); the plan's form
+∃ c d₀ d₁, ∀ k on instances with at most k attributes; and one machine with k in the input.
+Not proved: a per-k machine with k built in and constants independent of k (Complexitylib's
+case-split constants depend on the machine). Details in `docs/gap3-progress.md`.

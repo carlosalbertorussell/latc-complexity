@@ -2,6 +2,8 @@
 
 Checked 2026-10-29 against commit `011cd1a` of latc-complexity, for Paper D, "Machine-Checked
 Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was changed.
+Updated 2026-10-31 for commit `cbf016b` (an explicit degree in k, Gap 3, merged from `d6980bb`):
+the §6 explicit-degree entries, the audit count and the line counts.
 Updated 2026-10-31 for commit `43d7e25` (Valiant's theorem, Gap 1, merged from `3bb09ae`): the §5
 Valiant entries, caution 4, the audit count, the line counts and the notes on Valiant below.
 Updated 2026-10-31 for commit `242311b` (counting with a fixed number of attributes, Gap 2 of
@@ -10,8 +12,9 @@ line counts.
 
 ## Summary
 
-* **Theorems: 59/59 found.** The README's Valiant table (7 rows, Gap 1) is checked in §5 below,
-  under "Valiant's theorem". The other 52 are the earlier rows of the README's theorem tables (50 names;
+* **Theorems: 59/59 found, plus Gap 3.** The README's Valiant table (7 rows, Gap 1) is checked in
+  §5 below, under "Valiant's theorem"; its explicit-degree table (3 rows naming 9 theorems, Gap 3)
+  in §6, under "An explicit degree". The other 52 are the earlier rows of the README's theorem tables (50 names;
   `MissingNonempty_npComplete` and `Complete_coNPComplete` each appear twice, once for Boolean domains in
   `Latc.PaperD` and once for general domains in `Latc.PaperD.General`). The 49th,
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
@@ -133,7 +136,8 @@ Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the o
 A side note on the audit file: it prints 174 of the 191 `theorem`/`lemma` declarations in
 `LatcComplexity/` (130 of 147 at `011cd1a`; commit `242311b` added 44 declarations to
 `Tractable.lean`, all printed). Gap 1 adds `LatcComplexity/Valiant/Axioms.lean`, which prints all
-80 declarations of `LatcComplexity/Valiant/`. The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
+80 declarations of `LatcComplexity/Valiant/`; Gap 3 (`cbf016b`) adds the 46 declarations of
+`ExplicitDegree.lean`, all printed, so `Axioms.lean` prints 220 of 237. The other 17 are helper lemmas: `Inst.getElem?_toList`, `Inst.length_toList`,
 `assignment_pad`, `condHoldsB_polyTime`, `encList_polyTime`, `fromSAT_get`, `fromSAT_n`,
 `getElem?_toList_boolTuple`, `length_certWord`, `length_domains_le`, `length_encCNF_le`,
 `length_tuple`, `lookup_polyTime`, `mem_vars_denseRelabel_iff`, `ofFn_certFun`, `ofFn_getD` and
@@ -808,12 +812,65 @@ theorem missingCountFixedAttrs_polyTime_unary (k : ℕ) :
       encInst encNat
 ```
 
-Axiom lines for these four: the README's audit (build of 2026-10-31, commit `242311b`) lists every
+#### An explicit degree (`LatcComplexity/ExplicitDegree.lean`, namespace `Latc.PaperD.General`)
+
+Added by Gap 3 (`d6980bb`, merged in `cbf016b`). Axiom lines from that session's report: all 46 audited
+declarations print a subset of `[propext, Classical.choice, Quot.sound]`; per-theorem lines were not
+reported. All nine theorems of the README's table exist as written: `missingNonempty_explicitDegree`,
+`complete_explicitDegree`, `missingCount_explicitDegree` (lines 601, 610, 619),
+`missingNonemptyFixedAttrs_uniform`, `completeFixedAttrs_uniform`, `missingCountFixedAttrs_uniform`
+(627, 636, 645), and the three `…WithBound_explicitDegree` (655, 669, 684). The draft cites three:
+
+#### `Latc.PaperD.General.missingNonempty_explicitDegree`
+
+- Exists: yes, `LatcComplexity/ExplicitDegree.lean:601`
+- Reading: One machine decides non-emptiness of M(T₀) on every instance within time and space c·(|x|+1)^(d·n+d), n the number of attributes.
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem missingNonempty_explicitDegree :
+    ∃ c d, ComputableTidilyInTimeAndSpace
+      (fun I : Inst => decide (missing I.con I.table).Nonempty) encInstBin encBool
+      (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
+      (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
+```
+
+#### `Latc.PaperD.General.missingNonemptyFixedAttrs_uniform`
+
+- Exists: yes, `LatcComplexity/ExplicitDegree.lean:627`
+- Reading: The same constants c, d₀, d₁ serve every k, on instances with at most k attributes, within c·(|x|+1)^(d₀·k+d₁).
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem missingNonemptyFixedAttrs_uniform :
+    ∃ c d₀ d₁, ∀ k, ComputableTidilyInTimeAndSpace
+      (fun I : {I : Inst // I.n ≤ k} => decide (missing I.1.con I.1.table).Nonempty)
+      ((Function.Embedding.subtype _).trans encInstBin) encBool
+      (fun I => c * ((encInstBin I.1).length + 1) ^ (d₀ * k + d₁))
+      (fun I => c * ((encInstBin I.1).length + 1) ^ (d₀ * k + d₁))
+```
+
+#### `Latc.PaperD.General.missingNonemptyWithBound_explicitDegree`
+
+- Exists: yes, `LatcComplexity/ExplicitDegree.lean:655`
+- Reading: One machine, on pairs (k, I) with k in unary, decides I.n ≤ k ∧ M(T₀) ≠ ∅ within c·(|(k,x)|+1)^(d·k+d).
+- Axioms: a subset of the three (per-theorem line not reported)
+
+```lean
+theorem missingNonemptyWithBound_explicitDegree :
+    ∃ c d, ComputableTidilyInTimeAndSpace
+      (fun p : ℕ × Inst => decide (p.2.n ≤ p.1 ∧ (missing p.2.con p.2.table).Nonempty))
+      (encPair encUnary encInstBin) encBool
+      (fun p => c * ((encPair encUnary encInstBin p).length + 1) ^ (d * p.1 + d))
+      (fun p => c * ((encPair encUnary encInstBin p).length + 1) ^ (d * p.1 + d))
+```
+
+Axiom lines for the four counting theorems above: the README's audit (build of 2026-10-31, commit `242311b`) lists every
 theorem that prints fewer than all three axioms, and none of the four is among them.
 
 ## Line counts
 
-Counted with `wc -l` (every line, including blank lines and comments) at `43d7e25`.
+Counted with `wc -l` (every line, including blank lines and comments) at `cbf016b`.
 
 | File | Lines | Theorems/lemmas |
 |---|---|---|
@@ -825,14 +882,15 @@ Counted with `wc -l` (every line, including blank lines and comments) at `43d7e2
 | `LatcComplexity/Monotone.lean` | 191 | 15 |
 | `LatcComplexity/Binary.lean` | 186 | 21 |
 | `LatcComplexity/Tractable.lean` | 1099 | 81 |
-| `LatcComplexity/Axioms.lean` | 203 | 0 (174 `#print axioms`) |
+| `LatcComplexity/ExplicitDegree.lean` | 692 | 46 |
+| `LatcComplexity/Axioms.lean` | 252 | 0 (220 `#print axioms`) |
 | `LatcComplexity/Valiant/Gadget.lean` | 227 | 19 |
 | `LatcComplexity/Valiant/Counting.lean` | 518 | 38 |
 | `LatcComplexity/Valiant/Pendant.lean` | 195 | 9 |
 | `LatcComplexity/Valiant/OneCall.lean` | 200 | 14 |
 | `LatcComplexity/Valiant/Axioms.lean` | 98 | 0 (80 `#print axioms`) |
-| **`LatcComplexity/` total** | **3836** | **271** |
-| `LatcComplexity/` without the two `Axioms.lean` | 3535 | 271 |
+| **`LatcComplexity/` total** | **4577** | **317** |
+| `LatcComplexity/` without the two `Axioms.lean` | 4227 | 317 |
 | `LatcComplexity.lean` (root import file) | 14 | |
 | `LatcFormal/Basic.lean` | 114 | |
 | `LatcFormal/Thm1.lean` | 130 | |
@@ -847,10 +905,10 @@ Counted with `wc -l` (every line, including blank lines and comments) at `43d7e2
 | `LatcFormal/Axioms.lean` | 95 | |
 | **`LatcFormal/` total** (copied unchanged from latc-check) | **1777** | |
 | `LatcFormal.lean` (root import file) | 11 | |
-| **Repository total, all `.lean` files** | **5638** | |
+| **Repository total, all `.lean` files** | **6379** | |
 
-Paper D's new development is `LatcComplexity/`: 3836 lines, or 3535 without the two audit files
-(2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
+Paper D's new development is `LatcComplexity/`: 4577 lines, or 4227 without the two audit files
+(3836 and 3535 at `43d7e25`, before the explicit degree; 2598 and 2395 at `242311b`, before Valiant's theorem; 1966 and 1809 at `011cd1a`, before the
 counting result).
 
 ## References

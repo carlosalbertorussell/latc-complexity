@@ -1,4 +1,4 @@
-% Paper D, first draft (2026-10-31). Written from latc-complexity at commit 43d7e25 (the last
+% Paper D, first draft (2026-10-31). Written from latc-complexity at commit cbf016b (the last
 % commit that changes a Lean file) and from docs/paper-facts.md, which records every theorem
 % statement, file and line used here. Lean listings are copied from the source up to `:=`.
 %
@@ -124,7 +124,8 @@ the three standard axioms of Lean.
   from \#SAT (\Cref{sec:counting}).
 \item \textbf{The tractable side:} without domain constraints, completeness and non-emptiness
   are in P and the count is computable in polynomial time; with at most $k$ attributes, both
-  decision problems are in P and the count is computable in polynomial time, for each~$k$.
+  decision problems are in P and the count is computable in polynomial time, within
+  $c\,(|x|+1)^{d k + d}$ for constants $c, d$ independent of~$k$.
   Hardness needs both constraints and an unbounded
   number of attributes (\Cref{sec:boundary}).
 \item \textbf{An adequacy theorem} linking the word-encoded problems to latc-check's set-based
@@ -356,6 +357,27 @@ by the bounded-growth fold of the no-constraint case. Subtracting the valid dist
 of~$T_0$, the count is polynomial-time for each~$k$, with binary or unary attribute indices
 (\lstinline{missingCountFixedAttrs_polyTime}, \lstinline{missingCountFixedAttrs_polyTime_unary}).
 
+\subparagraph*{An explicit degree.}
+Polynomial time for each~$k$ says nothing about how the degree grows with~$k$. We make it explicit
+with Complexitylib's \lstinline{ComputableTidilyInO}, which keeps explicit bound functions and a
+single constant through composition, case splits and folds; the enumeration of candidate values
+becomes a left fold whose intermediate results are explicitly bounded. One machine decides
+non-emptiness on every instance within time and space $c\,(|x|+1)^{d n + d}$, $n$ the number of
+attributes, and likewise for completeness and the count:
+\begin{lstlisting}
+theorem missingNonempty_explicitDegree :
+    ∃ c d, ComputableTidilyInTimeAndSpace
+      (fun I : Inst => decide (missing I.con I.table).Nonempty) encInstBin encBool
+      (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
+      (fun I => c * ((encInstBin I).length + 1) ^ (d * I.n + d))
+\end{lstlisting}
+Restricted to instances with at most $k$ attributes, this gives constants $c, d_0, d_1$ that serve
+every~$k$ (\lstinline{missingNonemptyFixedAttrs_uniform} and its two companions); with $k$ given
+in unary beside the instance, one machine computes the fixed-$k$ problems of each~$k$ within
+$c\,(|(k,x)|+1)^{d k + d}$ (\lstinline{missingNonemptyWithBound_explicitDegree}). We do not
+prove the remaining variant, a separate machine for each~$k$ with $k$ built in and constants
+independent of~$k$: the constants of Complexitylib's case-split lemmas depend on the machine.
+
 \begin{table}[t]
 \caption{Where the hardness comes from.}
 \label{tab:boundary}
@@ -366,7 +388,7 @@ of~$T_0$, the count is polynomial-time for each~$k$, with binary or unary attrib
 \hline
 SAT reduction & clauses & unbounded & NP-, coNP-, \#P-complete \\
 no constraints & none & unbounded & in P; count polynomial-time \\
-fixed $k$ & clauses & at most $k$ & in P; count polynomial-time, for each $k$ \\
+fixed $k$ & clauses & at most $k$ & in P; count polynomial-time; degree $O(k)$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -376,14 +398,15 @@ fixed $k$ & clauses & at most $k$ & in P; count polynomial-time, for each $k$ \\
 \label{sec:conclusion}
 
 \subparagraph*{Effort.}
-The development is 3\,836 lines of Lean in the 14 files of \texttt{LatcComplexity/}, 3\,535 without the two axiom-audit files.
+The development is 4\,577 lines of Lean in the 15 files of \texttt{LatcComplexity/}, 4\,227 without the two axiom-audit files.
 Its first seven commits ran from 28 October 2026, 14:16, to 29 October, 00:18, over about ten
-hours, building on latc-check's model and reduction. On 31 October two more added counting with
-a fixed number of attributes and, in 1\,238 lines, Valiant's theorem.
+hours, building on latc-check's model and reduction. On 31 October three more added counting
+with a fixed number of attributes, Valiant's theorem (1\,238 lines) and the explicit degree
+(692 lines), the last two developed in parallel sessions and merged without conflicts.
 
 \subparagraph*{Automation.}
 Complexitylib's \lstinline{fun_prop} discharged many polynomial-time obligations: it occurs in
-90 lines of the development, often directly after unfolding a definition. Proofs by hand were
+99 lines of the development, often directly after unfolding a definition. Proofs by hand were
 needed where the size of intermediate values matters: the product of the domain sizes, whose
 bounded growth rests on Complexitylib's \lstinline{length_encNat_mul_le}, and the enumeration of
 candidate states, whose polynomial time is proved by induction on~$k$. For the graph of
@@ -405,15 +428,15 @@ and which now lives on as a separate repository with a different API.
 % (Lean rc2), #1694 (CSLib and Mathlib on rc2), #1657 (fun_prop clients on rc2).
 
 \subparagraph*{Trust.}
-\texttt{LatcComplexity/Axioms.lean} and \texttt{LatcComplexity/Valiant/Axioms.lean} print the axioms of 254 theorems, among them every theorem of this development that the paper cites; each depends only on
+\texttt{LatcComplexity/Axioms.lean} and \texttt{LatcComplexity/Valiant/Axioms.lean} print the axioms of 300 theorems, among them every theorem of this development that the paper cites; each depends only on
 \lstinline{propext}, \lstinline{Classical.choice} and \lstinline{Quot.sound}, or fewer. A
 cold build, from a fresh clone downloading precompiled Mathlib, took about seven minutes and 12\,GB of disk at an
 earlier commit; it will be re-measured at the final one.
 
 \subparagraph*{What remains.}
-An explicit formula in~$k$ for the degree of the fixed-attribute bounds, which we prove
-polynomial for each~$k$ without extracting the degree. Valiant's reduction uses only
-Complexitylib's notions apart from one-call reductions, and could be offered upstream.
+The per-$k$ machine with constants independent of~$k$ described in \Cref{sec:boundary}, and a
+build against Complexitylib's current main. Valiant's reduction uses only Complexitylib's notions
+apart from one-call reductions, and could be offered upstream.
 
 %-----------------------------------------------------------------------------------------------
 \bibliography{../docs/paper-refs,extra}
