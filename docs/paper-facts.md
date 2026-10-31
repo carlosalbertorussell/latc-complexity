@@ -23,10 +23,10 @@ line counts.
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
   last three, the counting result of commit `242311b` (`missingCount_eq_weighted_of_le`,
   `length_classStates_le`, `missingCountFixedAttrs_polyTime`); §6 below also records its `_unary`
-  corollary, which the paper draft cites. They include all 29
+  corollary, which the paper draft cites. They include all 31
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
-  first checked, and the 29 its section table cites after the edits of 2026-10-30 and 31. Of four
+  first checked, and the 31 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, three are resolved and one (namespaces) still applies.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
@@ -61,7 +61,7 @@ theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_Missing
 `mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
 **As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
-section table cites the 29 names below, by paper section; all exist exactly as written. Compared
+section table cites the 31 names below, by paper section; all exist exactly as written. Compared
 with the first list:
 
 * three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
@@ -84,7 +84,11 @@ with the first list:
   `countValidMonotone2_sharpPComplete_oneCall`, Valiant's theorem and the unconditional result:
   27 names;
 * and, after the Gap 3 merge (`cbf016b`), §6 added `missingNonempty_explicitDegree` and
-  `missingNonemptyFixedAttrs_uniform`: 29 names.
+  `missingNonemptyFixedAttrs_uniform`: 29 names;
+* and, when the section table was rebuilt for the paper's ten sections (2026-10-31), §6 (monotone)
+  added `countMissingMonotone2_sharpPComplete_oneCall` and `mem_missingNonempty_of_pos2B`: 31 names.
+  The table's section numbers now follow the paper: §6 is the monotone case and §7 the tractable
+  side; the § column below keeps the earlier numbering.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -107,6 +111,8 @@ with the first list:
 | 5 | `countValidMonotone2_oneCallSharpPComplete_bin` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` | `LatcComplexity/Binary.lean:179` | exists, exact name (added 2026-10-31) |
 | 5 | `sharpMonotone2SAT_oneCallSharpPHard` | `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard` | `LatcComplexity/Valiant/OneCall.lean:184` | exists, exact name (added 2026-10-31) |
 | 5 | `countValidMonotone2_sharpPComplete_oneCall` | `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall` | `LatcComplexity/Valiant/OneCall.lean:191` | exists, exact name (added 2026-10-31) |
+| 5 | `countMissingMonotone2_sharpPComplete_oneCall` | `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall` | `LatcComplexity/Valiant/AnyTable.lean:112` | exists, exact name (added 2026-10-31) |
+| 5 | `mem_missingNonempty_of_pos2B` | `Latc.PaperD.General.mem_missingNonempty_of_pos2B` | `LatcComplexity/Monotone.lean:152` | exists, exact name (added 2026-10-31) |
 | 6 | `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | exists, exact name |
 | 6 | `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:208` | exists, exact name |
 | 6 | `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:165` | exists, exact name |
@@ -662,7 +668,7 @@ theorem modelCount_eq_card (hd : ∀ o ∈ occurrences φ, o.2.2.1 < n)
 
 #### `Latc.PaperD.Valiant.countMissingMonotone2_eq_card_missing`
 
-- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:34` (merged in `a21b85f`)
+- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:38` (merged in `a21b85f`; line at `3b6f523`)
 - Reading: On instances with domains {0, 1}, clauses of two conditions with value 1 and any rows (`pos2AnyB`), the function `countMissingMonotone2` is latc-check's |M(T₀)|.
 - Axioms: `[propext, Classical.choice, Quot.sound]` (branch build `8d3cb97`)
 
@@ -671,10 +677,10 @@ theorem countMissingMonotone2_eq_card_missing (I : General.Inst) (h : pos2AnyB I
     countMissingMonotone2 I = (Latc.missing I.con I.table).card
 ```
 
-#### `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall`
+#### `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall` (outline)
 
-- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:97`
-- Reading: Counting the missing combinations of monotone two-literal tables with any T₀ is one-call #P-complete under `encInstBin` (`_unary` at line 104 for `encInst`). Hardness reuses the reduction from #Monotone-2SAT, whose images have T₀ = ∅ or fail the shape test.
+- Exists: yes, `LatcComplexity/Valiant/AnyTable.lean:112`
+- Reading: Counting the missing combinations of monotone two-literal tables with any T₀ is one-call #P-complete under `encInstBin` (`_unary` at line 119 for `encInst`). Hardness reuses the reduction from #Monotone-2SAT, whose images have T₀ = ∅ or fail the shape test.
 - Axioms: `[propext, Classical.choice, Quot.sound]`
 
 ```lean
@@ -682,7 +688,7 @@ theorem countMissingMonotone2_sharpPComplete_oneCall :
     OneCallSharpPComplete encInstBin countMissingMonotone2
 ```
 
-#### `Latc.PaperD.General.mem_missingNonempty_of_pos2B`
+#### `Latc.PaperD.General.mem_missingNonempty_of_pos2B` (outline)
 
 - Exists: yes, `LatcComplexity/Monotone.lean:152` (merged in `3b6f523`)
 - Reading: Every instance passing the monotone shape test (domains {0, 1}, clauses of two conditions with value 1 on existing attributes, T₀ = ∅) has a missing state: the all-ones state (`valid_replicate_one_of_pos2B`, line 142). So the decision version is trivial and hardness needs one-call reductions.
