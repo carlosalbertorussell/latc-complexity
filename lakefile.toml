@@ -12,7 +12,7 @@ autoImplicit = false
 [[require]]
 name = "complexitylib"
 git = "https://github.com/cslib-community/complexitylib"
-rev = "b7acfc2310217697a892e791d318a5e127fadfd9"
+rev = "b9e6241a5e9728c7d4c6d09da063fff651dc5cce"
 
 # The Lean formalisation of Paper A, copied from latc-check (commit b9f8273, folder formal/).
 [[lean_lib]]
