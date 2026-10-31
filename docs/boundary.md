@@ -66,8 +66,16 @@ conditions hold or whether the state is a row. The search space has at most `(2N
 so, informally, the running time is polynomial of degree growing linearly in `k`; the theorem certifies polynomial time for each fixed
 `k`, and the bound on the search space is the formal statement of the `k`-dependence.
 
-(c) for (b), counting with a fixed number of attributes, is left open: it needs the class sizes
-`dᵢ − #written values` as multiplicities.
+(c) for (b), counting with a fixed number of attributes:
+
+* `missingCountFixedAttrs_polyTime (k : ℕ) :
+  ComputableInPolyTime (fun I => if I.n ≤ k then missingCount I else 0) encInstBin encNat`
+  (and `_unary` for `encInst`).
+* `missingCount_eq_weighted_of_le : I.n ≤ k → missingCount I = ((classStates k I).map fun c =>
+  if validB (I, c) then classStateWeight (I, c) else 0).sum`: each written value is its own class
+  and the unwritten values form one class of size `dᵢ − #written values below dᵢ`; a valid class
+  vector that is not a row of T₀ counts with the product of its class sizes.
+* `length_classStates_le : (classStates k I).length ≤ (I.numVals + 1) ^ k`.
 
 ## The boundary
 
@@ -75,6 +83,6 @@ so, informally, the running time is polynomial of degree growing linearly in `k`
 |---|---|---|---|
 | hardness (`fromSAT`) | yes (CNF clauses) | unbounded | NP-/coNP-/#P-complete |
 | (a) | none | unbounded | P, counting in FP |
-| (b) | any clauses | ≤ k | P for each k |
+| (b) | any clauses | ≤ k | P for each k, counting in FP for each k |
 
 Hardness needs both constraints and an unbounded number of attributes.

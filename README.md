@@ -5,9 +5,9 @@ composed with the Cook–Levin theorems of
 [Complexitylib](https://github.com/cslib-community/complexitylib) and machine-checked end to end in
 Lean 4. Completeness of a decision table whose constraints are clauses is coNP-complete, and
 non-emptiness of its missing set M(T₀) is NP-complete, for general finite domains. Both become
-polynomial-time without constraints, or with a fixed number of attributes, so the hardness needs
-constraints and an unbounded number of attributes together. These are theorems about Turing
-machines with explicit encodings and polynomial-time bounds, not citations.
+polynomial-time without constraints, or with a fixed number of attributes, and so does counting
+|M(T₀)|; the hardness needs constraints and an unbounded number of attributes together. These are
+theorems about Turing machines with explicit encodings and polynomial-time bounds, not citations.
 
 ## Versions
 
@@ -36,15 +36,17 @@ lake build
 `lake exe cache get` downloads the precompiled Mathlib. CSLib and the Complexitylib modules that
 are imported are then compiled from source, which takes a while on the first build.
 
-Verification status (2026-10-29, Linux cloud machine, x86_64, 4 cores): Lean 4.36.0-rc1 (commit
-`c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0), with the dependencies above,
-`lake build` ended with `Build completed successfully (18625 jobs)` and exit code 0, with no
-warnings and no errors. The 22 modules of this repository (`LatcFormal`, its 11 files,
-`LatcComplexity`, `Bridge`, `General`, `Adequacy`, `Counting`, `CountingGeneral`, `Monotone`,
-`Binary`, `Tractable` and `Axioms`) were compiled in that checkout: the 20 of commit `d632d01` by a
-first `lake build` (18613 jobs, also clean), then `Binary`, `Tractable`, `Axioms` and
-`LatcComplexity` by this one. The other jobs were the dependencies (Mathlib from
-`lake exe cache get`, CSLib and Complexitylib compiled from source by that first build).
+Verification status (2026-10-31, Linux cloud machine, x86_64): Lean 4.36.0-rc1 (commit
+`c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0, elan 4.2.4), with the dependencies above,
+in a fresh checkout with no `~/.elan`, `.lake` or Mathlib cache. `lake exe cache get` took 123 s
+(all 9047 Mathlib files from the cache). A first `lake build` of commit `8985f38` (before the
+counting result of (b)) ended with `Build completed successfully (18625 jobs)` in 217 s, no
+warnings, no errors, compiling CSLib and Complexitylib from source and the 22 modules of this
+repository (`LatcFormal`, its 11 files, `LatcComplexity`, `Bridge`, `General`, `Adequacy`,
+`Counting`, `CountingGeneral`, `Monotone`, `Binary`, `Tractable` and `Axioms`). With the counting
+result added to `Tractable`, `lake build` recompiled `Tractable`, `Axioms` and `LatcComplexity` and
+again ended with `Build completed successfully (18625 jobs)` and exit code 0, with no warnings and
+no errors.
 
 Cold build (2026-10-28, same machine type, commit `a2ab2f8`, fresh clone, no `~/.elan`, `.lake` or
 Mathlib cache): elan install 1 s; `lake exe cache get` 160 s, including the toolchain download (all
@@ -205,7 +207,8 @@ because the identity is polynomial-time from `encInst` to `encInstBin`.
 `P` is Complexitylib's class (`Cslib.Complexity.P`: a Boolean decider computable in polynomial
 time). A restricted problem contains its restriction, as Complexitylib's `SharpThreeSAT` does: a
 decider also checks the shape of the instance. All statements are on latc-check's `Latc.missing`,
-for `encInstBin`; each also holds for `encInst` (suffix `_unary`, from `mem_P_of_mem_P_bin`).
+for `encInstBin`; each also holds for `encInst` (suffix `_unary`, from `mem_P_of_mem_P_bin`, or
+for the counting statements by composing with `encInst_to_encInstBin_polyTime`).
 
 **(a) No constraints** (`S = []`), any number of attributes, T₀ arbitrary. |M(T₀)| is
 ∏ dᵢ minus the number of distinct rows of T₀ inside the declared domains. ∏ dᵢ can be exponential
@@ -237,6 +240,22 @@ state exists iff a candidate one does. The candidate states are enumerated for a
 | `candidateStates_polyTime` | for each `k`, `ComputableTidilyInPolyTime (candidateStates k) encInstBin (encList (encList encNat))` |
 | `missingNonemptyFixedAttrs_mem_P` | `∀ k, {I \| I.n ≤ k ∧ (Latc.missing I.con I.table).Nonempty} ∈ P encInstBin` |
 | `completeFixedAttrs_mem_P` | `∀ k, {I \| I.n ≤ k ∧ Latc.missing I.con I.table = ∅} ∈ P encInstBin` |
+| `missingCount_eq_weighted_of_le` | `I.n ≤ k → missingCount I = ((classStates k I).map fun c => if validB (I, c) then classStateWeight (I, c) else 0).sum` |
+| `length_classStates_le` | `(classStates k I).length ≤ (I.numVals + 1) ^ k` |
+| `missingCountFixedAttrs_polyTime` | for each `k`, `ComputableInPolyTime (fun I => if I.n ≤ k then missingCount I else 0) encInstBin encNat` |
+
+**Counting with at most `k` attributes.** The values `0, …, dᵢ − 1` of attribute `i` fall into
+classes: each written value (`distinctVals (writtenVals I)`) is its own class, of size one if it is
+below `dᵢ` and zero otherwise, and the unwritten values form one more class, of size `dᵢ` minus the
+written values below `dᵢ`, represented by `unwritten I`, a value `≤ N` written nowhere
+(`classVals`, `classWeight`). Mapping each value to its class (`cls`) changes neither which
+conditions hold nor membership in T₀ (`validB_map_cls`: a state with an unwritten value is not a
+row of T₀). So |M(T₀)| is the sum, over the class vectors `c` (`classStates`, at most `(N + 1)ᵏ`
+of them) that satisfy the constraints and are not rows of T₀ (`validB`), of the number ∏ᵢ |cᵢ| of
+states they stand for (`classStateWeight`); the partition is proved one attribute at a time
+(`sum_range_eq_classes`, `length_filter_domStates`). Each weight is at most ∏ dᵢ
+(`classStateWeight_le_domProd`), so the sum is computed in binary by a fold with bounded growth,
+as in (a) (`countClasses_polyTime`).
 
 The degree depends on `k`: informally, the decider runs a polynomial-time check on at most
 `(2N + 1)ᵏ` states, `N` at most the number of values in the input `x`, so it runs in time
@@ -250,24 +269,27 @@ degree of the time bound itself is not extracted as a formula in `k`.
 |---|---|---|---|
 | SAT reduction (`fromSAT`) | clauses | `φ.numVars`, unbounded | NP-, coNP-, #P-complete |
 | (a) | none | unbounded | in P; counting \|M(T₀)\| polynomial-time |
-| (b) | clauses | at most `k` | in P for each `k` |
+| (b) | clauses | at most `k` | in P for each `k`; counting \|M(T₀)\| polynomial-time for each `k` |
 
 The reduction from SAT needs both ingredients: removing the constraints or bounding the number of
-attributes makes deciding completeness and non-emptiness polynomial-time. The planning note
-`docs/boundary.md` lists the same statements.
+attributes makes deciding completeness and non-emptiness, and counting |M(T₀)|, polynomial-time.
+The planning note `docs/boundary.md` lists the same statements.
 
 ## Axiom audit
 
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here. In the build above:
 
-* `LatcComplexity/Axioms.lean`, 130 theorems (72 as before, 21 of `Binary`, 37 of `Tractable`):
-  115 print `[propext, Classical.choice, Quot.sound]`; `Latc.PaperD.holdsAll_eq_eval`,
+* `LatcComplexity/Axioms.lean`, 174 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`):
+  152 print `[propext, Classical.choice, Quot.sound]`; `Latc.PaperD.holdsAll_eq_eval`,
   `Latc.PaperD.satisfiable_decode_iff`, and, in `Latc.PaperD.General`, `Inst.toList_injective`,
   `Inst.exists_toList_eq`, `con_iff`, `length_domains_le_bin`, `length_encNat_le_of_mem`,
-  `length_boundedSections_le`, `length_candVals_le`, `length_candidateStates_le` and
-  `candLists_eq` print `[propext, Quot.sound]`; `Latc.PaperD.General.Inst.inDomains_toList` and
-  `Latc.PaperD.General.con_cond_iff` print `[propext]`; and
+  `length_boundedSections_le`, `length_candVals_le`, `length_candidateStates_le`,
+  `candLists_eq`, `mem_domStates`, `length_of_mem_boundedSections` and
+  `length_encNat_le_of_mem_domains` print `[propext, Quot.sound]`;
+  `Latc.PaperD.General.Inst.inDomains_toList`, `Latc.PaperD.General.con_cond_iff`, and, in
+  `Latc.PaperD.General`, `foldl_mul_eq`, `foldl_add_eq`, `boundedSections_cons` and `sum_flatMap`
+  print `[propext]`; and
   `Latc.PaperD.General.boundedSections_zero` and `Latc.PaperD.General.boundedSections_succ` print
   `[Quot.sound]`. `countValidMonotone2_oneCallSharpPComplete` takes Valiant's theorem as its argument
   `hValiant`; an argument is not an axiom, so it does not appear in this list.
@@ -284,12 +306,9 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
   hypothesis `hValiant` of `countValidMonotone2_oneCallSharpPComplete`. Proving it needs Valiant's
   chain (or one through counting independent sets, as descriptive-complexity does) with
   polynomial-time certificates for every step.
-* Counting |M(T₀)| with at most `k` attributes and binary domain sizes. The candidate states of
-  `Tractable` decide non-emptiness, but counting needs each candidate weighted by the number of
-  unwritten values it stands for (`dᵢ` minus the written values inside the domain), and a proof
-  that these classes partition 𝒟.
-* An explicit formula in `k` for the degree of the time bound of (b); what is proved is polynomial
-  time for each `k` and the bound `(2N + 1)ᵏ` on the number of states searched.
+* An explicit formula in `k` for the degree of the time bounds of (b); what is proved is
+  polynomial time for each `k` and the bounds `(2N + 1)ᵏ` on the number of states searched and
+  `(N + 1)ᵏ` on the number of class vectors summed.
 
 ## Licence
 
