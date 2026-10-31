@@ -277,7 +277,7 @@ Composing with the parsimonious Cook--Levin theorem gives
 theorem missingCount_sharpPComplete_bin : SharpPComplete encInstBin missingCount
 \end{lstlisting}
 For Boolean domains there is also a reduction \emph{to} \#SAT, adding to the constraints one
-clause per row of $T_0$ that says the tuple differs from that row
+clause per row of $T_0$ of the right length that says the tuple differs from that row
 (\lstinline{countMissing_eq_sharpSAT}).
 
 \subparagraph*{The monotone two-literal case.}
@@ -288,7 +288,8 @@ reduction from \#SAT exists unless P~=~NP, and hardness needs a weaker reduction
 one-call reductions in Complexitylib's model, $f(a) = \mathit{post}(a, g(r(a)))$ for
 polynomial-time $r$ and $\mathit{post}$, and prove membership in \#P
 (\lstinline{countValidMonotone2_mem_SharpP_bin}) and a parsimonious reduction from
-\#Monotone-2SAT (\lstinline{sharpMonotone2SAT_reduces}) unconditionally. Hardness takes
+\#Monotone-2SAT (\lstinline{sharpMonotone2SAT_reduces}, to the unary-index encoding; the binary
+form follows by re-encoding) unconditionally. Hardness takes
 Valiant's theorem as an explicit hypothesis:
 \begin{lstlisting}
 theorem countValidMonotone2_oneCallSharpPComplete_bin
@@ -352,7 +353,7 @@ Its history runs from 28 October 2026, 14:16, to 29 October, 00:18: seven commit
 ten hours, building on latc-check's model and reduction.
 
 \subparagraph*{Automation.}
-Complexitylib's \lstinline{fun_prop} discharged most polynomial-time obligations: it occurs in
+Complexitylib's \lstinline{fun_prop} discharged many polynomial-time obligations: it occurs in
 48 lines of the development, often directly after unfolding a definition. Proofs by hand were
 needed where the size of intermediate values matters: the product of the domain sizes, whose
 bounded growth rests on Complexitylib's \lstinline{length_encNat_mul_le}, and the enumeration of
@@ -365,9 +366,9 @@ Complexitylib changes daily on a release-candidate Lean toolchain; we pin commit
 % TODO: describe any breakage met while following upstream.
 
 \subparagraph*{Trust.}
-\texttt{LatcComplexity/Axioms.lean} prints the axioms of 130 theorems; each depends only on
+\texttt{LatcComplexity/Axioms.lean} prints the axioms of 130 theorems, among them every theorem of this development that the paper cites; each depends only on
 \lstinline{propext}, \lstinline{Classical.choice} and \lstinline{Quot.sound}, or fewer. A
-cold build, from a fresh clone with no caches, took about seven minutes and 12\,GB of disk at an
+cold build, from a fresh clone downloading precompiled Mathlib, took about seven minutes and 12\,GB of disk at an
 earlier commit; it will be re-measured at the final one.
 
 \subparagraph*{What remains.}
