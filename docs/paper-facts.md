@@ -14,10 +14,10 @@ line counts.
   `countValidMonotone2_mem_SharpP_bin`, was added to the README on 2026-10-31, and so were the
   last three, the counting result of commit `242311b` (`missingCount_eq_weighted_of_le`,
   `length_classStates_le`, `missingCountFixedAttrs_polyTime`); §6 below also records its `_unary`
-  corollary, which the paper draft cites. They include all 24
+  corollary, which the paper draft cites. They include all 25
   theorems the outline's section table now cites, marked "(outline)" below.
 * **Wrong names in the outline: none.** Every name it cites exists exactly as written: the 22
-  first checked, and the 24 its section table cites after the edits of 2026-10-30 and 31. Of four
+  first checked, and the 25 its section table cites after the edits of 2026-10-30 and 31. Of four
   cautions in the next section, two were resolved in the outline and two still apply.
 * **References: 12/15 confirmed.** Three are not found as asked: the Coq Library of Complexity
   Theory has no paper of its own, Karp21 has no Isabelle paper or AFP entry, and complexitylib
@@ -49,7 +49,7 @@ theorems of `Adequacy.lean`", which is not a Lean name; it reads as `mem_Missing
 `mem_Complete_iff` and `coe_missing_map_toList`. All 22 existed exactly as written.
 
 **As the outline stands now (updated 2026-10-31).** After the edits of 2026-10-30, the outline's
-section table cites the 24 names below, by paper section; all exist exactly as written. Compared
+section table cites the 25 names below, by paper section; all exist exactly as written. Compared
 with the first list:
 
 * three names were added: `missingNonempty_finset_npComplete_bin` (replacing the unary
@@ -65,7 +65,9 @@ with the first list:
   `encInstBin` follows by composing with the identity re-encoding, as the proof of
   `countValidMonotone2_oneCallSharpPComplete_bin` does. The count stays at 23;
 * also on 2026-10-31, §4 added `complete_finset_coNPComplete_bin`, the binary form of the
-  completeness result on `Latc.missing`, beside its non-emptiness counterpart: 24 names.
+  completeness result on `Latc.missing`, beside its non-emptiness counterpart: 24 names;
+* and, after commit `242311b`, §6 added `missingCountFixedAttrs_polyTime`, the counting result
+  with at most `k` attributes: 25 names.
 
 | § | Outline name | Full name | File:line | Status |
 |---|---|---|---|---|
@@ -93,6 +95,7 @@ with the first list:
 | 6 | `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:480` | exists, exact name |
 | 6 | `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | exists, exact name |
 | 6 | `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:293` | exists, exact name |
+| 6 | `missingCountFixedAttrs_polyTime` | `Latc.PaperD.General.missingCountFixedAttrs_polyTime` | `LatcComplexity/Tractable.lean:1052` | exists, exact name (added 2026-10-31) |
 
 Cautions. None of these is a wrong name. Cautions 2 and 3 were resolved in the outline on
 2026-10-30; 1 and 4 still apply.
@@ -691,7 +694,7 @@ lemma length_classStates_le (k : ℕ) (I : Inst) :
     (classStates k I).length ≤ (I.numVals + 1) ^ k
 ```
 
-#### `Latc.PaperD.General.missingCountFixedAttrs_polyTime`
+#### `Latc.PaperD.General.missingCountFixedAttrs_polyTime` (outline)
 
 - Exists: yes, `LatcComplexity/Tractable.lean:1052`
 - Reading: For each fixed `k`, |M(T₀)| for tables with at most `k` attributes (any clause constraints, binary domain sizes) is computable exactly in polynomial time under `encInstBin` (the function is zero on instances with more attributes).
