@@ -1,9 +1,9 @@
-# Paper D, first draft
+# Paper D, revised draft
 
 "Machine-Checked Complexity of Decision-Table Completeness in Lean", planned as an ITP 2027
 paper. `main.tex` is the revised draft (2026-10-31), restructured as a regular paper after
 four referee reports, in the LIPIcs class
-`lipics-v2021`, written from this repository at commit `242311b` and from
+`lipics-v2021`, written from this repository at commit `42b9977` and from
 `../docs/paper-facts.md`, which records the statement, file and line of every theorem it cites.
 
 ## Build
