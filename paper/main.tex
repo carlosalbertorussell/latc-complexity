@@ -1,5 +1,5 @@
 % Paper D, revised draft (2026-10-31), restructured as a regular ITP paper after four referee
-% reports. Written from latc-complexity at commit a21b85f (the last commit that changes a Lean
+% reports. Written from latc-complexity at commit 3b6f523 (the last commit that changes a Lean
 % file) and from docs/paper-facts.md, which records every theorem statement, file and line used
 % here. Lean listings are copied from the source up to `:=`.
 %
@@ -368,8 +368,8 @@ Russell~\cite{PaperA} notes that counting the valid states stays \#P-complete wh
 clause is $A_i = 1 \lor A_j = 1$ over domains $\{0,1\}$, citing
 Valiant~\cite{Valiant1979enumeration}. Deciding such instances is easy: with domains
 $\{0,1\}$ and only positive two-literal clauses on existing attributes, the all-ones state is
-valid (a condition on a nonexistent attribute acts as a unit clause, which is still decided in
-polynomial time). So counting cannot
+valid; the shape tests also require every condition to name an existing attribute, so every
+such instance has a missing state (\lstinline{mem_missingNonempty_of_pos2B}). So counting cannot
 be \#P-hard under parsimonious reductions unless P~=~NP, and the right notion is the one-call
 reduction of \Cref{def:onecall}.
 
@@ -601,7 +601,7 @@ quantities the tractability results of \Cref{sec:boundary} are about, are first-
 \label{sec:formal}
 
 \subparagraph*{Trust.}
-The axiom audit prints the axioms of 313 theorems, among them every theorem this paper cites;
+The axiom audit prints the axioms of 318 theorems, among them every theorem this paper cites;
 each uses only \lstinline{propext}, \lstinline{Classical.choice} and \lstinline{Quot.sound}, or
 fewer, and none uses \lstinline{sorryAx}. This shows that no proof is left unfinished and no
 axiom is added. It does not show that the definitions are the intended ones. The trusted base is
@@ -612,7 +612,7 @@ reader need trust only latc-check's definition of the missing set and our map fr
 the table it denotes, each a few lines (\Cref{sec:prelim,sec:encoding}).
 
 \subparagraph*{Engineering.}
-The development has 4\,345 lines of Lean, besides the audit files. Complexitylib's
+The development has 4\,418 lines of Lean, besides the audit files. Complexitylib's
 \lstinline{fun_prop} discharged most composition steps of polynomial-time proofs. Proofs by hand
 were needed where the size of intermediate values matters: the binary product of the domain
 sizes, the enumeration of candidate states (by induction on~$k$), the explicit bounds of
@@ -741,7 +741,7 @@ theorem missingNonemptyFixedAttrs_uniform :
 
 \subparagraph*{Contents.}
 The development is the directory \texttt{LatcComplexity/} of the repository latc-complexity:
-4\,710 lines of Lean in 16 files, 4\,345 without the two axiom-audit files, on top of
+4\,788 lines of Lean in 16 files, 4\,418 without the two axiom-audit files, on top of
 latc-check's model, copied unchanged into \texttt{LatcFormal/}. The README lists every theorem
 with its statement, and \texttt{docs/paper-facts.md} records the file and line of every theorem
 this paper cites.
@@ -755,9 +755,9 @@ repository with a different API.
 \subparagraph*{Build and audit.}
 From a fresh clone, downloading precompiled Mathlib, \texttt{lake build} completed 18\,645 jobs
 with no warnings or errors in about nine minutes on four cores, using 12\,GB of disk, at the
-commit before the last theorem file was added; with that file the build has 18\,647 jobs, again
-clean. The axiom audit (the two files \texttt{Axioms.lean} of \texttt{LatcComplexity/} and of
-its subdirectory \texttt{Valiant/}) prints 313 theorems: 263 use all three standard axioms, 50
+commit before the last theorem file was added; with that file, and with the monotone shape tests
+tightened, the build has 18\,647 jobs, again clean. The axiom audit (the two files \texttt{Axioms.lean} of \texttt{LatcComplexity/} and of
+its subdirectory \texttt{Valiant/}) prints 318 theorems: 268 use all three standard axioms, 50
 fewer, none \lstinline{sorryAx}. The
 development also builds without any change against Complexitylib commit \texttt{b9e6241} on
 Lean \texttt{v4.36.0-rc2} (18\,717 jobs), but the artifact is published with the pin above,
@@ -767,7 +767,8 @@ against which the results were proved.
 The core results took seven commits over about ten hours on 28--29 October 2026. On
 31 October, counting with a fixed number of attributes, the Valiant reduction (1\,140 lines, besides its audit file) and
 the explicit degree (692 lines) were added, the last two in parallel and merged without
-conflicts; then the monotone result for tables with any rows (109 lines).
+conflicts; then the monotone result for tables with any rows, and a check in the monotone shape
+tests that every condition names an existing attribute.
 % Upstream figures from cslib-community/complexitylib, main at ff6ac8e on 2026-10-31; PRs #1653
 % (Lean rc2), #1694 (CSLib and Mathlib on rc2), #1657 (fun_prop clients on rc2). Upstream test:
 % branch claude/upstream-complexitylib-test, Complexitylib b9e6241, 18717 jobs, clean.

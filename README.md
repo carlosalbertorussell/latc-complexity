@@ -214,6 +214,12 @@ another model (first-order reductions, #P via existential second-order logic) as
 `countValidMonotone2` is |𝒱| on instances with domains {0, 1}, clauses of two conditions with value 1
 and T₀ = ∅, and zero on other syntax. This is the convention of Complexitylib's `SharpThreeSAT`.
 
+The shape tests (`pos2B`, and `pos2AnyB` below) also require every condition to name an existing
+attribute (`a.1 < I.1.length`), so on their instances the all-ones state is valid
+(`valid_replicate_one_of_pos2B`, `valid_replicate_one_of_pos2AnyB`) and a missing state always
+exists (`mem_missingNonempty_of_pos2B`): deciding is trivial, which is why hardness needs one-call
+reductions. (Added at `3b6f523`; the theorem statements are unchanged.)
+
 ### Valiant's theorem (`LatcComplexity/Valiant/`, namespace `Latc.PaperD.Valiant`)
 
 One reduction from #SAT to #Monotone-2SAT with a single oracle call, so the hypothesis `hValiant`
@@ -366,7 +372,11 @@ Full audit at the final commit (cold build above): 300 theorems. `LatcComplexity
 `[propext, Quot.sound]`, 6 `[propext]`. None mentions `sorryAx` or any other axiom. The any-T₀
 monotone result (`Valiant/AnyTable.lean`, branch build `8d3cb97`, merged in `a21b85f`) adds 13
 lines to `Valiant/Axioms.lean`: 10 print all three, `pos2AnyB_of_pos2B` prints `[propext]`, and
-`pos2B_eq` and `pos2AnyB_emptyClauseInst` depend on no axioms; 313 in all. The per-name lists below
+`pos2B_eq` and `pos2AnyB_emptyClauseInst` depend on no axioms; 313 in all. The tightened shape
+tests (`3b6f523`, branch build `574b4ee`, 18647 jobs, clean) add 5 more: `LatcComplexity/Axioms.lean`
+224 (192 all three, 17 `[propext, Quot.sound]`, 13 `[propext]`, 2 `[Quot.sound]`) and
+`LatcComplexity/Valiant/Axioms.lean` 94 (76 all three, 9 `[propext, Quot.sound]`, 7 `[propext]`,
+2 none); 318 in all, none with `sorryAx`. The per-name lists below
 are from the earlier builds:
 
 * `LatcComplexity/Axioms.lean`, 220 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`, 46 of

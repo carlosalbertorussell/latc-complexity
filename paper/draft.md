@@ -351,11 +351,11 @@ states stays \#P-complete when every clause is $A_i = 1 \lor A_j = 1$
 over domains $\{0,1\}$, citing Valiant ([Valiant
 1979](#ref-Valiant1979enumeration)). Deciding such instances is easy:
 with domains $\{0,1\}$ and only positive two-literal clauses on existing
-attributes, the all-ones state is valid (a condition on a nonexistent
-attribute acts as a unit clause, which is still decided in polynomial
-time). So counting cannot be \#P-hard under parsimonious reductions
-unless P = NP, and the right notion is the one-call reduction of
-Definition 1.
+attributes, the all-ones state is valid; the shape tests also require
+every condition to name an existing attribute, so every such instance
+has a missing state (`mem_missingNonempty_of_pos2B`). So counting cannot
+be \#P-hard under parsimonious reductions unless P = NP, and the right
+notion is the one-call reduction of Definition 1.
 
 Let *SharpMonotone2SAT* be the number of models of a CNF formula whose
 clauses are all $x_i \lor x_j$, and *countValidMonotone2* the number of
@@ -631,7 +631,7 @@ results of Section 7 are about, are first-class.
 
 #### Trust.
 
-The axiom audit prints the axioms of 313 theorems, among them every
+The axiom audit prints the axioms of 318 theorems, among them every
 theorem this paper cites; each uses only `propext`, `Classical.choice`
 and `Quot.sound`, or fewer, and none uses `sorryAx`. This shows that no
 proof is left unfinished and no axiom is added. It does not show that
@@ -646,7 +646,7 @@ an instance to the table it denotes, each a few lines (Sections 2 and
 
 #### Engineering.
 
-The development has 4 345 lines of Lean, besides the audit files.
+The development has 4 418 lines of Lean, besides the audit files.
 Complexitylib’s `fun_prop` discharged most composition steps of
 polynomial-time proofs. Proofs by hand were needed where the size of
 intermediate values matters: the binary product of the domain sizes, the
@@ -769,7 +769,7 @@ model, a different namespace from the general one below.
 #### Contents.
 
 The development is the directory `LatcComplexity/` of the repository
-latc-complexity: 4 710 lines of Lean in 16 files, 4 345 without the two
+latc-complexity: 4 788 lines of Lean in 16 files, 4 418 without the two
 axiom-audit files, on top of latc-check’s model, copied unchanged into
 `LatcFormal/`. The README lists every theorem with its statement, and
 `docs/paper-facts.md` records the file and line of every theorem this
@@ -788,13 +788,14 @@ separate repository with a different API.
 From a fresh clone, downloading precompiled Mathlib, `lake build`
 completed 18 645 jobs with no warnings or errors in about nine minutes
 on four cores, using 12 GB of disk, at the commit before the last
-theorem file was added; with that file the build has 18 647 jobs, again
-clean. The axiom audit (the two files `Axioms.lean` of `LatcComplexity/`
-and of its subdirectory `Valiant/`) prints 313 theorems: 263 use all
-three standard axioms, 50 fewer, none `sorryAx`. The development also
-builds without any change against Complexitylib commit `b9e6241` on Lean
-`v4.36.0-rc2` (18 717 jobs), but the artifact is published with the pin
-above, against which the results were proved.
+theorem file was added; with that file, and with the monotone shape
+tests tightened, the build has 18 647 jobs, again clean. The axiom audit
+(the two files `Axioms.lean` of `LatcComplexity/` and of its
+subdirectory `Valiant/`) prints 318 theorems: 268 use all three standard
+axioms, 50 fewer, none `sorryAx`. The development also builds without
+any change against Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2`
+(18 717 jobs), but the artifact is published with the pin above, against
+which the results were proved.
 
 #### History.
 
@@ -803,7 +804,8 @@ October 2026. On 31 October, counting with a fixed number of attributes,
 the Valiant reduction (1 140 lines, besides its audit file) and the
 explicit degree (692 lines) were added, the last two in parallel and
 merged without conflicts; then the monotone result for tables with any
-rows (109 lines).
+rows, and a check in the monotone shape tests that every condition names
+an existing attribute.
 
 ## References
 
