@@ -19,9 +19,9 @@ objects. Complementary polynomial-time results locate the hardness: all
 three problems are polynomial without constraints, and with a fixed
 number of attributes, where one machine runs within $c\,(|x|+1)^{dn+d}$
 on instances with $n$ attributes. For monotone two-literal constraints,
-counting the valid states remains \#P-complete under reductions with a
-single oracle call; for this we prove a one-call version of Valiant’s
-theorem on \#Monotone-2SAT in the same Turing-machine model.
+counting the missing combinations remains \#P-complete under reductions
+with a single oracle call; for this we prove a one-call version of
+Valiant’s theorem on \#Monotone-2SAT in the same Turing-machine model.
 
 ## 1 Introduction
 
@@ -77,10 +77,10 @@ Table 1 separates what this paper adds from what it reuses.
 
 4.  **One-call hardness for monotone two-literal counting** (Section 6):
     a definition of one-call reductions in Complexitylib’s model, and a
-    one-call version of Valiant’s theorem, from which counting the valid
-    states (the missing combinations of an empty table) stays
-    \#P-complete under one-call reductions when every constraint is
-    $A_i = 1 \lor A_j = 1$.
+    one-call version of Valiant’s theorem, from which counting the
+    missing combinations stays \#P-complete under one-call reductions
+    when every constraint is $A_i = 1 \lor A_j = 1$, for tables with any
+    rows.
 
 <div class="tabular">
 
@@ -360,18 +360,25 @@ Definition 1.
 Let *SharpMonotone2SAT* be the number of models of a CNF formula whose
 clauses are all $x_i \lor x_j$, and *countValidMonotone2* the number of
 valid states of an instance with domains $\{0,1\}$, clauses of two
-conditions with value 1, and no rows. As with Complexitylib’s \#3SAT,
-both functions are total and return $0$ on inputs of any other shape;
-the shape tests are polynomial-time. Counting valid states of such
-instances is in \#P, and \#Monotone-2SAT reduces to it parsimoniously
-(`countValidMonotone2_mem_SharpP_bin`, `sharpMonotone2SAT_reduces`).
-What remains is the hardness of \#Monotone-2SAT itself.
+conditions with value 1, and no rows. Let *countMissingMonotone2* be the
+same without the condition on rows: the number of missing combinations
+$|M(T_0)|$ of an instance with that domains and constraints and any rows
+(`countMissingMonotone2_eq_card_missing`). As with Complexitylib’s
+\#3SAT, the three functions are total and return $0$ on inputs of any
+other shape; the shape tests are polynomial-time. Both counts are in
+\#P, and \#Monotone-2SAT reduces to each parsimoniously
+(`sharpMonotone2SAT_reduces` and its variant with suffix
+`_countMissing`): the reduction produces either a monotone instance with
+no rows, where the two counts agree, or a fixed instance of the wrong
+shape, where both are $0$. What remains is the hardness of
+\#Monotone-2SAT itself.
 
 <div class="theorem">
 
 <span id="thm:valiant" label="thm:valiant"></span> \#Monotone-2SAT is
-one-call \#P-hard. Hence *countValidMonotone2* is one-call \#P-complete
-under `encInstBin` and `encInst`.
+one-call \#P-hard. Hence *countValidMonotone2* and
+*countMissingMonotone2* are one-call \#P-complete under `encInstBin` and
+`encInst`.
 
 </div>
 
@@ -449,8 +456,9 @@ construction of $\psi$ is polynomial-time; and the oracle is called
 once, on $\psi$ (`toMonotone_polyTime`, `post_polyTime`,
 `sharpSAT_oneCallReducible`). Composing with the parsimonious
 \#P-hardness of \#SAT gives `sharpMonotone2SAT_oneCallSharpPHard`, and
-with the reduction to *countValidMonotone2*, the second half of Theorem
-4. The development also keeps the conditional form,
+with the reductions to *countValidMonotone2* and
+*countMissingMonotone2*, the second half of Theorem 4 (Appendix A). The
+development also keeps the conditional form,
 `countValidMonotone2_oneCallSharpPComplete_bin`, which takes
 \#Monotone-2SAT’s hardness as a hypothesis; Theorem 4 discharges it.
 
@@ -552,8 +560,8 @@ parsimonious
 none & unbounded & P & polynomial-time & –  
 clauses & at most $k$ & P, degree $O(k)$ & polynomial-time, degree
 $O(k)$ & –  
-monotone two-literal, $T_0 = \emptyset$ & unbounded & polynomial &
-one-call \#P-complete & one-call  
+monotone two-literal & unbounded & polynomial & one-call \#P-complete &
+one-call  
 
 </div>
 
@@ -623,7 +631,7 @@ results of Section 7 are about, are first-class.
 
 #### Trust.
 
-The axiom audit prints the axioms of 300 theorems, among them every
+The axiom audit prints the axioms of 313 theorems, among them every
 theorem this paper cites; each uses only `propext`, `Classical.choice`
 and `Quot.sound`, or fewer, and none uses `sorryAx`. This shows that no
 proof is left unfinished and no axiom is added. It does not show that
@@ -638,7 +646,7 @@ an instance to the table it denotes, each a few lines (Sections 2 and
 
 #### Engineering.
 
-The development has 4 236 lines of Lean, besides the audit files.
+The development has 4 345 lines of Lean, besides the audit files.
 Complexitylib’s `fun_prop` discharged most composition steps of
 polynomial-time proofs. Proofs by hand were needed where the size of
 intermediate values matters: the binary product of the domain sizes, the
@@ -670,12 +678,12 @@ finding a missing combination NP-complete, and counting them
 to latc-check’s set-based definitions; without constraints, or with a
 fixed number of attributes, all three are polynomial, with a degree
 linear in the number of attributes. For monotone two-literal
-constraints, counting the valid states stays \#P-complete under one-call
-reductions, by a one-call version of Valiant’s theorem proved in the
-same model. What remains open in the formalisation is the per-$k$
-machine with constants independent of $k$. The one-call reductions and
-the Valiant reduction use only Complexitylib’s notions and could be
-offered upstream.
+constraints, counting the missing combinations stays \#P-complete under
+one-call reductions, for any table, by a one-call version of Valiant’s
+theorem proved in the same model. What remains open in the formalisation
+is the per-$k$ machine with constants independent of $k$. The one-call
+reductions and the Valiant reduction use only Complexitylib’s notions
+and could be offered upstream.
 
 ## Appendix A: Main Lean statements
 
@@ -732,6 +740,10 @@ model, a different namespace from the general one below.
         OneCallSharpPHard encCNF SharpMonotone2SAT
     theorem countValidMonotone2_sharpPComplete_oneCall :
         OneCallSharpPComplete encInstBin countValidMonotone2
+    theorem countMissingMonotone2_eq_card_missing (I : General.Inst) (h : pos2AnyB I = true) :
+        countMissingMonotone2 I = (Latc.missing I.con I.table).card
+    theorem countMissingMonotone2_sharpPComplete_oneCall :
+        OneCallSharpPComplete encInstBin countMissingMonotone2
 
 #### Tractability.
 
@@ -757,7 +769,7 @@ model, a different namespace from the general one below.
 #### Contents.
 
 The development is the directory `LatcComplexity/` of the repository
-latc-complexity: 4 586 lines of Lean in 15 files, 4 236 without the two
+latc-complexity: 4 710 lines of Lean in 16 files, 4 345 without the two
 axiom-audit files, on top of latc-check’s model, copied unchanged into
 `LatcFormal/`. The README lists every theorem with its statement, and
 `docs/paper-facts.md` records the file and line of every theorem this
@@ -775,13 +787,14 @@ separate repository with a different API.
 
 From a fresh clone, downloading precompiled Mathlib, `lake build`
 completed 18 645 jobs with no warnings or errors in about nine minutes
-on four cores, using 12 GB of disk. The axiom audit (the two files
-`Axioms.lean` of `LatcComplexity/` and of its subdirectory `Valiant/`)
-prints 300 theorems: 253 use all three standard axioms, 47 fewer, none
-`sorryAx`. The development also builds without any change against
-Complexitylib commit `b9e6241` on Lean `v4.36.0-rc2` (18 717 jobs), but
-the artifact is published with the pin above, against which the results
-were proved.
+on four cores, using 12 GB of disk, at the commit before the last
+theorem file was added; with that file the build has 18 647 jobs, again
+clean. The axiom audit (the two files `Axioms.lean` of `LatcComplexity/`
+and of its subdirectory `Valiant/`) prints 313 theorems: 263 use all
+three standard axioms, 50 fewer, none `sorryAx`. The development also
+builds without any change against Complexitylib commit `b9e6241` on Lean
+`v4.36.0-rc2` (18 717 jobs), but the artifact is published with the pin
+above, against which the results were proved.
 
 #### History.
 
@@ -789,7 +802,8 @@ The core results took seven commits over about ten hours on 28–29
 October 2026. On 31 October, counting with a fixed number of attributes,
 the Valiant reduction (1 140 lines, besides its audit file) and the
 explicit degree (692 lines) were added, the last two in parallel and
-merged without conflicts.
+merged without conflicts; then the monotone result for tables with any
+rows (109 lines).
 
 ## References
 

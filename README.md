@@ -7,7 +7,8 @@ Lean 4. Completeness of a decision table whose constraints are clauses is coNP-c
 non-emptiness of its missing set M(T₀) is NP-complete, for general finite domains. Both become
 polynomial-time without constraints, or with a fixed number of attributes, and so does counting
 |M(T₀)|; the hardness needs constraints and an unbounded number of attributes together. Counting
-stays #P-complete, under one-call reductions, for monotone two-literal constraints: Valiant's theorem
+|M(T₀)| stays #P-complete, under one-call reductions, for monotone two-literal constraints and any
+T₀: Valiant's theorem
 is proved here in Complexitylib's model, not assumed. These are
 theorems about Turing machines with explicit encodings and polynomial-time bounds, not citations.
 
@@ -58,6 +59,9 @@ branch (`d6980bb`, on top of `242311b`: `Build completed successfully (18627 job
 `43d7e25` in a scratch checkout, where `lake build` ended with `Build completed successfully (18645
 jobs)`, exit code 0, no warnings, no errors. That merge is `cbf016b` on `main`; the commits between
 `43d7e25` and it change documentation only, so its Lean files are those of that build.
+The any-T₀ monotone result (`LatcComplexity/Valiant/AnyTable.lean`) was built on its branch on top
+of `0b9b734`: `Build completed successfully (18647 jobs)`, no warnings, no errors; it was merged
+into `main` (`a21b85f`) without conflicts, adding one file, one import line and audit lines.
 
 Cold build at the final commit (2026-10-31, Linux cloud machine, x86_64, 4 cores, commit `6603497`,
 whose Lean files are those of `cbf016b`; fresh clone, no `~/.elan`, `.lake` or Mathlib cache):
@@ -94,7 +98,7 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Counting` | Boolean domains: counting \|M(T₀)\| is in #P, hence #P-complete |
 | `LatcComplexity.CountingGeneral` | General finite domains: counting \|M(T₀)\| of latc-check's model is #P-complete |
 | `LatcComplexity.Monotone` | Clauses of two conditions Aᵢ = 1, Aⱼ = 1: counting \|𝒱\| is in #P, and one-call #P-complete given Valiant's theorem as a hypothesis |
-| `LatcComplexity.Valiant` | Valiant's theorem in its one-call form, proved: #Monotone-2SAT is one-call #P-hard, so the monotone case is unconditional (`Gadget`, `Counting`, `Pendant`, `OneCall`, `Axioms`) |
+| `LatcComplexity.Valiant` | Valiant's theorem in its one-call form, proved: #Monotone-2SAT is one-call #P-hard, so the monotone case is unconditional, for counting valid states and for counting \|M(T₀)\| with any T₀ (`Gadget`, `Counting`, `Pendant`, `OneCall`, `AnyTable`, `Axioms`) |
 | `LatcComplexity.Binary` | The attribute index of a condition in binary: every theorem above for the encoding `encInstBin` |
 | `LatcComplexity.Tractable` | The tractable side: no constraints, or at most `k` attributes, in polynomial time |
 | `LatcComplexity.ExplicitDegree` | The fixed-attribute bounds with an explicit degree, uniform in `k`: time and space `c · (\|x\| + 1) ^ (d · n + d)` |
@@ -228,8 +232,18 @@ then one-call (`ParsimoniousReducible.trans_oneCall`), from Complexitylib's
 | `sharpMonotone2SAT_oneCallSharpPHard` | `OneCallSharpPHard encCNF SharpMonotone2SAT` |
 | `countValidMonotone2_sharpPComplete_oneCall` | `OneCallSharpPComplete encInstBin countValidMonotone2` |
 | `countValidMonotone2_sharpPComplete_oneCall_unary` | `OneCallSharpPComplete General.encInst countValidMonotone2` |
+| `countMissingMonotone2_eq_card_missing` | `pos2AnyB I = true → countMissingMonotone2 I = (Latc.missing I.con I.table).card` |
+| `sharpMonotone2SAT_reduces_countMissing` | `ParsimoniousReducible encCNF General.encInst SharpMonotone2SAT countMissingMonotone2` |
+| `countMissingMonotone2_sharpPComplete_oneCall` | `OneCallSharpPComplete encInstBin countMissingMonotone2` |
+| `countMissingMonotone2_sharpPComplete_oneCall_unary` | `OneCallSharpPComplete General.encInst countMissingMonotone2` |
 | `sharpSAT_oneCallReducible` | `OneCallReducible encCNF encCNF SharpSAT SharpMonotone2SAT` |
 | `sharpSAT_eq_post` | `SharpSAT φ = post φ (SharpMonotone2SAT (toMonotone φ))` |
+
+`countMissingMonotone2` (`Valiant/AnyTable.lean`) is |M(T₀)| on instances with domains {0, 1} and
+clauses of two conditions with value 1, any T₀ (`pos2AnyB`, which is `pos2B` without its `T₀ = ∅`
+test), and zero on other syntax. Its hardness needs no new reduction: the reduction from
+#Monotone-2SAT produces either a monotone instance with T₀ = ∅, where it agrees with
+`countValidMonotone2`, or `emptyClauseInst`, which fails both shape tests.
 | `toMonotone_polyTime` | `ComputableInPolyTime toMonotone encCNF encCNF` |
 | `post_polyTime` | `ComputableInPolyTime (fun p : CNF ℕ × ℕ => post p.1 p.2) (encPair encCNF encNat) encNat` |
 
@@ -349,8 +363,11 @@ Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound
 Full audit at the final commit (cold build above): 300 theorems. `LatcComplexity/Axioms.lean`, 220:
 188 print `[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
 2 `[Quot.sound]`. `LatcComplexity/Valiant/Axioms.lean`, 80: 65 print all three, 9
-`[propext, Quot.sound]`, 6 `[propext]`. None mentions `sorryAx` or any other axiom. The per-name
-lists below are from the earlier builds:
+`[propext, Quot.sound]`, 6 `[propext]`. None mentions `sorryAx` or any other axiom. The any-T₀
+monotone result (`Valiant/AnyTable.lean`, branch build `8d3cb97`, merged in `a21b85f`) adds 13
+lines to `Valiant/Axioms.lean`: 10 print all three, `pos2AnyB_of_pos2B` prints `[propext]`, and
+`pos2B_eq` and `pos2AnyB_emptyClauseInst` depend on no axioms; 313 in all. The per-name lists below
+are from the earlier builds:
 
 * `LatcComplexity/Axioms.lean`, 220 theorems (72 as before, 21 of `Binary`, 81 of `Tractable`, 46 of
   `ExplicitDegree`). The 46 of `ExplicitDegree` (Gap 3 build, `d6980bb`) each print a subset of

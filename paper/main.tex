@@ -1,5 +1,5 @@
 % Paper D, revised draft (2026-10-31), restructured as a regular ITP paper after four referee
-% reports. Written from latc-complexity at commit 42b9977 (the last commit that changes a Lean
+% reports. Written from latc-complexity at commit a21b85f (the last commit that changes a Lean
 % file) and from docs/paper-facts.md, which records every theorem statement, file and line used
 % here. Lean listings are copied from the source up to `:=`.
 %
@@ -90,7 +90,8 @@ decision-table completion, so the results speak about the original objects. Comp
 polynomial-time results locate the hardness: all three problems are polynomial without
 constraints, and with a fixed number of attributes, where one machine runs within
 $c\,(|x|+1)^{dn+d}$ on instances with $n$ attributes. For monotone two-literal constraints,
-counting the valid states remains \#P-complete under reductions with a single oracle call; for this we prove a
+counting the missing combinations remains \#P-complete under reductions with a single oracle
+call; for this we prove a
 one-call version of Valiant's theorem on \#Monotone-2SAT in the same Turing-machine model.
 \end{abstract}
 
@@ -135,8 +136,8 @@ none on \lstinline{sorry}.
   counting, with an explicit degree linear in the number of attributes.
 \item \textbf{One-call hardness for monotone two-literal counting} (\Cref{sec:monotone}): a
   definition of one-call reductions in Complexitylib's model, and a one-call version of Valiant's
-  theorem, from which counting the valid states (the missing combinations of an empty table)
-  stays \#P-complete under one-call reductions when every constraint is $A_i = 1 \lor A_j = 1$.
+  theorem, from which counting the missing combinations stays \#P-complete under one-call
+  reductions when every constraint is $A_i = 1 \lor A_j = 1$, for tables with any rows.
 \end{enumerate}
 
 \begin{table}[t]
@@ -374,16 +375,22 @@ reduction of \Cref{def:onecall}.
 
 Let \textit{SharpMonotone2SAT} be the number of models of a CNF formula whose clauses are all
 $x_i \lor x_j$, and \textit{countValidMonotone2} the number of valid states of an instance with
-domains $\{0,1\}$, clauses of two conditions with value~1, and no rows. As with Complexitylib's
-\#3SAT, both functions are total and return~$0$ on inputs of any other shape; the shape tests are
-polynomial-time. Counting valid states of such instances is in \#P, and \#Monotone-2SAT reduces
-to it parsimoniously (\lstinline{countValidMonotone2_mem_SharpP_bin},
-\lstinline{sharpMonotone2SAT_reduces}). What remains is the hardness of \#Monotone-2SAT itself.
+domains $\{0,1\}$, clauses of two conditions with value~1, and no rows. Let
+\textit{countMissingMonotone2} be the same without the condition on rows: the number of missing
+combinations $|M(T_0)|$ of an instance with that domains and constraints and any rows
+(\lstinline{countMissingMonotone2_eq_card_missing}). As with Complexitylib's \#3SAT, the three
+functions are total and return~$0$ on inputs of any other shape; the shape tests are
+polynomial-time. Both counts are in \#P, and \#Monotone-2SAT reduces to each
+parsimoniously (\lstinline{sharpMonotone2SAT_reduces} and its variant with suffix
+\lstinline{_countMissing}): the reduction produces either a monotone instance with no rows, where the two counts agree, or a fixed
+instance of the wrong shape, where both are~$0$. What remains is the hardness of \#Monotone-2SAT
+itself.
 
 \begin{theorem}[one-call Valiant]
 \label{thm:valiant}
-\#Monotone-2SAT is one-call \#P-hard. Hence \textit{countValidMonotone2} is one-call
-\#P-complete under \lstinline{encInstBin} and \lstinline{encInst}.
+\#Monotone-2SAT is one-call \#P-hard. Hence \textit{countValidMonotone2} and
+\textit{countMissingMonotone2} are one-call \#P-complete under \lstinline{encInstBin} and
+\lstinline{encInst}.
 \end{theorem}
 
 Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing reductions,
@@ -450,8 +457,9 @@ numbers of polynomially many bits, all polynomial-time in Complexitylib; the con
 $\psi$ is polynomial-time; and the oracle is called once, on~$\psi$
 (\lstinline{toMonotone_polyTime}, \lstinline{post_polyTime}, \lstinline{sharpSAT_oneCallReducible}).
 Composing with the parsimonious \#P-hardness of \#SAT gives
-\lstinline{sharpMonotone2SAT_oneCallSharpPHard}, and with the reduction to
-\textit{countValidMonotone2}, the second half of \Cref{thm:valiant}. The development also keeps
+\lstinline{sharpMonotone2SAT_oneCallSharpPHard}, and with the reductions to
+\textit{countValidMonotone2} and \textit{countMissingMonotone2}, the second half of
+\Cref{thm:valiant} (\Cref{app:statements}). The development also keeps
 the conditional form, \lstinline{countValidMonotone2_oneCallSharpPComplete_bin}, which takes
 \#Monotone-2SAT's hardness as a hypothesis; \Cref{thm:valiant} discharges it.
 
@@ -540,7 +548,7 @@ constraints & attributes & deciding & counting & hardness via \\
 clauses & unbounded & NP-, coNP-complete & \#P-complete & many-one, parsimonious \\
 none & unbounded & P & polynomial-time & -- \\
 clauses & at most $k$ & P, degree $O(k)$ & polynomial-time, degree $O(k)$ & -- \\
-monotone two-literal, $T_0 = \emptyset$ & unbounded & polynomial & one-call \#P-complete & one-call \\
+monotone two-literal & unbounded & polynomial & one-call \#P-complete & one-call \\
 \hline
 \end{tabular}
 \end{table}
@@ -593,7 +601,7 @@ quantities the tractability results of \Cref{sec:boundary} are about, are first-
 \label{sec:formal}
 
 \subparagraph*{Trust.}
-The axiom audit prints the axioms of 300 theorems, among them every theorem this paper cites;
+The axiom audit prints the axioms of 313 theorems, among them every theorem this paper cites;
 each uses only \lstinline{propext}, \lstinline{Classical.choice} and \lstinline{Quot.sound}, or
 fewer, and none uses \lstinline{sorryAx}. This shows that no proof is left unfinished and no
 axiom is added. It does not show that the definitions are the intended ones. The trusted base is
@@ -604,7 +612,7 @@ reader need trust only latc-check's definition of the missing set and our map fr
 the table it denotes, each a few lines (\Cref{sec:prelim,sec:encoding}).
 
 \subparagraph*{Engineering.}
-The development has 4\,236 lines of Lean, besides the audit files. Complexitylib's
+The development has 4\,345 lines of Lean, besides the audit files. Complexitylib's
 \lstinline{fun_prop} discharged most composition steps of polynomial-time proofs. Proofs by hand
 were needed where the size of intermediate values matters: the binary product of the domain
 sizes, the enumeration of candidate states (by induction on~$k$), the explicit bounds of
@@ -630,8 +638,8 @@ Decision-table completeness under clause constraints is coNP-complete, finding a
 combination NP-complete, and counting them \#P-complete, with machine-checked proofs on Turing
 machines that apply to latc-check's set-based definitions; without constraints, or with a fixed
 number of attributes, all three are polynomial, with a degree linear in the number of
-attributes. For monotone two-literal constraints, counting the valid states stays
-\#P-complete under one-call reductions, by a one-call version of Valiant's theorem proved in the same model. What remains
+attributes. For monotone two-literal constraints, counting the missing combinations stays
+\#P-complete under one-call reductions, for any table, by a one-call version of Valiant's theorem proved in the same model. What remains
 open in the formalisation is the per-$k$ machine with constants independent of~$k$. The one-call
 reductions and the Valiant reduction use only Complexitylib's notions and could be offered
 upstream.
@@ -701,6 +709,10 @@ theorem sharpMonotone2SAT_oneCallSharpPHard :
     OneCallSharpPHard encCNF SharpMonotone2SAT
 theorem countValidMonotone2_sharpPComplete_oneCall :
     OneCallSharpPComplete encInstBin countValidMonotone2
+theorem countMissingMonotone2_eq_card_missing (I : General.Inst) (h : pos2AnyB I = true) :
+    countMissingMonotone2 I = (Latc.missing I.con I.table).card
+theorem countMissingMonotone2_sharpPComplete_oneCall :
+    OneCallSharpPComplete encInstBin countMissingMonotone2
 \end{lstlisting}
 
 \subparagraph*{Tractability.}
@@ -729,7 +741,7 @@ theorem missingNonemptyFixedAttrs_uniform :
 
 \subparagraph*{Contents.}
 The development is the directory \texttt{LatcComplexity/} of the repository latc-complexity:
-4\,586 lines of Lean in 15 files, 4\,236 without the two axiom-audit files, on top of
+4\,710 lines of Lean in 16 files, 4\,345 without the two axiom-audit files, on top of
 latc-check's model, copied unchanged into \texttt{LatcFormal/}. The README lists every theorem
 with its statement, and \texttt{docs/paper-facts.md} records the file and line of every theorem
 this paper cites.
@@ -742,10 +754,11 @@ repository with a different API.
 
 \subparagraph*{Build and audit.}
 From a fresh clone, downloading precompiled Mathlib, \texttt{lake build} completed 18\,645 jobs
-with no warnings or errors in about nine minutes on four cores, using 12\,GB of disk. The axiom
-audit (the two files \texttt{Axioms.lean} of \texttt{LatcComplexity/} and of its subdirectory
-\texttt{Valiant/}) prints
-300 theorems: 253 use all three standard axioms, 47 fewer, none \lstinline{sorryAx}. The
+with no warnings or errors in about nine minutes on four cores, using 12\,GB of disk, at the
+commit before the last theorem file was added; with that file the build has 18\,647 jobs, again
+clean. The axiom audit (the two files \texttt{Axioms.lean} of \texttt{LatcComplexity/} and of
+its subdirectory \texttt{Valiant/}) prints 313 theorems: 263 use all three standard axioms, 50
+fewer, none \lstinline{sorryAx}. The
 development also builds without any change against Complexitylib commit \texttt{b9e6241} on
 Lean \texttt{v4.36.0-rc2} (18\,717 jobs), but the artifact is published with the pin above,
 against which the results were proved.
@@ -754,7 +767,7 @@ against which the results were proved.
 The core results took seven commits over about ten hours on 28--29 October 2026. On
 31 October, counting with a fixed number of attributes, the Valiant reduction (1\,140 lines, besides its audit file) and
 the explicit degree (692 lines) were added, the last two in parallel and merged without
-conflicts.
+conflicts; then the monotone result for tables with any rows (109 lines).
 % Upstream figures from cslib-community/complexitylib, main at ff6ac8e on 2026-10-31; PRs #1653
 % (Lean rc2), #1694 (CSLib and Mathlib on rc2), #1657 (fun_prop clients on rc2). Upstream test:
 % branch claude/upstream-complexitylib-test, Complexitylib b9e6241, 18717 jobs, clean.
