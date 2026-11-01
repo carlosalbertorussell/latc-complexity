@@ -1,8 +1,9 @@
 # Releasing latc-complexity v1.0
 
 Steps for the release that Paper D (Journal of Automated Reasoning version, `paper/jar/main.tex`)
-cites as its artifact. **Nothing here has been done yet.** The repository is private; the paper
-cites the archive as `[DOI at release]`. Each step needs the author's approval, and the steps
+cites as its artifact. **Steps 0–3 were done on 2026-11-01** (tag `v1.0` on commit `6a008ef`;
+build and audit recorded in the README). The repository is private; the paper cites the archive
+as `[DOI at release]`. Each step needs the author's approval, and the steps
 that publish something (4 and 5) cannot be undone.
 
 ## 0. Preconditions

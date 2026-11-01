@@ -36,13 +36,32 @@ lake exe cache get
 lake build
 ```
 
-The steps for the v1.0 release (tag, cold build and audit at the tag, making the repository
-public, Zenodo archive) are in `RELEASE.md`; none has been done yet.
+The steps for the v1.0 release are in `RELEASE.md`. Steps 0–3 (preconditions, the tag `v1.0` on
+commit `6a008ef`, the cold build and the full audit at the tag) were done on 2026-11-01; the
+repository is not public yet and has no Zenodo archive yet.
 
 `lake exe cache get` downloads the precompiled Mathlib. CSLib and the Complexitylib modules that
 are imported are then compiled from source, which takes a while on the first build.
 
-Current verification (JAR revision, 2026-11-01): cold build of commit `0ea3170` on 2026-11-01,
+Verification at the tag `v1.0` (commit `6a008ef`, 2026-11-01): cold build on a Linux cloud
+machine, x86_64, 4 cores, 15 GB RAM, Ubuntu 24.04, in a fresh clone with an empty `HOME` (no
+`~/.elan`, `.lake` or Mathlib cache), following `RELEASE.md` §2–3 and timed with `date` stamps.
+Lean 4.36.0-rc1 (commit `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`), Lake 5.0.0, elan 4.2.4.
+Clone 1 s; elan install 1 s; `lake exe cache get` 97 s, including the toolchain download (all 9047
+Mathlib files from the cache); `lake build` 213 s, `Build completed successfully (18651 jobs)`,
+exit code 0, no warnings, no errors, compiling from source 27 CSLib and 212 Complexitylib modules
+and the 30 repository modules; the full axiom audit (below) 14 s. About 5.5 minutes in all. Disk:
+the clone with `.lake` 7.8 GB, `~/.elan` 3.1 GB, `~/.cache/mathlib` 453 MB, 11.4 GB in all. The
+Lean files and the pins of `6a008ef` are those of `0ea3170`, the build the JAR version of Paper D
+reports.
+
+### History of builds
+
+The builds below are the development's history, moved here from the paper. The pin `b7acfc2` was
+kept throughout; Complexitylib had just been rewritten on CSLib, and its earlier version, which
+Paper A cites, is a separate repository with a different API.
+
+JAR revision (2026-11-01): cold build of commit `0ea3170` on 2026-11-01,
 Linux cloud machine, x86_64, 4 cores, in a fresh clone with an empty `HOME` (no `~/.elan`, `.lake`
 or Mathlib cache), Lean 4.36.0-rc1 (commit `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`), Lake 5.0.0,
 elan 4.2.4. elan install 1 s; `lake exe cache get` 103 s, including the toolchain (all 9047 Mathlib
@@ -50,12 +69,6 @@ files from the cache); `lake build` 217 s, `Build completed successfully (18651 
 no warnings, no errors, compiling from source 239 CSLib and Complexitylib modules and the 30
 repository modules; the audit (below) 13 s. Disk: the clone with `.lake` 8.0 GB, `~/.elan` 3.1 GB,
 `~/.cache/mathlib` 453 MB. This is the build the JAR version of Paper D reports.
-
-### History of builds
-
-The builds below are the development's history, moved here from the paper. The pin `b7acfc2` was
-kept throughout; Complexitylib had just been rewritten on CSLib, and its earlier version, which
-Paper A cites, is a separate repository with a different API.
 
 Verification status (2026-10-31, Linux cloud machine, x86_64): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0, elan 4.2.4), with the dependencies above,
@@ -400,7 +413,8 @@ The planning note `docs/boundary.md` lists the same statements.
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here.
 
-Full audit at the JAR revision (Lean files of `0ea3170`, 2026-11-01), run as
+Full audit at the tag `v1.0` (commit `6a008ef`, whose Lean files are those of `0ea3170`),
+2026-11-01, in the cold build above; the same counts as at the JAR revision. Run as
 `lake env lean` on each audit file: 397 answers. `LatcComplexity/Axioms.lean` 234: 202 print
 `[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
 2 `[Quot.sound]` (the ten theorems of `Restricted.lean` print all three).
