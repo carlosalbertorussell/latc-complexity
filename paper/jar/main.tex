@@ -114,8 +114,7 @@
 % [rev D6]
 \abstract{%
 A decision table is complete when every combination of its declared condition values that the
-domain constraints allow is covered by a row. The classification below was argued on paper in
-the author's earlier work, which is under review; every proof here is self-contained. We prove
+domain constraints allow is covered by a row. We prove
 in Lean~4, over multi-tape Turing machines and with no unproved assumptions beyond the
 definitions themselves, that for finite-domain decision tables with clause constraints and rows
 that are complete condition tuples, deciding whether some combination is missing is
@@ -129,7 +128,8 @@ $n$ attributes, for some constants $c$ and~$e$. For monotone two-literal constra
 the missing combinations remains \#P-complete under reductions with a single oracle call; for
 this we give a new formal proof, in the same Turing-machine model, of a one-call version of
 Valiant's theorem on \#Monotone-2SAT. We also report how the development was engineered and how
-an AI system was used to write it.}
+an AI system was used to write it. The classification was first argued on paper in the
+author's earlier work, which is under review; every proof here is self-contained.}
 
 % [rev D6] Six keywords (JAR asks for 4-6).
 \keywords{decision tables, completeness, coNP-completeness, \#P-completeness, Lean 4,
@@ -1126,7 +1126,6 @@ repository's history; JAR asks that such use be documented in the methods of the
   and a referee read of the JAR version that led to the present revision. All of these reports
   were produced by AI agents; none was written by a person. The AI system also
   searched for related work and checked bibliographic records against the publishers' records.
-  [AUTHOR: confirm that you verified every reference yourself.]
 \item \emph{Accountability.} The author takes responsibility for the content of the paper and of
   the development. An AI system does not meet the criteria for authorship and is not an author.
   [AUTHOR TO APPROVE]
