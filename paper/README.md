@@ -55,6 +55,13 @@ guidelines (read 2026-11-01): single-blind review, no page limit stated, an abst
 words, 4–6 keywords, a Statements and Declarations section, use of LLMs documented in the methods,
 a data availability statement, numbered references with DOIs, LaTeX source and PDF.
 
+`jar/submission/` holds the upload package for Springer's submission system, built on 2026-11-01
+at commit `c76fbfc` with the same toolchain (32 pages, the same warnings as above):
+`PaperD-JAR.pdf`, `PaperD-JAR-source.zip` (a self-contained source with the class, the style,
+both `.bib` files and the generated `.bbl`, compiled from an empty directory with `pdflatex`
+alone) and `UPLOAD.md` (what to upload where, and the metadata for the form). The cover letter
+is supplied by the author separately and is not in the repository.
+
 To redo the fidelity check of the earlier, generated version, build the LIPIcs version as below and run
 
 ```bash
