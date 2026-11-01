@@ -2,6 +2,9 @@
 
 Checked 2026-10-29 against commit `011cd1a` of latc-complexity, for Paper D, "Machine-Checked
 Complexity of Decision-Table Completeness in Lean" (ITP 2027). No Lean file was changed.
+Updated 2026-11-01 for the JAR revision (branch `jar-revision`, Lean files of `0ea3170`): the
+section "JAR revision" at the end lists every name the revised paper cites, fully qualified, and
+the sources read for it.
 Updated 2026-10-31 for commits `a21b85f` and `3b6f523` (the monotone result for any T₀ and the
 tightened shape tests): their §5 entries, the outline names (31) and the line counts; and after two
 referee reads of the paper, the summary and the references added after them.
@@ -1359,3 +1362,226 @@ Two points for the novelty claim:
   the tautology problem for formulas in disjunctive normal form, coNP-complete", citing Cook.
   Paper D's tractable side (no constraints, in P) is about explicit condition tuples, not compact
   rules, so the two agree. Paper D should say so, or a reader may see a contradiction.
+
+## JAR revision (2026-11-01): every name the paper cites
+
+Generated from `paper/jar/main.tex` on branch `jar-revision` (Lean files of commit `0ea3170`):
+every Lean name in a `\lstinline` or a listing of the paper, with its fully qualified name, file and
+line. Names that occur twice in the repository (the Boolean model in `Latc.PaperD` and the general
+model in `Latc.PaperD.General`) are listed with both; the paper means the `General` one except in
+Appendix C, which names the Boolean ones in full. Library files are given relative to
+`.lake/packages/` at the pinned commits (Complexitylib `b7acfc2`, CSLib `f4a4725`, Mathlib
+`625d891`). Not listed: Lean's axioms (`propext`, `Classical.choice`, `Quot.sound`, `sorryAx`), the
+keyword `sorry`, Lean core types (`Fin`, `Finset`), the tactic `fun_prop` (Mathlib) and the
+suffixes `_bin` and `_unary`.
+
+| Name in the paper | Fully qualified name | File:line | Source |
+|---|---|---|---|
+| `allSections` | `Latc.PaperD.General.allSections` | `LatcComplexity/ExplicitDegree.lean:170` | repository |
+| `allSections_inO` | `Latc.PaperD.General.allSections_inO` | `LatcComplexity/ExplicitDegree.lean:291` | repository |
+| `BoolEmpty` | `Latc.PaperD.General.BoolEmpty` | `LatcComplexity/Restricted.lean:32` | repository |
+| `checkBin_polyTime` | `Latc.PaperD.General.checkBin_polyTime` | `LatcComplexity/Binary.lean:80` | repository |
+| `coe_missing_map_toList` | `Latc.PaperD.General.coe_missing_map_toList` | `LatcComplexity/Adequacy.lean:119` | repository |
+| `Complete` | `Latc.PaperD.General.Complete` | `LatcComplexity/General.lean:62` | repository |
+| `Complete_coNPComplete` | `Latc.PaperD.General.Complete_coNPComplete` | `LatcComplexity/General.lean:202` | repository |
+| `Complete_coNPComplete` | `Latc.PaperD.Complete_coNPComplete` | `LatcComplexity/Bridge.lean:138` | repository |
+| `Complete_coNPComplete_bin` | `Latc.PaperD.General.Complete_coNPComplete_bin` | `LatcComplexity/Binary.lean:107` | repository |
+| `complete_finset_coNPComplete` | `Latc.PaperD.General.complete_finset_coNPComplete` | `LatcComplexity/Adequacy.lean:145` | repository |
+| `complete_finset_coNPComplete_bin` | `Latc.PaperD.General.complete_finset_coNPComplete_bin` | `LatcComplexity/Binary.lean:119` | repository |
+| `CompleteBoolEmpty` | `Latc.PaperD.General.CompleteBoolEmpty` | `LatcComplexity/Restricted.lean:55` | repository |
+| `CompleteBoolEmpty_coNPHard_bin` | `Latc.PaperD.General.CompleteBoolEmpty_coNPHard_bin` | `LatcComplexity/Restricted.lean:75` | repository |
+| `completeFixedAttrs_mem_P` | `Latc.PaperD.General.completeFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:480` | repository |
+| `completeFixedAttrs_mem_P_unary` | `Latc.PaperD.General.completeFixedAttrs_mem_P_unary` | `LatcComplexity/Tractable.lean:1086` | repository |
+| `completeNoConstraints_mem_P` | `Latc.PaperD.General.completeNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:196` | repository |
+| `completeNoConstraints_mem_P_unary` | `Latc.PaperD.General.completeNoConstraints_mem_P_unary` | `LatcComplexity/Tractable.lean:1073` | repository |
+| `ComputableTidilyInO` | `Turing.MultiTapeTM.ComputableTidilyInO` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Complexity/BigO.lean:50` | complexitylib |
+| `ComputableTidilyInPolyTime.getElem?` | `Turing.MultiTapeTM.ComputableTidilyInPolyTime.getElem?` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Complexity/PolyTime/List.lean:686` | complexitylib |
+| `ComputableTidilyInTimeAndSpace` | `Turing.MultiTapeTM.ComputableTidilyInTimeAndSpace` | `cslib/Cslib/Computability/Machines/Turing/MultiTape/Plumbing/Tidy/Defs.lean:95` | cslib |
+| `Cond` | `Latc.PaperD.General.Cond` | `LatcComplexity/General.lean:37` | repository |
+| `Cond` | `Latc.Prop5.Cond` | `LatcFormal/Prop5Reduction.lean:77` | repository |
+| `CondHolds` | `Latc.PaperD.General.CondHolds` | `LatcComplexity/General.lean:51` | repository |
+| `countMissing_eq_sharpSAT` | `Latc.PaperD.countMissing_eq_sharpSAT` | `LatcComplexity/Counting.lean:104` | repository |
+| `countMissingMonotone2` | `Latc.PaperD.Valiant.countMissingMonotone2` | `LatcComplexity/Valiant/AnyTable.lean:34` | repository |
+| `countMissingMonotone2_eq_card_missing` | `Latc.PaperD.Valiant.countMissingMonotone2_eq_card_missing` | `LatcComplexity/Valiant/AnyTable.lean:38` | repository |
+| `countMissingMonotone2_sharpPComplete_oneCall` | `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall` | `LatcComplexity/Valiant/AnyTable.lean:112` | repository |
+| `countMissingMonotone2_sharpPComplete_oneCall_unary` | `Latc.PaperD.Valiant.countMissingMonotone2_sharpPComplete_oneCall_unary` | `LatcComplexity/Valiant/AnyTable.lean:119` | repository |
+| `countValidMonotone2` | `Latc.PaperD.General.countValidMonotone2` | `LatcComplexity/Monotone.lean:117` | repository |
+| `countValidMonotone2_oneCallSharpPComplete_bin` | `Latc.PaperD.General.countValidMonotone2_oneCallSharpPComplete_bin` | `LatcComplexity/Binary.lean:199` | repository |
+| `countValidMonotone2_sharpPComplete_oneCall` | `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall` | `LatcComplexity/Valiant/OneCall.lean:191` | repository |
+| `countValidMonotone2_sharpPComplete_oneCall_unary` | `Latc.PaperD.Valiant.countValidMonotone2_sharpPComplete_oneCall_unary` | `LatcComplexity/Valiant/OneCall.lean:196` | repository |
+| `digit` | `Latc.PaperD.Valiant.digit` | `LatcComplexity/Valiant/OneCall.lean:29` | repository |
+| `encInst` | `Latc.PaperD.General.encInst` | `LatcComplexity/General.lean:43` | repository |
+| `encInst` | `Latc.PaperD.encInst` | `LatcComplexity/Bridge.lean:45` | repository |
+| `encInst_to_encInstBin_polyTime` | `Latc.PaperD.General.encInst_to_encInstBin_polyTime` | `LatcComplexity/Binary.lean:31` | repository |
+| `encInstBin` | `Latc.PaperD.General.encInstBin` | `LatcComplexity/Binary.lean:26` | repository |
+| `encNat` | `Turing.MultiTapeTM.encNat` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Encodings/Nat/Bits.lean:28` | complexitylib |
+| `encUnary` | `Turing.MultiTapeTM.encUnary` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Encodings/Unary.lean:19` | complexitylib |
+| `exists_missing_candidate_iff` | `Latc.PaperD.General.exists_missing_candidate_iff` | `LatcComplexity/Tractable.lean:399` | repository |
+| `foldlWithInput_of_bounded_growth` | `Turing.MultiTapeTM.ComputableInPolyTime.foldlWithInput_of_bounded_growth` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Internal/PolyTimeLoops.lean:284` | complexitylib |
+| `foldlWithInput_of_bounded_growth` | `Turing.MultiTapeTM.ComputableTidilyInPolyTime.foldlWithInput_of_bounded_growth` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Complexity/PolyTime/Fold.lean:175` | complexitylib |
+| `fromSAT_mem_boolEmpty` | `Latc.PaperD.General.fromSAT_mem_boolEmpty` | `LatcComplexity/Restricted.lean:38` | repository |
+| `fromSAT_polyTime` | `Latc.PaperD.General.fromSAT_polyTime` | `LatcComplexity/General.lean:142` | repository |
+| `fromSAT_polyTime` | `Latc.PaperD.fromSAT_polyTime` | `LatcComplexity/Bridge.lean:59` | repository |
+| `General.fromSAT_polyTime` | `Latc.PaperD.General.fromSAT_polyTime` | `LatcComplexity/General.lean:142` | repository |
+| `holdsAll_eq_eval` | `Latc.PaperD.holdsAll_eq_eval` | `LatcComplexity/Bridge.lean:29` | repository |
+| `InDomains` | `Latc.PaperD.General.InDomains` | `LatcComplexity/General.lean:48` | repository |
+| `inO_pow_of_polyTime` | `Latc.PaperD.General.inO_pow_of_polyTime` | `LatcComplexity/ExplicitDegree.lean:142` | repository |
+| `Inst` | `Latc.PaperD.General.Inst` | `LatcComplexity/General.lean:40` | repository |
+| `Inst` | `Latc.PaperD.Inst` | `LatcComplexity/Bridge.lean:42` | repository |
+| `Inst.con` | `Latc.PaperD.General.Inst.con` | `LatcComplexity/Adequacy.lean:70` | repository |
+| `Inst.Dom` | `Latc.PaperD.General.Inst.Dom` | `LatcComplexity/Adequacy.lean:33` | repository |
+| `Inst.n` | `Latc.PaperD.General.Inst.n` | `LatcComplexity/Adequacy.lean:30` | repository |
+| `Inst.table` | `Latc.PaperD.General.Inst.table` | `LatcComplexity/Adequacy.lean:77` | repository |
+| `Inst.toList` | `Latc.PaperD.General.Inst.toList` | `LatcComplexity/Adequacy.lean:36` | repository |
+| `Latc.PaperD.Complete_coNPComplete` | `Latc.PaperD.Complete_coNPComplete` | `LatcComplexity/Bridge.lean:138` | repository |
+| `Latc.PaperD.countMissing_sharpPComplete` | `Latc.PaperD.countMissing_sharpPComplete` | `LatcComplexity/Counting.lean:137` | repository |
+| `Latc.PaperD.MissingNonempty_npComplete` | `Latc.PaperD.MissingNonempty_npComplete` | `LatcComplexity/Bridge.lean:133` | repository |
+| `length_candidateStates_le` | `Latc.PaperD.General.length_candidateStates_le` | `LatcComplexity/Tractable.lean:293` | repository |
+| `length_classStates_le` | `Latc.PaperD.General.length_classStates_le` | `LatcComplexity/Tractable.lean:857` | repository |
+| `length_encList_le_of_inDomains` | `Latc.PaperD.General.length_encList_le_of_inDomains` | `LatcComplexity/General.lean:111` | repository |
+| `length_state_le` | `Latc.PaperD.General.length_state_le` | `LatcComplexity/ExplicitDegree.lean:216` | repository |
+| `listGetD_binary` | `Turing.MultiTapeTM.ComputableInPolyTime.listGetD_binary` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Internal/PolyTimeListBinaryLookup.lean:44` | complexitylib |
+| `listGetD_binary` | `Turing.MultiTapeTM.ComputableTidilyInPolyTime.listGetD_binary` | `complexitylib/Complexity/Computability/Machines/Turing/MultiTape/Complexity/PolyTime/List.lean:750` | complexitylib |
+| `mem_Complete_iff` | `Latc.PaperD.General.mem_Complete_iff` | `LatcComplexity/Adequacy.lean:113` | repository |
+| `mem_MissingNonempty_iff` | `Latc.PaperD.General.mem_MissingNonempty_iff` | `LatcComplexity/Adequacy.lean:101` | repository |
+| `mem_missingNonempty_of_pos2B` | `Latc.PaperD.General.mem_missingNonempty_of_pos2B` | `LatcComplexity/Monotone.lean:152` | repository |
+| `mem_P_of_mem_P_bin` | `Latc.PaperD.General.mem_P_of_mem_P_bin` | `LatcComplexity/Tractable.lean:1069` | repository |
+| `mem_SharpP_of_polyTime_length` | `Cslib.Complexity.mem_SharpP_of_polyTime_length` | `complexitylib/Complexity/Computability/Complexity/Classes/SharpP/Closure.lean:237` | complexitylib |
+| `missing` | `Latc.missing` | `LatcFormal/Basic.lean:37` | repository |
+| `missingCount` | `Latc.PaperD.General.missingCount` | `LatcComplexity/CountingGeneral.lean:25` | repository |
+| `missingCount_eq_acceptCount` | `Latc.PaperD.General.missingCount_eq_acceptCount` | `LatcComplexity/CountingGeneral.lean:128` | repository |
+| `missingCount_eq_of_noConstraints` | `Latc.PaperD.General.missingCount_eq_of_noConstraints` | `LatcComplexity/Tractable.lean:103` | repository |
+| `missingCount_eq_weighted_of_le` | `Latc.PaperD.General.missingCount_eq_weighted_of_le` | `LatcComplexity/Tractable.lean:840` | repository |
+| `missingCount_sharpPComplete` | `Latc.PaperD.General.missingCount_sharpPComplete` | `LatcComplexity/CountingGeneral.lean:259` | repository |
+| `missingCount_sharpPComplete_bin` | `Latc.PaperD.General.missingCount_sharpPComplete_bin` | `LatcComplexity/Binary.lean:161` | repository |
+| `missingCountBoolEmpty` | `Latc.PaperD.General.missingCountBoolEmpty` | `LatcComplexity/Restricted.lean:90` | repository |
+| `missingCountBoolEmpty_sharpPHard_bin` | `Latc.PaperD.General.missingCountBoolEmpty_sharpPHard_bin` | `LatcComplexity/Restricted.lean:99` | repository |
+| `missingCountFixedAttrs_polyTime` | `Latc.PaperD.General.missingCountFixedAttrs_polyTime` | `LatcComplexity/Tractable.lean:1052` | repository |
+| `missingCountFixedAttrs_polyTime_unary` | `Latc.PaperD.General.missingCountFixedAttrs_polyTime_unary` | `LatcComplexity/Tractable.lean:1094` | repository |
+| `missingCountNoConstraints_polyTime` | `Latc.PaperD.General.missingCountNoConstraints_polyTime` | `LatcComplexity/Tractable.lean:165` | repository |
+| `missingCountNoConstraints_polyTime_unary` | `Latc.PaperD.General.missingCountNoConstraints_polyTime_unary` | `LatcComplexity/Tractable.lean:1081` | repository |
+| `MissingNonempty` | `Latc.PaperD.General.MissingNonempty` | `LatcComplexity/General.lean:58` | repository |
+| `MissingNonempty` | `Latc.PaperD.MissingNonempty` | `LatcComplexity/Bridge.lean:51` | repository |
+| `missingNonempty_explicitDegree` | `Latc.PaperD.General.missingNonempty_explicitDegree` | `LatcComplexity/ExplicitDegree.lean:601` | repository |
+| `missingNonempty_finset_npComplete` | `Latc.PaperD.General.missingNonempty_finset_npComplete` | `LatcComplexity/Adequacy.lean:136` | repository |
+| `missingNonempty_finset_npComplete_bin` | `Latc.PaperD.General.missingNonempty_finset_npComplete_bin` | `LatcComplexity/Binary.lean:111` | repository |
+| `MissingNonempty_npComplete` | `Latc.PaperD.General.MissingNonempty_npComplete` | `LatcComplexity/General.lean:197` | repository |
+| `MissingNonempty_npComplete` | `Latc.PaperD.MissingNonempty_npComplete` | `LatcComplexity/Bridge.lean:133` | repository |
+| `MissingNonempty_npComplete_bin` | `Latc.PaperD.General.MissingNonempty_npComplete_bin` | `LatcComplexity/Binary.lean:103` | repository |
+| `MissingNonemptyBoolEmpty` | `Latc.PaperD.General.MissingNonemptyBoolEmpty` | `LatcComplexity/Restricted.lean:52` | repository |
+| `MissingNonemptyBoolEmpty_npHard_bin` | `Latc.PaperD.General.MissingNonemptyBoolEmpty_npHard_bin` | `LatcComplexity/Restricted.lean:71` | repository |
+| `missingNonemptyFixedAttrs_mem_P` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P` | `LatcComplexity/Tractable.lean:468` | repository |
+| `missingNonemptyFixedAttrs_mem_P_unary` | `Latc.PaperD.General.missingNonemptyFixedAttrs_mem_P_unary` | `LatcComplexity/Tractable.lean:1090` | repository |
+| `missingNonemptyFixedAttrs_uniform` | `Latc.PaperD.General.missingNonemptyFixedAttrs_uniform` | `LatcComplexity/ExplicitDegree.lean:627` | repository |
+| `missingNonemptyNoConstraints_mem_P` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P` | `LatcComplexity/Tractable.lean:208` | repository |
+| `missingNonemptyNoConstraints_mem_P_unary` | `Latc.PaperD.General.missingNonemptyNoConstraints_mem_P_unary` | `LatcComplexity/Tractable.lean:1077` | repository |
+| `missingNonemptyPromise` | `Latc.PaperD.General.missingNonemptyPromise` | `LatcComplexity/Restricted.lean:79` | repository |
+| `missingNonemptyPromise_npHard_bin` | `Latc.PaperD.General.missingNonemptyPromise_npHard_bin` | `LatcComplexity/Restricted.lean:83` | repository |
+| `missingNonemptyWithBound_explicitDegree` | `Latc.PaperD.General.missingNonemptyWithBound_explicitDegree` | `LatcComplexity/ExplicitDegree.lean:655` | repository |
+| `modelCount_eq_card` | `Latc.PaperD.Valiant.modelCount_eq_card` | `LatcComplexity/Valiant/Counting.lean:481` | repository |
+| `modelCount_psi` | `Latc.PaperD.Valiant.modelCount_psi` | `LatcComplexity/Valiant/Pendant.lean:115` | repository |
+| `monotone2B` | `Latc.PaperD.General.monotone2B` | `LatcComplexity/Monotone.lean:102` | repository |
+| `mul_pow_le_pow_add` | `Latc.PaperD.General.mul_pow_le_pow_add` | `LatcComplexity/ExplicitDegree.lean:42` | repository |
+| `OneCallReducible` | `Latc.PaperD.General.OneCallReducible` | `LatcComplexity/Monotone.lean:52` | repository |
+| `OneCallSharpPComplete` | `Latc.PaperD.General.OneCallSharpPComplete` | `LatcComplexity/Monotone.lean:63` | repository |
+| `OneCallSharpPHard` | `Latc.PaperD.General.OneCallSharpPHard` | `LatcComplexity/Monotone.lean:59` | repository |
+| `OneCallSharpPHard.trans_parsimonious` | `Latc.PaperD.General.OneCallSharpPHard.trans_parsimonious` | `LatcComplexity/Monotone.lean:88` | repository |
+| `ParsimoniousReducible.oneCallReducible` | `Latc.PaperD.General.ParsimoniousReducible.oneCallReducible` | `LatcComplexity/Monotone.lean:67` | repository |
+| `ParsimoniousReducible.trans_oneCall` | `Latc.PaperD.Valiant.ParsimoniousReducible.trans_oneCall` | `LatcComplexity/Valiant/OneCall.lean:170` | repository |
+| `pipeline_inO` | `Latc.PaperD.General.pipeline_inO` | `LatcComplexity/ExplicitDegree.lean:345` | repository |
+| `pos2AnyB` | `Latc.PaperD.Valiant.pos2AnyB` | `LatcComplexity/Valiant/AnyTable.lean:27` | repository |
+| `pos2AnyB_polyTime_bin` | `Latc.PaperD.Valiant.pos2AnyB_polyTime_bin` | `LatcComplexity/Valiant/AnyTable.lean:89` | repository |
+| `pos2B` | `Latc.PaperD.General.pos2B` | `LatcComplexity/Monotone.lean:109` | repository |
+| `pos2B_polyTime_bin` | `Latc.PaperD.General.pos2B_polyTime_bin` | `LatcComplexity/Binary.lean:185` | repository |
+| `post_polyTime` | `Latc.PaperD.Valiant.post_polyTime` | `LatcComplexity/Valiant/Gadget.lean:207` | repository |
+| `satisfiable_decode_iff` | `Latc.PaperD.satisfiable_decode_iff` | `LatcComplexity/Bridge.lean:35` | repository |
+| `SharpMonotone2SAT` | `Latc.PaperD.General.SharpMonotone2SAT` | `LatcComplexity/Monotone.lean:105` | repository |
+| `sharpMonotone2SAT_oneCallSharpPHard` | `Latc.PaperD.Valiant.sharpMonotone2SAT_oneCallSharpPHard` | `LatcComplexity/Valiant/OneCall.lean:184` | repository |
+| `sharpMonotone2SAT_reduces` | `Latc.PaperD.General.sharpMonotone2SAT_reduces` | `LatcComplexity/Monotone.lean:214` | repository |
+| `sharpMonotone2SAT_reduces_countMissing` | `Latc.PaperD.Valiant.sharpMonotone2SAT_reduces_countMissing` | `LatcComplexity/Valiant/AnyTable.lean:77` | repository |
+| `SharpPHard.oneCallSharpPHard` | `Latc.PaperD.General.SharpPHard.oneCallSharpPHard` | `LatcComplexity/Monotone.lean:74` | repository |
+| `sharpSAT_eq_missingCount` | `Latc.PaperD.General.sharpSAT_eq_missingCount` | `LatcComplexity/CountingGeneral.lean:205` | repository |
+| `sharpSAT_eq_post` | `Latc.PaperD.Valiant.sharpSAT_eq_post` | `LatcComplexity/Valiant/OneCall.lean:140` | repository |
+| `sharpSAT_oneCallReducible` | `Latc.PaperD.Valiant.sharpSAT_oneCallReducible` | `LatcComplexity/Valiant/OneCall.lean:165` | repository |
+| `timeAndSpace_of_inO_xp` | `Latc.PaperD.General.timeAndSpace_of_inO_xp` | `LatcComplexity/ExplicitDegree.lean:122` | repository |
+| `TM2ComputableInPolyTime` | `Turing.TM2ComputableInPolyTime` | `mathlib/Mathlib/Computability/TuringMachine/Computable.lean:174` | mathlib |
+| `toMonotone_polyTime` | `Latc.PaperD.Valiant.toMonotone_polyTime` | `LatcComplexity/Valiant/Gadget.lean:161` | repository |
+| `Valid` | `Latc.PaperD.General.Valid` | `LatcComplexity/General.lean:54` | repository |
+| `validSpace` | `Latc.validSpace` | `LatcFormal/Basic.lean:34` | repository |
+| `vv_polyTime` | `Latc.PaperD.Valiant.vv_polyTime` | `LatcComplexity/Valiant/Gadget.lean:80` | repository |
+| `vv_polyTime'` | `Latc.PaperD.Valiant.vv_polyTime'` | `LatcComplexity/Valiant/Gadget.lean:86` | repository |
+| `XPBounded` | `Latc.PaperD.General.XPBounded` | `LatcComplexity/ExplicitDegree.lean:38` | repository |
+
+Notes for the revision:
+
+* **`mem_SharpP_of_polyTime_length`** is `Cslib.Complexity.mem_SharpP_of_polyTime_length`
+  (Complexitylib, `SharpP/Closure.lean:237`): if a verifier `V` is polynomial-time and a length
+  `r` is polynomial-time with its value in unary, then `fun a => acceptCount V a (r a)` is in `#P`.
+* **`sharpMonotone2SAT_reduces_countMissing`** is `Latc.PaperD.Valiant.sharpMonotone2SAT_reduces_countMissing`
+  (`Valiant/AnyTable.lean:77`): `ParsimoniousReducible encCNF General.encInst SharpMonotone2SAT countMissingMonotone2`.
+* **The bound frameworks.** `Turing.MultiTapeTM.ComputableTidilyInTimeAndSpace f encIn encOut t s`
+  (CSLib, `Cslib/Computability/Machines/Turing/MultiTape/Plumbing/Tidy/Defs.lean:95`): some machine
+  with binary alphabet and finitely many states computes `f` tidily within exactly `t a` steps and
+  `s a` cells on every input `a`. `Turing.MultiTapeTM.ComputableTidilyInO f encIn encOut T S`
+  (Complexitylib, `Complexity/BigO.lean:50`) is defined from it:
+  `∃ c, ComputableTidilyInTimeAndSpace f encIn encOut (fun a => c * (T a + 1)) (fun a => c * (S a + 1)) ∧ ∀ a, (encOut (f a)).length ≤ c * (S a + 1)`.
+  The explicit-degree theorems are stated with the first and proved with the second;
+  `Latc.PaperD.General.timeAndSpace_of_inO_xp` (`ExplicitDegree.lean:122`) converts.
+* **`listGetD_binary`** exists in two forms; `Binary.lean` uses the tidy one,
+  `Turing.MultiTapeTM.ComputableTidilyInPolyTime.listGetD_binary` (`PolyTime/List.lean:750`).
+* **`ComputableTidilyInPolyTime.getElem?`** (cited in §10.2) takes the index in unary (`hindex : … encUnary`),
+  which is why `encInst` writes the attribute index in unary (`General.lean`, `lookup_polyTime`).
+* **`TM2ComputableInPolyTime`** is `Turing.TM2ComputableInPolyTime`, a structure in
+  `Mathlib/Computability/TuringMachine/Computable.lean:174`, header "Authors: Pim Spelier, Daan van
+  Gent" (copyright 2020), read at the pinned Mathlib commit; cited as `MathlibTMComputable` in
+  `paper/extra.bib`.
+* **New at `0ea3170`** (`LatcComplexity/Restricted.lean`): `BoolEmpty`, `fromSAT_mem_boolEmpty`,
+  `fromSAT_polyTime_bin`, `mem_SAT_iff_fromSAT`, `MissingNonemptyBoolEmpty`, `CompleteBoolEmpty`,
+  `SAT_reduces_boolEmpty`, `UNSAT_reduces_boolEmpty`, `MissingNonemptyBoolEmpty_npHard_bin`,
+  `CompleteBoolEmpty_coNPHard_bin`, `missingNonemptyPromise`, `missingNonemptyPromise_npHard_bin`,
+  `missingCountBoolEmpty`, `sharpSAT_reduces_boolEmpty`, `missingCountBoolEmpty_sharpPHard_bin`, all
+  in `Latc.PaperD.General`; the ten theorems each print `[propext, Classical.choice, Quot.sound]`.
+* **`LatcFormal/`** is byte-identical (all eleven files and `LatcFormal.lean`, checked with `cmp`
+  on 2026-11-01) to the folder `formal/` of the Zenodo archive latc-check 0.1.0
+  (doi:10.5281/zenodo.23646699, file `latc-check-v0.1.0.zip`, MD5 `a85b6eca0d16f004d86630f9be346e28`,
+  archived from commit `0330360`). The README says `LatcFormal/` was copied from latc-check commit
+  `b9f8273`; the two commits therefore have the same `formal/` Lean files.
+* **Audit at `0ea3170`:** 397 `#print axioms` answers: `LatcComplexity/Axioms.lean` 234 (202 all three
+  standard axioms, 17 `[propext, Quot.sound]`, 13 `[propext]`, 2 `[Quot.sound]`),
+  `LatcComplexity/Valiant/Axioms.lean` 94 (76, 9 `[propext, Quot.sound]`, 7 `[propext]`, 2 none),
+  `LatcFormal/Axioms.lean` 69 (66, 3 `[propext, Quot.sound]`); none mentions `sorryAx`. In
+  `LatcComplexity/` 328 of the 345 theorem and lemma declarations are printed; the 17 others are
+  the helper lemmas listed above.
+
+### Sources read for the JAR revision (2026-11-01)
+
+* Krentel 1988: the JCSS text refused access; read the Cornell technical report TR 85-719 (1985) of
+  the same title, Section 2, p. 3, an unnumbered definition: a *metric reduction* from `f` to `g`
+  (both Σ* → ℕ) is a pair of polynomial-time functions `T1`, `T2` with `f(x) = T2(x, g(T1(x)))`. It
+  matches Definition 1 exactly; the paper now says "is the metric reduction that Krentel defines".
+* Creignou and Hermann 1996: **not read** (ScienceDirect refused). Hermann's CP 2001 survey (p. 5)
+  states the dichotomy and says its hard cases come from Positive-2-SAT (Valiant) and
+  Implicative-2-SAT (Provan and Ball); the paper marks the sentence for the author.
+* Kapur, Narendran, Rosenkrantz and Zhang 1991: **abstract only** (Springer paywall).
+  Sufficient completeness is co-NP-complete for term rewriting systems with free constructors, and
+  the results "also apply to the ground-reducibility property"; the abstract does not say
+  quasi-reducibility. Thiemann and Yamada (FSCD 2024 version) cite it for quasi-reducibility.
+* Elmallah and Gouda: read the 2013 University of Alberta technical report TR13-08 of the same
+  title; the TDSC text was not read. Firewall completeness: Theorem 5 (NP-hard), by reduction from
+  slice probing, which alone is reduced from 3-SAT; the reduction maps to the complement of
+  completeness. No membership theorem; the conclusion remarks that some problems "can be shown to
+  be NP" and the others "co-NP". Rules test each field against an interval of integers.
+* Cygan et al. 2015: read the authors' PDF. Theorem 13.25 (p. 444): Clique, Multicolored Clique and
+  others are W[1]-complete; Theorem 13.7 (p. 428) reduces Clique to Multicolored Clique. The book
+  spells it "Multicolored".
+* Papadimitriou and Yannakakis 1999 (JCSS 58(3):407–427, doi:10.1006/jcss.1999.1626, Crossref):
+  JCSS text not read; read the PODS 1997 version, whose Theorem 1 gives conjunctive query evaluation
+  W[1]-hard with the number of variables as parameter, by a reduction from Clique. Added to
+  `paper/extra.bib`.
+* Senellart and Gnatenko: the arXiv paper (v1) has no counting results; the one-call #Monotone-2SAT
+  proof is in the library (`descriptive-complexity`, commit `fc068f6`): #1-in-SAT → #Clique →
+  independent sets of size k → all independent sets with one call (pendant leaves, digit
+  `sum_pow_div_mod`) → #Monotone-2SAT. No file attributes the pendant-leaf technique; added to
+  `paper/extra.bib` as `DescriptiveComplexityLib`.
+* Who introduced pendant-leaf amplification: **not verified**. Provan and Ball 1983, Vadhan 2001 and
+  Greenhill 2000 could not be read.

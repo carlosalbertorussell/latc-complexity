@@ -6,6 +6,7 @@ import LatcComplexity.CountingGeneral
 import LatcComplexity.Monotone
 import LatcComplexity.Binary
 import LatcComplexity.Tractable
+import LatcComplexity.Restricted
 import LatcComplexity.Axioms
 import LatcComplexity.Valiant.Gadget
 import LatcComplexity.Valiant.Counting
