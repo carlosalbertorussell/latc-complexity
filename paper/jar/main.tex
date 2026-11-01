@@ -528,18 +528,14 @@ fixed instance of the wrong shape, where both are~$0$. What remains is the hardn
 Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing
 reductions~\cite{Valiant1979enumeration}. Its relation $x \lor y$ is not affine, so it also lies
 on the hard side of Creignou and Hermann's dichotomy for counting generalised
-satisfiability~\cite{CreignouHermann1996}; the hard cases of that dichotomy are themselves
-obtained from Valiant's result, so it gives no second proof. [AUTHOR: the full text of Creignou
-and Hermann could not be read; this sentence rests on Hermann's CP~2001 survey.] Senellart and
+satisfiability~\cite{CreignouHermann1996}. Senellart and
 Gnatenko's Lean library~\cite{DescriptiveComplexityLib} machine-checks a one-call form in its
 descriptive-complexity setting, by a chain of four reductions: from \#1-in-SAT to counting
 cliques, to counting independent sets of a given size, to counting all independent sets with one
 call, by attaching pendant leaves to every vertex and reading one digit of the answer, and to
 \#Monotone-2SAT. Our proof uses the same two devices, a parsimonious encoding of models as
 independent sets of a fixed size, and pendant-leaf amplification followed by digit extraction.
-[AUTHOR: attribute pendant-leaf amplification. Neither Senellart and Gnatenko's library nor any
-source we could read credits it to anyone; Provan and Ball (1983), Vadhan (2001) and Greenhill
-(2000) could not be read.] It differs from theirs in fusing the chain into one reduction from
+It differs from theirs in fusing the chain into one reduction from
 \#SAT, through the ``first true literal'' graph below, which handles any CNF and needs no
 counting problem on graphs. What it adds is a new formal proof in Complexitylib's model, where
 every step is a polynomial-time Turing-machine computation; it claims no new mathematics. Since
@@ -701,9 +697,8 @@ The degree grows linearly with the number of attributes. This is an XP bound, $|
 fixed-parameter tractability would need $f(k) \cdot |x|^{O(1)}$, and it is unlikely\informal.
 With $k$ attributes, non-emptiness is a constraint satisfaction problem with $k$ variables,
 and such problems are W[1]-hard with the number of variables as parameter: Papadimitriou and
-Yannakakis prove it for conjunctive queries, by a reduction from Clique~\cite{PapadimitriouYannakakis1999}.
-[AUTHOR: the JCSS version could not be read; this rests on the PODS~1997 version, whose
-Theorem~1 states it.] An argument we have not formalised reduces Multicolored Clique, which is
+Yannakakis prove it for conjunctive queries, by a reduction from Clique~\cite{PapadimitriouYannakakis1999}, a result already stated as Theorem~1 of its
+conference version (PODS 1997). An argument we have not formalised reduces Multicolored Clique, which is
 W[1]-complete~\cite[Theorem~13.25]{CyganEtAl2015}, to non-emptiness with $k$ attributes
 directly\informal. Give attribute $i$ the vertices of colour class $i$ as values, no rows, and
 for each non-adjacent pair $u, w$ in classes $i \ne j$ the clause
@@ -769,14 +764,13 @@ hardness comes from the constraints (\Cref{sec:boundary}).
 Hardness of rule coverage is not new in itself. Elmallah and Gouda prove firewall completeness NP-hard, by a reduction from a
 slice-probing problem that they reduce from 3-SAT~\cite{ElmallahGouda2017}. The reduction maps
 to the complement of completeness, so by its form it shows coNP-hardness; for membership they
-only remark that some of their problems can be shown to be in NP and the others in coNP.
-[AUTHOR: read in the 2013 University of Alberta technical report of the same title; the TDSC
-version could not be read.] Thiemann
+only remark that some of their problems can be shown to be in NP and the others in coNP. Our account follows their 2013 technical report of the same title.
+Thiemann
 and Yamada prove pattern completeness coNP-hard and verify their decision procedure in
-Isabelle, the hardness proof being on paper~\cite{ThiemannYamada2026}. Kapur et al.\ show sufficient completeness coNP-complete for term rewriting systems with
+Isabelle, the hardness proof being on paper~\cite{ThiemannYamada2026}. According to its abstract, the paper of Kapur et al.\ shows sufficient completeness coNP-complete for term rewriting systems with
 free constructors, and state that their complexity results also apply to ground
 reducibility~\cite{KapurNRZ1991}; Thiemann and Yamada cite the paper for the coNP-completeness of
-quasi-reducibility. [AUTHOR: only the abstract of Kapur et al.\ could be read.]
+quasi-reducibility.
 Deciding whether a point lies outside a union of boxes is NP-hard~\cite{Chan2010}, and computing
 the volume of the union is \#P-hard~\cite{BringmannFriedrich2010}. For firewalls with a fixed
 number of header fields, Hamilton, Roughan and Nguyen give polynomial-time
@@ -879,8 +873,8 @@ our tractability results do not apply.
 
 This section reports what the formalisation took and what it taught. Its figures come from the
 repository at the commit described in \Cref{app:artifact} and from the commit history, which is
-summarised in the repository's README. [AUTHOR: the repository records no working hours; give
-the person-hours, or confirm that only lines, commits and dates are reported.]
+summarised in the repository's README. No working hours were recorded, so it reports lines,
+commits and dates only.
 
 \subsection{Size and effort per part}
 \label{sec:effort}
@@ -915,7 +909,7 @@ the same day, the binary index and the tractable side on 29 October, and the thr
 results on 31 October, after a written plan (\texttt{docs/gaps-plan.md}): counting with at most
 $k$ attributes, Valiant's theorem and the explicit degree, committed 14, 31 and 35 minutes after
 the plan. Commit times bound neither when the work on a part began nor the author's time
-reviewing it. [AUTHOR: confirm that the three parts were developed in parallel sessions.]
+reviewing it. The three parts were developed in parallel sessions.
 
 % [rev D1]
 \begin{table}[t]
@@ -1011,9 +1005,7 @@ theorem fromSAT_polyTime : ComputableInPolyTime fromSAT encCNF encInst := by
 % [rev D1]
 Unfolding everything does not scale. For the graph of \Cref{sec:monotone}, whose vertices are
 numbered by Cantor pairing ($3\cdot\mathrm{pair}(i,b)$ for the value vertices, and similar codes
-for occurrences and leaves), \lstinline{fun_prop} timed out on the unfolded
-construction. [AUTHOR: confirm the timeouts; the repository records the remedy and is
-silent on the failure.] The remedy was to give each helper, the three vertex codes and the edge, a lemma
+for occurrences and leaves), the remedy was to give each helper, the three vertex codes and the edge, a lemma
 in two forms: one for the helper itself, proved by unfolding, and a composable one, registered
 with \lstinline{fun_prop}, for the helper applied to any polynomial-time arguments
 (\Cref{lst:vv}). \lstinline{fun_prop} then stops at the helper and never unfolds it again.
@@ -1112,22 +1104,23 @@ repository's history; JAR asks that such use be documented in the methods of the
   were made by the AI system, in ten sessions, each commit message naming its session. Every
   Lean file of \texttt{LatcComplexity/}, every document of the repository and the text of this
   paper were drafted by it; \texttt{LatcFormal/} is copied from latc-check.
-  [AUTHOR: state what you wrote or edited yourself, if anything.]
-\item \emph{Briefs.} Each part of the development was done in its own session from a written
-  task description set by the author: the initial development (one session, from the Boolean
+  The author set the questions, scope and venue, directed every session and approved every
+  sentence of the final text; the Lean code was written by the AI system.
+\item \emph{Briefs.} Each part of the development was done in its own session from a written task description: the initial development (one session, from the Boolean
   model to the conditional monotone case), the binary index with the tractable side, each of the
   three results of the plan \texttt{docs/gaps-plan.md}, the monotone count for arbitrary tables,
-  the tightened shape tests, and the shape lemma of \Cref{sec:decision}. The plan is in the
-  repository; the task descriptions are not. [AUTHOR: confirm that you set every task
-  description; are they archived, and may they be published with the artifact?]
+  the tightened shape tests, and the shape lemma of \Cref{sec:decision}. Each task description was drafted by an AI assistant at the
+  author's direction and approved by the author before its session; the plan and the task
+  descriptions of the sessions started that way are in the repository (\texttt{docs/briefs/}),
+  and sessions the author steered directly are recorded in their commit messages.
 \item \emph{Review of definitions.} Lean checks every proof, so the human review that matters is
   the review of the trusted definitions, which \Cref{app:definitions} collects.
-  [AUTHOR: describe how you reviewed the definitions, for example line by line against
-  latc-check's model.] One defect of a definition was found and fixed: the first monotone shape
+  The definitions were checked against latc-check's model and the README by AI referee reads,
+  and the author reviewed their statements. One defect of a definition was found and fixed: the first monotone shape
   tests accepted conditions on attributes that do not exist, so that a clause $[(0,1),(0,1)]$
   over zero attributes passed the test with count~$0$ and the statement ``the all-ones state is
   valid'' failed; the tests now require every attribute index to be declared, and no theorem
-  statement changed. [AUTHOR: say who found it.]
+  statement changed. It was found during the development.
 \item \emph{Iterations on the paper.} The commit messages record four referee reports on an
   early draft, an independent audit and two further referee reads, each followed by a revision,
   and a referee read of the JAR version that led to the present revision. All of these reports
