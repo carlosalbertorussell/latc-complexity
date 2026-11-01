@@ -36,14 +36,15 @@ lake exe cache get
 lake build
 ```
 
-The steps for the v1.0 release are in `RELEASE.md`. Steps 0–3 (preconditions, the tag `v1.0` on
-commit `6a008ef`, the cold build and the full audit at the tag) were done on 2026-11-01; the
+The steps for the v1.0 release are in `RELEASE.md`. Steps 0–3 (preconditions, the cold build and the
+full audit at commit `6a008ef`, and the tag `v1.0` on the commit that records them, with the same
+Lean files) were done on 2026-11-01; the
 repository is not public yet and has no Zenodo archive yet.
 
 `lake exe cache get` downloads the precompiled Mathlib. CSLib and the Complexitylib modules that
 are imported are then compiled from source, which takes a while on the first build.
 
-Verification at the tag `v1.0` (commit `6a008ef`, 2026-11-01): cold build on a Linux cloud
+Verification at commit `6a008ef` (2026-11-01; the tag `v1.0` has the same Lean files): cold build on a Linux cloud
 machine, x86_64, 4 cores, 15 GB RAM, Ubuntu 24.04, in a fresh clone with an empty `HOME` (no
 `~/.elan`, `.lake` or Mathlib cache), following `RELEASE.md` §2–3 and timed with `date` stamps.
 Lean 4.36.0-rc1 (commit `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`), Lake 5.0.0, elan 4.2.4.
@@ -413,7 +414,7 @@ The planning note `docs/boundary.md` lists the same statements.
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here.
 
-Full audit at the tag `v1.0` (commit `6a008ef`, whose Lean files are those of `0ea3170`),
+Full audit at commit `6a008ef` (whose Lean files are those of `0ea3170` and of the tag `v1.0`),
 2026-11-01, in the cold build above; the same counts as at the JAR revision. Run as
 `lake env lean` on each audit file: 397 answers. `LatcComplexity/Axioms.lean` 234: 202 print
 `[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
