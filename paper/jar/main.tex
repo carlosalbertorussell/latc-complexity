@@ -4,14 +4,6 @@
 %
 % Template: Springer Nature LaTeX authoring template (sn-jnl.cls, December 2024 package),
 % reference style sn-mathphys-num (Math and Physical Sciences, numbered).
-%
-% Revision tags: a comment line "% [rev X]" precedes every paragraph that the JAR revision
-% added or changed, X being the item of paper/jar/CHANGES-FOR-APPROVAL.md (D1-D7, m1-m13, SD
-% for the Statements and Declarations). They can be deleted once the author has approved the
-% changes.
-%
-% Open before submission: every [AUTHOR: ...] question and every [AUTHOR TO APPROVE]
-% placeholder (listed in CHANGES-FOR-APPROVAL.md).
 
 \documentclass[pdflatex,sn-mathphys-num]{sn-jnl}
 
@@ -32,7 +24,6 @@
 \crefname{lstlisting}{Listing}{Listings}
 \newcommand{\crefrangeconjunction}{--}% "Sections 4--7"
 
-% [rev D5] The mark of a claim argued on paper only.
 \newcommand{\informal}{\ensuremath{^{\dagger}}}
 
 % sn-jnl's \subparagraph is a run-in heading, which a listing that follows at once would
@@ -111,7 +102,6 @@
 
 \affil*[1]{\orgname{Independent Researcher}, \orgaddress{\city{Buenos Aires}, \country{Argentina}}}
 
-% [rev D6]
 \abstract{%
 A decision table is complete when every combination of its declared condition values that the
 domain constraints allow is covered by a row. We prove
@@ -131,7 +121,6 @@ Valiant's theorem on \#Monotone-2SAT. We also report how the development was eng
 an AI system was used to write it. The classification was first argued on paper in the
 author's earlier work, which is under review; every proof here is self-contained.}
 
-% [rev D6] Six keywords (JAR asks for 4-6).
 \keywords{decision tables, completeness, coNP-completeness, \#P-completeness, Lean 4,
   Cook--Levin theorem}
 
@@ -154,7 +143,6 @@ the DMN standard~\cite{CalvaneseDLMMT2016}, which report missing rules. Counting
 too: one missing edge case and a table that misses half of its valid inputs are both
 ``incomplete'', and $|M(T_0)|$ is what tells them apart.
 
-% [rev D6]
 Russell~\cite{PaperA}, in a paper under review, re-examined a decision-table completion method
 over declared finite domains and argued, on paper, that completeness under clause constraints
 is coNP-complete and that counting $|M(T_0)|$ is \#P-complete (Proposition~5 there). The
@@ -177,7 +165,6 @@ axioms, and the build contains no \lstinline{sorry}.
 latc-check. Tables with compact rows, such as DMN rules with wildcards or ranges, are a different
 problem: there completeness is coNP-hard even without constraints (\Cref{sec:related}).
 
-% [rev D5]
 \emph{Informal claims.} A few claims are argued on paper only and are not theorems of the
 development. They are marked with a dagger, as in ``P\informal'', both in the text and in
 \Cref{tab:boundary}. Every other result is a Lean theorem, cited by its name.
@@ -185,7 +172,6 @@ development. They are marked with a dagger, as in ``P\informal'', both in the te
 \subparagraph*{Contributions.}
 \Cref{tab:contrib} separates what this paper adds from what it reuses.
 \begin{enumerate}
-% [rev D5]
 \item \textbf{The classification, machine-checked end to end} (\Cref{sec:decision,sec:counting}):
   non-emptiness of $M(T_0)$ is NP-complete, completeness coNP-complete and counting \#P-complete,
   for finite domains with clause constraints, with every number of the input written in binary.
@@ -193,7 +179,6 @@ development. They are marked with a dagger, as in ``P\informal'', both in the te
   shows that the reduction produces only such instances (\Cref{sec:decision}).
 \item \textbf{Adequacy} (\Cref{sec:encoding}): the encoded problems are exactly latc-check's
   set-based ones.
-% [rev D7]
 \item \textbf{One-call hardness for monotone two-literal counting} (\Cref{sec:monotone}): a
   definition of one-call reductions in Complexitylib's model, and a new formal proof in that
   model of a one-call version of Valiant's theorem, by classical techniques. From it, counting
@@ -202,14 +187,12 @@ development. They are marked with a dagger, as in ``P\informal'', both in the te
 \item \textbf{The tractability boundary} (\Cref{sec:boundary}): polynomial time without
   constraints, and with a fixed number of attributes, for both decision problems and for
   counting, with an explicit degree linear in the number of attributes.
-% [rev D1]
 \item \textbf{An account of the engineering} (\Cref{sec:engineering}): the size of each part,
   what Complexitylib provided and lacked, how the polynomial-time proofs were automated, how the
   instance-dependent bounds were kept explicit, the lemmas that could be reused, and how an AI
   system was used.
 \end{enumerate}
 
-% [rev D7] Last row of the table.
 \begin{table}[t]
 \caption{What is reused and what is new.}
 \label{tab:contrib}
@@ -229,7 +212,6 @@ one-call reductions, one-call Valiant & Valiant (Turing reductions); Senellart--
 \end{tabular}
 \end{table}
 
-% [rev D1]
 \Cref{sec:prelim} recalls Complexitylib and latc-check, \Cref{sec:encoding} fixes the input
 language, \Cref{sec:decision,sec:counting,sec:monotone,sec:boundary} prove the results,
 \Cref{sec:related} discusses related work, \Cref{sec:formal} the trusted base and
@@ -271,7 +253,6 @@ reads $a$ and the answer $g(r(a))$ written in binary. $g$ is \emph{one-call \#P-
 function in \#P, under any encoding, reduces to it with one call, and \emph{one-call
 \#P-complete} if it is moreover in \#P.
 \end{definition}
-% [rev D5] [rev m12]
 The running time of $\mathit{post}$ is polynomial in the length of $a$ and of the oracle's
 answer. For a target $g$ whose values have polynomially many bits, as for every function in
 \#P, a one-call reduction is a polynomial-time Turing reduction making exactly one oracle query,
@@ -294,7 +275,6 @@ Our hardness proofs start from Complexitylib's Cook--Levin theorem and its parsi
 SAT is NP-hard, UNSAT coNP-complete, and \#SAT \#P-hard under parsimonious reductions.
 
 \subparagraph*{latc-check's model.}
-% [rev m1] (tuples are written \tau; x is kept for input words)
 Attributes are indexed by a finite type~$\iota$, attribute $i$ having the declared finite domain
 $D_i$, so the space of condition tuples $\mathcal{D} = \prod_i D_i$ is finite. Constraints are a
 decidable predicate $C$ on tuples, and a table is represented by its set $T_0$ of condition
@@ -339,12 +319,10 @@ $(0,0)$, $(0,1)$, $(1,1)$:
 \[
 I = \bigl([3, 2],\ [[(0,0), (1,1)]],\ [[0,0], [0,1], [1,1]]\bigr).
 \]
-% [rev m12]
 Of the six states, four are valid: $(0,0)$, $(0,1)$, $(1,1)$ and $(2,1)$. The first three are
 rows, so $M(T_0) = \{(2,1)\}$: the instance is in \textit{MissingNonempty}, it is incomplete,
 and $\textit{missingCount}(I) = 1$.
 
-% [rev m1]
 \subparagraph*{Encoding and input size.}
 The main encoding, \lstinline{encInstBin}, writes the triple with Complexitylib's encodings of
 pairs and lists and every number in binary: the domain sizes, the attribute index and value of
@@ -353,7 +331,6 @@ it is the length of the list~$d$. The input size $|x|$ in every polynomial bound
 length of this encoding of the instance~$x$. With binary domain sizes,
 $|\mathcal{D}| = \prod_i d_i$ can be exponential in $|x|$ even for one attribute.
 
-% [rev m6] [rev m12]
 Checking a condition $(i, v)$ against a state reads $s_i$ at a binary index~$i$. We use
 Complexitylib's \lstinline{listGetD_binary}, which walks the list while reading the bits of the
 index and returns a default when the list ends, so the cost is polynomial in the lengths of the
@@ -412,7 +389,6 @@ $\{I : M(T_0) \neq \emptyset\}$ and $\{I : M(T_0) = \emptyset\}$ stated with lat
 \lstinline{missing}.
 \end{proof}
 
-% [rev D5]
 \subparagraph*{Hardness on Boolean domains with empty tables.}
 The reduction produces only instances whose domains are all $\{0,1\}$ and whose table is empty:
 writing \textit{BoolEmpty} for the class of such instances, \lstinline{fromSAT_mem_boolEmpty}
@@ -428,7 +404,6 @@ problem in Complexitylib's sense (\lstinline{missingNonemptyPromise_npHard_bin})
 reduction of \Cref{thm:counting} is the same map, and gives the same for counting
 (\lstinline{missingCountBoolEmpty_sharpPHard_bin}).
 
-% [rev m8] [rev m12]
 The empty table shows that the hardness lies in the constraints: with $T_0 = \emptyset$,
 completeness is unsatisfiability of the constraints. Rows that are complete tuples only remove
 single states, and \Cref{sec:boundary} shows that without constraints they cannot make the
@@ -468,7 +443,6 @@ Cook--Levin theorem gives \lstinline{missingCount_sharpPComplete_bin}.
 \section{Monotone two-literal constraints and Valiant's theorem}
 \label{sec:monotone}
 
-% [rev D5]
 Russell~\cite{PaperA} notes that counting the valid states stays \#P-complete when every
 clause is $A_i = 1 \lor A_j = 1$ over domains $\{0,1\}$, citing
 Valiant~\cite{Valiant1979enumeration}. Deciding such instances is easy: with domains
@@ -481,7 +455,6 @@ so backtracking lists the valid states with polynomial delay, and listing $|T|+1
 decides whether one is missing. So neither count can be \#P-hard under parsimonious reductions
 unless P~=~NP\informal, and the right notion is the one-call reduction of \Cref{def:onecall}.
 
-% [rev D3]
 \subparagraph*{Restricted problems.}
 A problem restricted to a class $K$ of instances is stated in this development as a problem on
 all instances that contains its restriction. A restricted decision problem is the set
@@ -503,7 +476,6 @@ on the instances that pass the shape test; the reduction leaves that class only 
 where both sides are~$0$ by the convention, and the promise versions of the counts are not
 stated separately in Lean\informal.
 
-% [rev D3]
 Let \textit{SharpMonotone2SAT} be the number of models of a CNF formula whose clauses are all
 $x_i \lor x_j$, and \textit{countValidMonotone2} the number of valid states of an instance with
 domains $\{0,1\}$, clauses of two conditions with value~1 on existing attributes, and no rows. Let
@@ -524,7 +496,6 @@ fixed instance of the wrong shape, where both are~$0$. What remains is the hardn
 \lstinline{encInst}.
 \end{theorem}
 
-% [rev D7] [rev m2]
 Valiant proved \#Monotone-2SAT \#P-complete under polynomial-time Turing
 reductions~\cite{Valiant1979enumeration}. Its relation $x \lor y$ is not affine, so it also lies
 on the hard side of Creignou and Hermann's dichotomy for counting generalised
@@ -543,7 +514,6 @@ every step is a polynomial-time Turing-machine computation; it claims no new mat
 \#SAT to \#Monotone-2SAT with one call.
 
 \subparagraph*{Step 1: models as independent sets.}
-% [rev m1] (independent sets are J)
 Let $\varphi$ have variables $0, \dots, n-1$ (after dense renumbering) and clauses
 $c_1, \dots, c_m$. Build a graph $G$ with a vertex $(i, b)$ for each variable $i$ and value $b$,
 and a vertex $o$ for each literal occurrence, read ``$o$ is the first true literal of its
@@ -567,7 +537,6 @@ $(0,0)$; those at $o_2$ go to $o_1$, $(1,0)$ and $(0,1)$. The independent sets o
 $\{(0,1), (1,0), o_1\}$, $\{(0,1), (1,1), o_1\}$ and $\{(0,0), (1,1), o_2\}$: three, one per model.
 
 \subparagraph*{Step 2: a monotone formula.}
-% [rev m1] (the number of vertices is \nu, the oracle answer y)
 Let $\nu$ be the number of vertices of $G$, and give every vertex $t = n + 1$ fresh pendant
 leaves. The monotone formula $\psi$ has a variable per vertex and leaf, and a clause $x_u \lor
 x_w$ per edge $\{u, w\}$ of the graph with leaves. Its models are the vertex covers, the
@@ -581,7 +550,6 @@ y \;=\; \#\mathrm{SAT}(\psi) \;=\; \sum_{J \text{ independent in } G} 2^{\,t\,(\
 Every vertex has leaves, so every variable of $\psi$ occurs in some clause, and $\psi$ has exactly two
 positive literals per clause.
 
-% [rev m1]
 \subparagraph*{Step 3: one digit.}
 Write $y$ in base $2^t$. Multiply by $2^{tK}$ and divide by $2^{t\nu}$:
 \[
@@ -613,7 +581,6 @@ the conditional form, \lstinline{countValidMonotone2_oneCallSharpPComplete_bin},
 \section{Where the hardness comes from}
 \label{sec:boundary}
 
-% [rev D3]
 The reductions of \Cref{sec:decision,sec:counting} use clause constraints and as many
 attributes as the formula has variables. Removing either ingredient makes all three problems
 polynomial-time (\Cref{tab:boundary}). As in \Cref{sec:monotone}, each restricted problem
@@ -644,7 +611,6 @@ problems are in P for each~$k$ (\lstinline{missingNonemptyFixedAttrs_mem_P},
 \lstinline{completeFixedAttrs_mem_P}).
 
 \subparagraph*{At most $k$ attributes: counting.}
-% [rev m1] (class vectors are \gamma)
 A candidate state stands for all the states obtained by replacing its unwritten values, so
 counting must weigh it. For each attribute, split its domain into classes: each written value
 inside the domain alone, and one class holding all the unwritten values of the domain (possibly
@@ -661,7 +627,6 @@ no-constraint case, and the count is polynomial-time for each~$k$
 (\lstinline{missingCountFixedAttrs_polyTime}).
 
 \subparagraph*{An explicit degree.}
-% [rev m1] [rev m4] [rev m12]
 ``Polynomial time for each $k$'' allows the polynomial to depend on $k$ arbitrarily. We bound
 its form: the exponent is linear in the number of attributes, with constants that are proved to
 exist and are not computed. The constants are written $c$, $e$, $e_0$ and~$e_1$ below; the Lean
@@ -680,7 +645,6 @@ non-emptiness, completeness and counting, each for time and space, under
 \item \emph{One machine for all instances.} There are $c, e$ such that one machine decides
   non-emptiness on every instance within $c\,(|x|+1)^{en+e}$, where $n$ is the instance's number
   of attributes (\lstinline{missingNonempty_explicitDegree}; \Cref{app:statements}).
-% [rev m5]
 \item \emph{Uniform constants in $k$} (\lstinline{missingNonemptyFixedAttrs_uniform}). There are
   $c, e_0, e_1$ such that for every $k$ some machine decides the problem within
   $c\,(|x|+1)^{e_0 k + e_1}$ on every instance with at most $k$ attributes. Its inputs are the
@@ -692,7 +656,6 @@ non-emptiness, completeness and counting, each for time and space, under
   instance, decides ``at most $k$ attributes and $M(T_0) \neq \emptyset$'' within
   $c\,(|(k,x)|+1)^{ek+e}$ (\lstinline{missingNonemptyWithBound_explicitDegree}).
 \end{enumerate}
-% [rev m7] [rev D5] [rev m12]
 The degree grows linearly with the number of attributes. This is an XP bound, $|x|^{O(k)}$;
 fixed-parameter tractability would need $f(k) \cdot |x|^{O(1)}$, and it is unlikely\informal.
 With $k$ attributes, non-emptiness is a constraint satisfaction problem with $k$ variables,
@@ -705,7 +668,6 @@ for each non-adjacent pair $u, w$ in classes $i \ne j$ the clause
 $\bigvee_{v \ne u} A_i = v \lor \bigvee_{v \ne w} A_j = v$ (``not both $A_i = u$ and
 $A_j = w$''); the valid states are exactly the multicoloured cliques.
 
-% [rev m12]
 \emph{What is not proved.} We do not prove that, for each fixed $k$, a separate machine with $k$
 built in, which rejects instances with more than $k$ attributes, meets the bound with constants
 independent of~$k$.
@@ -715,7 +677,6 @@ need changes to the library. Statements~2 and~3 cover the same ground: the first
 instances where the answer can be positive, the second on all instances with $k$ given as
 input.
 
-% [rev D5]
 \begin{table}[t]
 \caption{Where the hardness comes from. A dagger marks a claim argued on paper only; every
 other entry is a Lean theorem. The hardness of the first row holds already on Boolean domains
@@ -741,7 +702,6 @@ compact (wildcards) & none & unbounded & coNP-complete\informal & \#P-complete\i
 \label{sec:related}
 
 \subparagraph*{Compact rows.}
-% [rev D5] [rev m11] [rev m12] [rev m2]
 Our rows are complete tuples, as in latc-check. In DMN and in many rule bases a row is compact: a
 conjunction of tests over the declared finite domains, with wildcards or ranges, standing for
 many tuples. Then the rows form a DNF formula and the uncovered inputs are the models of its
@@ -761,7 +721,6 @@ tuples, constraints, counting and the mechanisation. With complete tuples as row
 hardness comes from the constraints (\Cref{sec:boundary}).
 
 \subparagraph*{Hardness of coverage.}
-% [rev m2] [rev m11]
 Hardness of rule coverage is not new in itself. Elmallah and Gouda prove firewall completeness NP-hard, by a reduction from a
 slice-probing problem that they reduce from 3-SAT~\cite{ElmallahGouda2017}. The reduction maps
 to the complement of completeness, so by its form it shows coNP-hardness; for membership they
@@ -778,7 +737,6 @@ number of header fields, Hamilton, Roughan and Nguyen give polynomial-time
 algorithms~\cite{HamiltonRoughanNguyen2022}, an analogue of our fixed-$k$ results.
 
 \subparagraph*{Decision tables and tabular specifications.}
-% [rev m12]
 Checking tables for completeness and consistency is long established: in expert-system
 checkers~\cite{SuwaScottShortliffe1982}, for decision tables~\cite{VanthienenMA1998}, for SCR and
 RSML requirements~\cite{HeitmeyerJL1996,HeimdahlLeveson1996}, and for DMN, where Calvanese et al.\
@@ -812,7 +770,6 @@ tuples as rows over declared finite domains, or counts their missing combination
 hardness proofs is machine-checked.
 
 \subparagraph*{Mechanised computability and complexity.}
-% [rev m13] [rev m12]
 Cook--Levin has been mechanised in ACL2~\cite{GamboaCowles2004}, Coq~\cite{GaeherKunze2021} and
 Isabelle~\cite{Cook_Levin-AFP}; reductions between Karp's problems are verified in
 Isabelle~\cite{PolyReductionsIsabelle}; and Senellart and Gnatenko prove all 21 of Karp's
@@ -830,12 +787,10 @@ so polynomial time, binary encodings of numbers and the size of the input, the q
 tractability results of \Cref{sec:boundary} are about, are first-class.
 
 %-----------------------------------------------------------------------------------------------
-% [rev D1]
 \section{Trusted base and audit}
 \label{sec:formal}
 
 \subparagraph*{Trust.}
-% [rev D2] [rev D5]
 The axiom audit prints the axioms of 328 of the development's 345 theorem and lemma
 declarations, among them every theorem this paper cites (the other 17 are helper lemmas used by
 audited theorems); each uses only \lstinline{propext}, \lstinline{Classical.choice} and
@@ -858,7 +813,6 @@ pass the shape test, so the shape test is trusted; an earlier version of it acce
 nonexistent attributes, which the present one rejects.
 
 \subparagraph*{Worst case and practice.}
-% [rev m12]
 The classification rules out a polynomial algorithm for all tables with clause constraints,
 unless P~=~NP; it does not say that tables met in practice are slow to check. For tables whose
 rows are complete tuples, few attributes or the absence of constraints give the polynomial
@@ -868,7 +822,6 @@ compact rows, as in DMN, the rows themselves can carry the hardness (\Cref{sec:r
 our tractability results do not apply.
 
 %-----------------------------------------------------------------------------------------------
-% [rev D1] New section, replacing the paragraph "Engineering" of the former Section 9.
 \section{Engineering the development}
 \label{sec:engineering}
 
@@ -880,7 +833,6 @@ commits and dates only.
 \subsection{Size and effort per part}
 \label{sec:effort}
 
-% [rev D1]
 \Cref{tab:modules} lists the modules. The development has 4\,520 lines of Lean in 15 files,
 besides the two axiom-audit files (383 lines), with 345 theorem and lemma declarations; it sits
 on latc-check's model, copied unchanged into \texttt{LatcFormal/}. By lines, the effort fell
@@ -911,7 +863,6 @@ $k$ attributes, Valiant's theorem and the explicit degree, committed 14, 31 and 
 the plan. Commit times bound neither when the work on a part began nor the author's time
 reviewing it. The three parts were developed in parallel sessions.
 
-% [rev D1]
 \begin{table}[t]
 \caption{The modules of \texttt{LatcComplexity/}: lines, theorem and lemma declarations, and
 definitions (\texttt{def}, \texttt{abbrev}, \texttt{instance}). The two audit files
@@ -946,7 +897,6 @@ total & 4\,520 & 345 & 114 & \\
 \subsection{What Complexitylib provided and what it lacked}
 \label{sec:gaps}
 
-% [rev D1]
 Complexitylib provided the machine model, the encodings, the classes, the Cook--Levin theorem
 with its parsimonious form, and a large stock of polynomial-time lemmas, among them binary
 arithmetic (multiplication, division, remainder, powers of two), list folds, the binary list
@@ -985,7 +935,6 @@ one commit and one toolchain (\Cref{app:artifact}).
 \subsection{Polynomial time by automation}
 \label{sec:funprop}
 
-% [rev D1]
 Complexitylib registers its polynomial-time lemmas with Mathlib's \lstinline{fun_prop} tactic,
 which proves a polynomial-time claim for a term built from registered functions by composing
 their lemmas. The library's documentation asks that local definitions be unfolded so that
@@ -1003,7 +952,6 @@ theorem fromSAT_polyTime : ComputableInPolyTime fromSAT encCNF encInst := by
   fun_prop
 \end{lstlisting}
 
-% [rev D1]
 For larger constructions, the development does not unfold everything. For the graph of \Cref{sec:monotone}, whose vertices are
 numbered by Cantor pairing ($3\cdot\mathrm{pair}(i,b)$ for the value vertices, and similar codes
 for occurrences and leaves), the remedy was to give each helper, the three vertex codes and the edge, a lemma
@@ -1025,7 +973,6 @@ theorem vv_polyTime' {α : Type} {input : α ↪ List Bool} {f : α → ℕ} {g 
   vv_polyTime.comp (hf.prod hg)
 \end{lstlisting}
 
-% [rev D1]
 Automation stops where the size of intermediate values matters. Proofs by hand were needed for
 the binary product of the domain sizes (a fold whose intermediate products are bounded by the
 input, through \lstinline{foldlWithInput_of_bounded_growth}), the enumeration of candidate
@@ -1035,7 +982,6 @@ post-processing.
 \subsection{An instance-dependent time bound}
 \label{sec:instance-bounds}
 
-% [rev D1]
 The bound $c\,(|x|+1)^{en+e}$ of \Cref{sec:boundary} depends on the instance through its number
 of attributes~$n$, which is not a function of $|x|$ alone. It is built in three steps.
 \begin{enumerate}
@@ -1072,7 +1018,6 @@ theorem timeAndSpace_of_inO_xp {α β : Type} {encIn : α ↪ List Bool} {encOut
 \subsection{Reusable lemmas}
 \label{sec:reusable}
 
-% [rev D1]
 Some results are independent of decision tables and could serve other developments on
 Complexitylib, or be offered upstream; apart from \Cref{def:onecall} they use only
 Complexitylib's notions.
@@ -1094,9 +1039,6 @@ Complexitylib's notions.
 \subsection{How an AI system was used}
 \label{sec:ai}
 
-% [rev D1] [rev m10] Replaces the unnumbered section "Use of generative AI". Springer Nature's
-% policy asks that the use of a large language model be documented in the Methods section or a
-% suitable alternative part of the manuscript; this subsection is that part.
 The development and this paper were written with an AI system, Claude (Anthropic), used through
 Claude Code with the model Claude Opus~5.5, between 28~October and 1~November 2026. This subsection records how, from the
 repository's history; JAR asks that such use be documented in the methods of the paper.
@@ -1129,14 +1071,12 @@ repository's history; JAR asks that such use be documented in the methods of the
   searched for related work and checked bibliographic records against the publishers' records.
 \item \emph{Accountability.} The author takes responsibility for the content of the paper and of
   the development. An AI system does not meet the criteria for authorship and is not an author.
-  [AUTHOR TO APPROVE]
 \end{itemize}
 
 %-----------------------------------------------------------------------------------------------
 \section{Conclusion}
 \label{sec:conclusion}
 
-% [rev D7]
 For decision tables whose rows are complete tuples, completeness under clause constraints is
 coNP-complete, finding a missing combination NP-complete, and counting them \#P-complete, with
 machine-checked proofs on Turing machines that apply to latc-check's set-based definitions and
@@ -1152,53 +1092,46 @@ upstream.
 %-----------------------------------------------------------------------------------------------
 \backmatter
 
-% [rev D4]
 \bmhead{Supplementary information}
 The Lean development, latc-complexity, described in \Cref{app:artifact}.
 
-% [rev SD]
 \section*{Statements and Declarations}
-% Headings from the Springer Nature template's Declarations list. Every statement is a
-% placeholder for the author, prefilled only from text that already exists in the paper or
-% the repository.
 
 \bmhead{Funding}
-[AUTHOR TO APPROVE: No funding was received for this work.]
+No funding was received for this work.
 
 \bmhead{Competing interests}
-[AUTHOR TO APPROVE: The author is a co-author of the 2021 paper that introduced the LATC
+The author is a co-author of the 2021 paper that introduced the LATC
 decision-table completion method, which the author's earlier work~\cite{PaperA} re-examines.
-The author has no other competing interests to declare.] (The 2021 paper is~\cite{RaggioRussell2021}.)
+The author has no other competing interests to declare. (The 2021 paper is~\cite{RaggioRussell2021}.)
 
 \bmhead{Ethics approval and consent to participate}
-[AUTHOR TO APPROVE: Not applicable.]
+Not applicable.
 
 \bmhead{Consent for publication}
-[AUTHOR TO APPROVE: Not applicable.]
+Not applicable.
 
-% [rev D4]
 \bmhead{Data availability}
-[AUTHOR TO APPROVE: No data were generated or analysed beyond the Lean source code described
+No data were generated or analysed beyond the Lean source code described
 under Code availability. The decision-table model it builds on is archived as latc-check~0.1.0
-(\url{https://doi.org/10.5281/zenodo.23646699}).]
+(\url{https://doi.org/10.5281/zenodo.23646699}).
 
 \bmhead{Materials availability}
-[AUTHOR TO APPROVE: Not applicable.]
+Not applicable.
 
-% [rev D4]
 \bmhead{Code availability}
-[AUTHOR TO APPROVE: The Lean development latc-complexity, described in \Cref{app:artifact}, will
+The Lean development latc-complexity, described in \Cref{app:artifact}, will
 be released as version~1.0 under the MIT licence at
 \url{https://github.com/carlosalbertorussell/latc-complexity} and archived on Zenodo with the
-DOI [DOI at release]. The release follows the steps of \texttt{RELEASE.md} in the repository.]
+DOI [DOI at release]. The release follows the steps of \texttt{RELEASE.md} in the repository.
 
 \bmhead{Author contribution}
-[AUTHOR TO APPROVE: C.A.R. is the sole author, set the research questions and the task
+C.A.R. is the sole author, set the research questions and the task
 descriptions, reviewed the definitions and the text, and is responsible for the whole work;
-the Lean proofs and the text were drafted with an AI system, as described in \Cref{sec:ai}.]
+the Lean proofs and the text were drafted with an AI system, as described in \Cref{sec:ai}.
 
 \bmhead{Use of generative AI}
-[AUTHOR TO APPROVE: The use of an AI system is documented in \Cref{sec:ai}.]
+The use of an AI system is documented in \Cref{sec:ai}.
 
 %-----------------------------------------------------------------------------------------------
 \begin{appendices}
@@ -1233,7 +1166,6 @@ theorem sharpSAT_eq_missingCount (φ : CNF ℕ) : SharpSAT φ = missingCount (fr
 theorem missingCount_sharpPComplete_bin : SharpPComplete encInstBin missingCount
 \end{lstlisting}
 
-% [rev D5]
 \subparagraph*{Boolean domains with empty tables.}
 \begin{lstlisting}
 theorem fromSAT_mem_boolEmpty (φ : CNF ℕ) : fromSAT φ ∈ BoolEmpty
@@ -1283,7 +1215,6 @@ theorem missingNonemptyFixedAttrs_uniform :
       (fun I => c * ((encInstBin I.1).length + 1) ^ (d₀ * k + d₁))
 \end{lstlisting}
 
-% [rev m6]
 \subparagraph*{The unary forms.}
 Each polynomial-time result of \Cref{sec:boundary} also holds for \lstinline{encInst}:
 \lstinline{completeNoConstraints_mem_P_unary}, \lstinline{missingNonemptyNoConstraints_mem_P_unary},
@@ -1298,7 +1229,6 @@ The hardness results have their unary forms without the suffix \lstinline{_bin}
 \lstinline{countMissingMonotone2_sharpPComplete_oneCall_unary}).
 
 %-----------------------------------------------------------------------------------------------
-% [rev D2] New appendix.
 \section{Trusted definitions}
 \label{app:definitions}
 
@@ -1458,7 +1388,6 @@ def missingCountBoolEmpty (I : Inst) : ℕ := if I ∈ BoolEmpty then missingCou
 \label{app:artifact}
 
 \subparagraph*{Contents.}
-% [rev D1] [rev m13]
 The development is the directory \texttt{LatcComplexity/} of the repository latc-complexity:
 4\,903 lines of Lean in 17 files, 4\,520 without the two axiom-audit files
 (\Cref{tab:modules}), on top of latc-check's model in \texttt{LatcFormal/}. The eleven files of
@@ -1467,7 +1396,6 @@ archived release latc-check~0.1.0~\cite{latc_check_0_1_0}. The README lists ever
 with its statement, and \texttt{docs/paper-facts.md} records the fully qualified name, file and
 line of every name this paper cites.
 
-% [rev m8]
 \subparagraph*{The Boolean model.}
 The repository also contains the first form of the development, a Boolean model
 (\texttt{Bridge.lean}, \texttt{Counting.lean}): its attributes are the variables of a
@@ -1477,13 +1405,11 @@ Complexitylib CNF formula used as the constraints, and its rows are bit vectors.
 the last with a parsimonious reduction \emph{to} \#SAT (\lstinline{countMissing_eq_sharpSAT}).
 It has no adequacy theorem, and the results of this paper do not use it.
 
-% [rev D4] [rev m9]
 \subparagraph*{Versions.}
 Lean \texttt{v4.36.0-rc1}; Complexitylib at commit \texttt{b7acfc2} (28 October 2026), with the
 CSLib and Mathlib it pins. The earlier, pre-CSLib version of Complexitylib, which
 Russell~\cite{PaperA} cites, is a separate repository with a different API.
 
-% [rev D4]
 \subparagraph*{Build and audit.}
 The build reported here is a cold build of commit \texttt{0ea3170}, whose Lean files are
 those of this paper, made on 1 November 2026 on a Linux x86-64 machine with four cores, in a
@@ -1499,7 +1425,6 @@ standard axioms, 51 use one or two of them, 2 use none, and none uses \lstinline
 whole-word search of the \texttt{.lean} files finds \lstinline{sorry}, \texttt{admit},
 \texttt{native\_decide} and \texttt{axiom} only in the \texttt{\#print axioms} commands.
 
-% [rev D4]
 \subparagraph*{Release.}
 The repository is private during review. The file \texttt{RELEASE.md} lists the steps of the
 release: tagging version~1.0, a cold build and the full audit at the tag, making the repository
