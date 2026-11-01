@@ -23,28 +23,29 @@ the same paper in the Springer Nature LaTeX template (`sn-jnl.cls` and `sn-mathp
 from the December 2024 template package, downloaded from
 <https://www.springernature.com/gp/authors/campaigns/latex-author-support>):
 
-* `jar/main.tex` is generated from `main.tex` by `jar/port.py`, which replaces the class, front
-  matter, theorem environments, back matter and bibliography setup and copies the body line by
-  line. Edit `main.tex` and regenerate; or, once the two versions are meant to diverge, edit
-  `jar/main.tex` directly and stop using `port.py`.
-* The Declarations at the end of `jar/main.tex` are placeholders marked `[AUTHOR TO APPROVE]`.
-* `jar/FIDELITY.md` lists every difference between the two PDFs, checked by `jar/fidelity.py`.
+* `jar/main.tex` was first generated from `main.tex` by `jar/port.py`. Since the JAR revision of
+  2026-11-01 (branch `jar-revision`) the two versions diverge: `jar/main.tex` is edited directly,
+  and `port.py`, `fidelity.py` and `FIDELITY.md` describe only the earlier, generated version.
+* `jar/CHANGES-FOR-APPROVAL.md` lists every change of the JAR revision (item, location, old and
+  new text) and every open `[AUTHOR: …]` question. In `jar/main.tex`, a comment `% [rev X]` marks
+  each changed paragraph.
+* The Statements and Declarations at the end of `jar/main.tex` are placeholders marked
+  `[AUTHOR TO APPROVE]`.
 
 Build (the template files are in `jar/`, so no extra `TEXINPUTS` is needed):
 
 ```bash
-cd jar && python3 port.py && latexmk -pdf main.tex
+cd jar && latexmk -pdf main.tex
 ```
 
 On 2026-11-01, with the TeX Live 2023/Debian packages listed below plus `texlive-bibtex-extra`,
-this gave 21 pages (main text to page 14, appendices 15 to 17, references 17 to 21) with no
-errors, no undefined references or citations and no overfull boxes. BibTeX warns, as for the
-LIPIcs version, that the style does not know `@software`. JAR's submission guidelines
-(<https://link.springer.com/journal/10817/submission-guidelines>) sit behind a Springer login
-and could not be read, so the reference style, the Declarations list and any length limit
-still need checking against them.
+the revised `jar/main.tex` gives 32 pages (main text to page 20, Statements and Declarations on page 21, appendices 21 to 27, references 28 to 32) with no errors, no undefined references or citations
+and no overfull boxes. BibTeX warns that the style does not know `@software` (two entries). JAR's
+guidelines (read 2026-11-01): single-blind review, no page limit stated, an abstract of 150–250
+words, 4–6 keywords, a Statements and Declarations section, use of LLMs documented in the methods,
+a data availability statement, numbered references with DOIs, LaTeX source and PDF.
 
-To redo the fidelity check, build the LIPIcs version as below and run
+To redo the fidelity check of the earlier, generated version, build the LIPIcs version as below and run
 
 ```bash
 python3 jar/fidelity.py <directory of the built LIPIcs main.tex, main.bbl, main.pdf> jar
