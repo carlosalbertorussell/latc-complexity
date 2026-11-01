@@ -1411,16 +1411,16 @@ CSLib and Mathlib it pins. The earlier, pre-CSLib version of Complexitylib, whic
 Russell~\cite{PaperA} cites, is a separate repository with a different API.
 
 \subparagraph*{Build and audit.}
-The build reported here is a cold build of commit \texttt{0ea3170}, whose Lean files are
-those of this paper, made on 1 November 2026 on a Linux x86-64 machine with four cores, in a
+The build reported here is a cold build of the released version (the tag \texttt{v1.0}, whose
+Lean files are those of this paper), made on 1 November 2026 on a Linux x86-64 machine with four cores, in a
 fresh clone with no \texttt{\textasciitilde/.elan}, \texttt{.lake} or Mathlib cache, with Lean
 \texttt{4.36.0-rc1}, Lake 5.0.0 and elan 4.2.4. \texttt{lake exe cache get} downloaded the
-toolchain and all 9\,047 precompiled Mathlib files in 103~s. \texttt{lake build} compiled 239
-modules of CSLib and Complexitylib and the 30 modules of the repository in 217~s and ended with
+toolchain and all 9\,047 precompiled Mathlib files in 97~s. \texttt{lake build} compiled 239
+modules of CSLib and Complexitylib and the 30 modules of the repository in 213~s and ended with
 \texttt{Build completed successfully (18651 jobs)}, exit code~0, no warnings and no errors; the
-checkout, toolchain and caches took 11.5~GB of disk. The axiom audit, \texttt{lake env lean} on
+checkout, toolchain and caches took 11.4~GB of disk. The axiom audit, \texttt{lake env lean} on
 the three audit files (\texttt{LatcComplexity/Axioms.lean}, \texttt{LatcComplexity/Valiant/Axioms.lean}
-and \texttt{LatcFormal/Axioms.lean}), took 13~s and printed 397 answers: 344 use all three
+and \texttt{LatcFormal/Axioms.lean}), took 14~s and printed 397 answers: 344 use all three
 standard axioms, 51 use one or two of them, 2 use none, and none uses \lstinline{sorryAx}. A
 whole-word search of the \texttt{.lean} files finds \lstinline{sorry}, \texttt{admit},
 \texttt{native\_decide} and \texttt{axiom} only in the \texttt{\#print axioms} commands.
