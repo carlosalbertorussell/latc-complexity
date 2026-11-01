@@ -706,8 +706,9 @@ $\bigvee_{v \ne u} A_i = v \lor \bigvee_{v \ne w} A_j = v$ (``not both $A_i = u$
 $A_j = w$''); the valid states are exactly the multicoloured cliques.
 
 % [rev m12]
-\emph{What is not proved.} For each fixed $k$, a separate machine with $k$ built in that rejects
-instances with more than $k$ attributes, with constants independent of~$k$, is not proved.
+\emph{What is not proved.} We do not prove that, for each fixed $k$, a separate machine with $k$
+built in, which rejects instances with more than $k$ attributes, meets the bound with constants
+independent of~$k$.
 Testing $n \le k$ inside the machine goes through Complexitylib's case-split and
 constant-output lemmas, whose constants depend on the machine, and making them uniform would
 need changes to the library. Statements~2 and~3 cover the same ground: the first on the
