@@ -1,5 +1,7 @@
 # Paper D (JAR version): changes for the author's approval
 
+**Status: approved by the author on 2026-11-01.** The author approved every change listed below and answered every open question. The answers and the author's rewordings were applied in commits `6cf3db0`, `b43c31b`, `98bd88d`, `4270f71`, `bc27f18` and `7e12b6c`; commit `8b39114` then removed the `[AUTHOR TO APPROVE: …]` markers (keeping their text), the `% [rev X]` comments and the header comment on these conventions from `main.tex`. The rest of this file records the state submitted for approval, so its line numbers and placeholders refer to `main.tex` before those commits.
+
 Branch `jar-revision`, 2026-11-01. Every change to `paper/jar/main.tex` made by the JAR revision is listed below, by item of the referee read of 2026-10-31 (D1–D7 major, m1–m13 minor, SD for the Statements and Declarations). Nothing is approved yet. In `main.tex`, a comment `% [rev X]` precedes each changed paragraph; it can be deleted after approval.
 
 The list was generated from a paragraph-level comparison of `main.tex` before the revision (commit `c609312`) and after it, and then checked by hand. For a changed paragraph, only the sentences that differ are shown: **Old** is the text removed, **New** the text that replaces it (an empty side means a pure deletion or addition). New and deleted paragraphs are shown in full. Text is LaTeX source.
