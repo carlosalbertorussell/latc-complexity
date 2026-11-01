@@ -902,8 +902,7 @@ unevenly on four parts:
 \end{itemize}
 The tractable side (\texttt{Tractable.lean}, 1\,099 lines) is the largest single file: the
 enumeration of candidate states needs an induction on $k$ for its polynomial time, and the
-counting with classes adds the partition of each domain. The repository records commits, not
-hours. Its first Lean commit (28 October 2026) holds the Boolean model and the general NP- and
+counting with classes adds the partition of each domain. Its first Lean commit (28 October 2026) holds the Boolean model and the general NP- and
 coNP-completeness; adequacy, the two counting files and the conditional monotone case followed
 the same day, the binary index and the tractable side on 29 October, and the three remaining
 results on 31 October, after a written plan (\texttt{docs/gaps-plan.md}): counting with at most
@@ -963,7 +962,8 @@ library did not have, and worked around each:
   \lstinline{OneCallSharpPHard.trans_parsimonious}).
 \item \emph{\#P-hardness beyond the SAT family.} The library has \#SAT and \#3SAT, a decision
   problem for independent sets, and no counting problem on graphs. The plan was to port
-  Senellart and Gnatenko's chain of three reductions through counting problems on graphs; the
+  Senellart and Gnatenko's chain of four reductions, three of them through counting problems on
+  graphs; the
   proof instead builds the graph of \Cref{sec:monotone} directly as a CNF over numbered vertices
   and needs no graph library.
 \item \emph{Explicit bounds.} The composition lemmas for polynomial time are existential: a
@@ -1003,7 +1003,7 @@ theorem fromSAT_polyTime : ComputableInPolyTime fromSAT encCNF encInst := by
 \end{lstlisting}
 
 % [rev D1]
-Unfolding everything does not scale. For the graph of \Cref{sec:monotone}, whose vertices are
+For larger constructions, the development does not unfold everything. For the graph of \Cref{sec:monotone}, whose vertices are
 numbered by Cantor pairing ($3\cdot\mathrm{pair}(i,b)$ for the value vertices, and similar codes
 for occurrences and leaves), the remedy was to give each helper, the three vertex codes and the edge, a lemma
 in two forms: one for the helper itself, proved by unfolding, and a composable one, registered
