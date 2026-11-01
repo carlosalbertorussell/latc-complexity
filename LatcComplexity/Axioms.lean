@@ -7,6 +7,7 @@ import LatcComplexity.Monotone
 import LatcComplexity.Binary
 import LatcComplexity.Tractable
 import LatcComplexity.ExplicitDegree
+import LatcComplexity.Restricted
 
 /-! Axiom audit: each theorem should depend only on `propext`, `Classical.choice` and
 `Quot.sound`. -/
@@ -254,3 +255,15 @@ import LatcComplexity.ExplicitDegree
 #print axioms Latc.PaperD.General.missingNonemptyWithBound_explicitDegree
 #print axioms Latc.PaperD.General.completeWithBound_explicitDegree
 #print axioms Latc.PaperD.General.missingCountWithBound_explicitDegree
+
+-- Hardness already on Boolean domains with T₀ = ∅ (`LatcComplexity/Restricted.lean`)
+#print axioms Latc.PaperD.General.fromSAT_mem_boolEmpty
+#print axioms Latc.PaperD.General.fromSAT_polyTime_bin
+#print axioms Latc.PaperD.General.mem_SAT_iff_fromSAT
+#print axioms Latc.PaperD.General.SAT_reduces_boolEmpty
+#print axioms Latc.PaperD.General.UNSAT_reduces_boolEmpty
+#print axioms Latc.PaperD.General.MissingNonemptyBoolEmpty_npHard_bin
+#print axioms Latc.PaperD.General.CompleteBoolEmpty_coNPHard_bin
+#print axioms Latc.PaperD.General.missingNonemptyPromise_npHard_bin
+#print axioms Latc.PaperD.General.sharpSAT_reduces_boolEmpty
+#print axioms Latc.PaperD.General.missingCountBoolEmpty_sharpPHard_bin
