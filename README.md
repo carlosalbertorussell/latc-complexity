@@ -39,7 +39,9 @@ lake build
 The steps for the v1.0 release are in `RELEASE.md`. Steps 0–3 (preconditions, the cold build and the
 full audit at commit `6a008ef`, and the tag `v1.0` on the commit that records them, with the same
 Lean files) were done on 2026-11-01; the
-repository is not public yet and has no Zenodo archive yet.
+repository was made public and version 1.0 archived on Zenodo the same day:
+[doi:10.5281/zenodo.23860668](https://doi.org/10.5281/zenodo.23860668) (all versions:
+[doi:10.5281/zenodo.23860667](https://doi.org/10.5281/zenodo.23860667)).
 
 `lake exe cache get` downloads the precompiled Mathlib. CSLib and the Complexitylib modules that
 are imported are then compiled from source, which takes a while on the first build.
