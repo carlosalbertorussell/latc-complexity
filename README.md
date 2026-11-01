@@ -263,14 +263,14 @@ then one-call (`ParsimoniousReducible.trans_oneCall`), from Complexitylib's
 | `countMissingMonotone2_sharpPComplete_oneCall_unary` | `OneCallSharpPComplete General.encInst countMissingMonotone2` |
 | `sharpSAT_oneCallReducible` | `OneCallReducible encCNF encCNF SharpSAT SharpMonotone2SAT` |
 | `sharpSAT_eq_post` | `SharpSAT φ = post φ (SharpMonotone2SAT (toMonotone φ))` |
+| `toMonotone_polyTime` | `ComputableInPolyTime toMonotone encCNF encCNF` |
+| `post_polyTime` | `ComputableInPolyTime (fun p : CNF ℕ × ℕ => post p.1 p.2) (encPair encCNF encNat) encNat` |
 
 `countMissingMonotone2` (`Valiant/AnyTable.lean`) is |M(T₀)| on instances with domains {0, 1} and
 clauses of two conditions with value 1, any T₀ (`pos2AnyB`, which is `pos2B` without its `T₀ = ∅`
 test), and zero on other syntax. Its hardness needs no new reduction: the reduction from
 #Monotone-2SAT produces either a monotone instance with T₀ = ∅, where it agrees with
 `countValidMonotone2`, or `emptyClauseInst`, which fails both shape tests.
-| `toMonotone_polyTime` | `ComputableInPolyTime toMonotone encCNF encCNF` |
-| `post_polyTime` | `ComputableInPolyTime (fun p : CNF ℕ × ℕ => post p.1 p.2) (encPair encCNF encNat) encNat` |
 
 ### The binary attribute index (`LatcComplexity/Binary.lean`, namespace `Latc.PaperD.General`)
 

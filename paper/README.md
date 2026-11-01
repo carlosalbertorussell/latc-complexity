@@ -1,5 +1,10 @@
 # Paper D, revised draft
 
+> **Superseded.** The current text of Paper D is `jar/main.tex`, the Journal of Automated Reasoning
+> version approved by the author on 2026-11-01, which the v1.0 release accompanies. `main.tex`
+> (LIPIcs, planned for ITP 2027), its reading copy `draft.md` and the sections below on them record
+> the earlier draft of 2026-10-31; they are kept for reference and receive no further edits.
+
 "Machine-Checked Complexity of Decision-Table Completeness in Lean", planned as an ITP 2027
 paper. `main.tex` is the revised draft (2026-10-31), restructured as a regular paper after
 four referee reports, in the LIPIcs class
