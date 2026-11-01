@@ -16,6 +16,40 @@ latexmk -pdf main.tex
 
 The bibliography is `../docs/paper-refs.bib` (the verified references) plus `extra.bib`.
 
+## Journal of Automated Reasoning version
+
+On 2026-10-31 the target became the Journal of Automated Reasoning (Springer). `jar/` holds
+the same paper in the Springer Nature LaTeX template (`sn-jnl.cls` and `sn-mathphys-num.bst`
+from the December 2024 template package, downloaded from
+<https://www.springernature.com/gp/authors/campaigns/latex-author-support>):
+
+* `jar/main.tex` is generated from `main.tex` by `jar/port.py`, which replaces the class, front
+  matter, theorem environments, back matter and bibliography setup and copies the body line by
+  line. Edit `main.tex` and regenerate; or, once the two versions are meant to diverge, edit
+  `jar/main.tex` directly and stop using `port.py`.
+* The Declarations at the end of `jar/main.tex` are placeholders marked `[AUTHOR TO APPROVE]`.
+* `jar/FIDELITY.md` lists every difference between the two PDFs, checked by `jar/fidelity.py`.
+
+Build (the template files are in `jar/`, so no extra `TEXINPUTS` is needed):
+
+```bash
+cd jar && python3 port.py && latexmk -pdf main.tex
+```
+
+On 2026-11-01, with the TeX Live 2023/Debian packages listed below plus `texlive-bibtex-extra`,
+this gave 21 pages (main text to page 14, appendices 15 to 17, references 17 to 21) with no
+errors, no undefined references or citations and no overfull boxes. BibTeX warns, as for the
+LIPIcs version, that the style does not know `@software`. JAR's submission guidelines
+(<https://link.springer.com/journal/10817/submission-guidelines>) sit behind a Springer login
+and could not be read, so the reference style, the Declarations list and any length limit
+still need checking against them.
+
+To redo the fidelity check, build the LIPIcs version as below and run
+
+```bash
+python3 jar/fidelity.py <directory of the built LIPIcs main.tex, main.bbl, main.pdf> jar
+```
+
 ## Reading copy
 
 `draft.md` is a Markdown rendering of `main.tex` for reading on screen, made with pandoc
