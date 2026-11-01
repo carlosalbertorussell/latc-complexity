@@ -36,8 +36,26 @@ lake exe cache get
 lake build
 ```
 
+The steps for the v1.0 release (tag, cold build and audit at the tag, making the repository
+public, Zenodo archive) are in `RELEASE.md`; none has been done yet.
+
 `lake exe cache get` downloads the precompiled Mathlib. CSLib and the Complexitylib modules that
 are imported are then compiled from source, which takes a while on the first build.
+
+Current verification (JAR revision, 2026-11-01): cold build of commit `0ea3170` on 2026-11-01,
+Linux cloud machine, x86_64, 4 cores, in a fresh clone with an empty `HOME` (no `~/.elan`, `.lake`
+or Mathlib cache), Lean 4.36.0-rc1 (commit `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`), Lake 5.0.0,
+elan 4.2.4. elan install 1 s; `lake exe cache get` 103 s, including the toolchain (all 9047 Mathlib
+files from the cache); `lake build` 217 s, `Build completed successfully (18651 jobs)`, exit code 0,
+no warnings, no errors, compiling from source 239 CSLib and Complexitylib modules and the 30
+repository modules; the audit (below) 13 s. Disk: the clone with `.lake` 8.0 GB, `~/.elan` 3.1 GB,
+`~/.cache/mathlib` 453 MB. This is the build the JAR version of Paper D reports.
+
+### History of builds
+
+The builds below are the development's history, moved here from the paper. The pin `b7acfc2` was
+kept throughout; Complexitylib had just been rewritten on CSLib, and its earlier version, which
+Paper A cites, is a separate repository with a different API.
 
 Verification status (2026-10-31, Linux cloud machine, x86_64): Lean 4.36.0-rc1 (commit
 `c9afcddf514a6772bd4d649f7cfc04eff0b9f15e`, Lake 5.0.0, elan 4.2.4), with the dependencies above,
@@ -100,6 +118,7 @@ the 46 theorems audited at that commit.
 | `LatcComplexity.Monotone` | Clauses of two conditions Aᵢ = 1, Aⱼ = 1: counting \|𝒱\| is in #P, and one-call #P-complete given Valiant's theorem as a hypothesis |
 | `LatcComplexity.Valiant` | Valiant's theorem in its one-call form, proved: #Monotone-2SAT is one-call #P-hard, so the monotone case is unconditional, for counting valid states and for counting \|M(T₀)\| with any T₀ (`Gadget`, `Counting`, `Pendant`, `OneCall`, `AnyTable`, `Axioms`) |
 | `LatcComplexity.Binary` | The attribute index of a condition in binary: every theorem above for the encoding `encInstBin` |
+| `LatcComplexity.Restricted` | Hardness already on Boolean domains with T₀ = ∅: the shape of `fromSAT`, NP- and coNP-hardness of the restricted sets, NP-hardness of the promise version, #P-hardness of the restricted count |
 | `LatcComplexity.Tractable` | The tractable side: no constraints, or at most `k` attributes, in polynomial time |
 | `LatcComplexity.ExplicitDegree` | The fixed-attribute bounds with an explicit degree, uniform in `k`: time and space `c · (\|x\| + 1) ^ (d · n + d)` |
 | `LatcComplexity.Axioms` | `#print axioms` on every main theorem of the `LatcComplexity` files (17 helper lemmas are not printed) (`LatcComplexity.Valiant.Axioms` for `Valiant/`) |
@@ -275,6 +294,21 @@ because the identity is polynomial-time from `encInst` to `encInstBin`.
 | `countValidMonotone2_mem_SharpP_bin` | `countValidMonotone2 ∈ SharpP encInstBin` (unconditional) |
 | `countValidMonotone2_oneCallSharpPComplete_bin` | `(hValiant : OneCallSharpPHard encCNF SharpMonotone2SAT) → OneCallSharpPComplete encInstBin countValidMonotone2` |
 
+### Boolean domains with T₀ = ∅ (`LatcComplexity/Restricted.lean`, namespace `Latc.PaperD.General`)
+
+`fromSAT` produces only instances whose domains all have size 2 and whose table is empty, the class
+`BoolEmpty`. Hardness therefore holds already on that class. A restricted set contains its
+restriction (`MissingNonempty ∩ BoolEmpty`), and the promise version leaves instances outside
+`BoolEmpty` unconstrained. All for `encInstBin`.
+
+| Theorem | Statement |
+|---|---|
+| `fromSAT_mem_boolEmpty` | `fromSAT φ ∈ BoolEmpty` |
+| `MissingNonemptyBoolEmpty_npHard_bin` | `NPHard encInstBin MissingNonemptyBoolEmpty` |
+| `CompleteBoolEmpty_coNPHard_bin` | `coNPHard encInstBin CompleteBoolEmpty` |
+| `missingNonemptyPromise_npHard_bin` | `PromiseProblem.NPHard encInstBin missingNonemptyPromise` (yes: `BoolEmpty` with M(T₀) ≠ ∅; no: `BoolEmpty` with M(T₀) = ∅) |
+| `missingCountBoolEmpty_sharpPHard_bin` | `SharpPHard encInstBin missingCountBoolEmpty` (|M(T₀)| on `BoolEmpty`, 0 elsewhere) |
+
 ### The tractable side (`LatcComplexity/Tractable.lean`, namespace `Latc.PaperD.General`)
 
 `P` is Complexitylib's class (`Cslib.Complexity.P`: a Boolean decider computable in polynomial
@@ -366,7 +400,16 @@ The planning note `docs/boundary.md` lists the same statements.
 Each theorem should depend only on `propext`, `Classical.choice` and `Quot.sound`; `sorry`
 (`sorryAx`) and custom axioms would show up here.
 
-Full audit at the final commit (cold build above): 300 theorems. `LatcComplexity/Axioms.lean`, 220:
+Full audit at the JAR revision (Lean files of `0ea3170`, 2026-11-01), run as
+`lake env lean` on each audit file: 397 answers. `LatcComplexity/Axioms.lean` 234: 202 print
+`[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
+2 `[Quot.sound]` (the ten theorems of `Restricted.lean` print all three).
+`LatcComplexity/Valiant/Axioms.lean` 94: 76 all three, 9 `[propext, Quot.sound]`, 7 `[propext]`,
+2 none. `LatcFormal/Axioms.lean` 69: 66 all three, 3 `[propext, Quot.sound]`. None mentions
+`sorryAx` or any other axiom. In `LatcComplexity/`, 328 of the 345 theorem and lemma declarations
+are printed; the other 17 are helper lemmas. The counts below are from earlier builds.
+
+Full audit at the cold build of `6603497`: 300 theorems. `LatcComplexity/Axioms.lean`, 220:
 188 print `[propext, Classical.choice, Quot.sound]`, 17 `[propext, Quot.sound]`, 13 `[propext]`,
 2 `[Quot.sound]`. `LatcComplexity/Valiant/Axioms.lean`, 80: 65 print all three, 9
 `[propext, Quot.sound]`, 6 `[propext]`. None mentions `sorryAx` or any other axiom. The any-T₀
