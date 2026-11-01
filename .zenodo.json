@@ -1,0 +1,31 @@
+{
+  "upload_type": "software",
+  "title": "latc-complexity: machine-checked complexity of decision-table completeness in Lean",
+  "version": "1.0",
+  "publication_date": "2026-11-01",
+  "creators": [
+    {
+      "name": "Russell, Carlos A.",
+      "affiliation": "Independent Researcher, Buenos Aires, Argentina",
+      "orcid": "0009-0003-3741-0230"
+    }
+  ],
+  "description": "<p>Lean 4 development accompanying \"Machine-Checked Complexity of Decision-Table Completeness in Lean\" (Journal of Automated Reasoning version). On the multi-tape Turing machines of Complexitylib, it proves that deciding whether a finite-domain decision table with clause constraints has a missing combination is NP-complete, that deciding completeness is coNP-complete and that counting the missing combinations is #P-complete, already for Boolean domains and empty tables; an adequacy theorem to the set-based model of latc_check; polynomial-time results without constraints and with a fixed number of attributes, with an explicit degree; and, for monotone two-literal constraints, a one-call version of Valiant's theorem on #Monotone-2SAT. Only Lean's standard axioms are used. Pinned to Lean v4.36.0-rc1 and Complexitylib b7acfc2; build instructions, the cold-build record and the full axiom audit are in the README.</p><p>Released under the MIT licence.</p>",
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "Lean 4",
+    "computational complexity",
+    "decision tables",
+    "completeness",
+    "#P",
+    "formal verification"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.23646699",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ]
+}
